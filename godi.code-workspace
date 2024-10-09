@@ -1,0 +1,24 @@
+{
+	"folders": [
+		{
+			"name": "object",
+			"path": "../object"
+		},
+		{
+			"name": "godi",
+			"path": "."
+		},
+		{
+			"name": "model",
+			"path": "../model"
+		},
+		{
+			"name": "unixid",
+			"path": "../unixid"
+		},
+		{
+			"path": "../../../Notes/Go"
+		}
+	],
+	"settings": {}
+}

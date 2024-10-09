@@ -1,0 +1,36 @@
+.age-number input {
+    /* margin-top: 10px; */
+    /* top: 10px; */
+    width: 11%;
+}
+
+.age-number:after,
+.age-date::before {
+    color: var(--col-ter);
+    /* font-size: 70%; */
+    font-size: .8rem;
+}
+
+.age-date input {
+    width: 140px;
+    /* width: 60%; */
+
+    float: right;
+}
+
+.age-date {
+    float: right;
+}
+
+
+label.age-number:after {
+    content: 'Años';
+}
+
+.age-date::before {
+    /* padding: 0 5px 0 0; */
+    vertical-align: -20%;
+    
+    content: 'Fecha Nacimiento:';
+    margin-right: 7px;
+}

@@ -1,0 +1,22 @@
+.run-type {
+    display: flex;
+    justify-content: space-between; /* Esto distribuirá los elementos al principio y al final del contenedor */
+}
+
+input.rut {
+    flex: 1;
+}
+
+.rut-label-container {
+    /* flex: 1; */
+    text-align: right;
+    background: none;
+}
+
+.rut-radio-label {
+    display: inline-flex;
+    margin:var(--mag-sec);
+ 
+}
+
+

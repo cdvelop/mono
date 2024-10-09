@@ -1,0 +1,16 @@
+label.date-spanish {
+    width: 0px;
+    display: none;
+    position: absolute;
+}
+
+label.date-spanish::before {
+    text-transform: capitalize;
+    content: attr(data-spanish);
+    color: var(--col-cua);
+    position: relative;
+    top: 10px;
+    /* margin-top: auto; */
+    /* margin-bottom: auto; */
+    font-weight: bold;
+}
