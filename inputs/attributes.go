@@ -49,7 +49,6 @@ type attributes struct {
 
 	options []map[string]string // ej: [{"m": "male"}, { "f": "female"}]
 
-	list []string // ej: ["a","b","c"]
 }
 
 // extractValue removes a prefix. Example:
@@ -64,26 +63,26 @@ func extractValue(option, delete string) string {
 	return out
 }
 
-func (a attributes) Render(id string) (result string) {
+func (h input) Render(id string) (result string) {
 	var open = `<input`
 	var close = `>`
-	a.Type = a.htmlName
+	h.Type = h.htmlName
 
-	if a.htmlName == "textarea" {
+	if h.htmlName == "textarea" {
 		open = `<textarea`
 		close = `></textarea>`
-		a.Type = ""
+		h.Type = ""
 	}
 
-	a.Id = id
+	h.Id = id
 
-	a.DataSet = append(a.DataSet, map[string]string{
-		"name": a.customName,
+	h.DataSet = append(h.DataSet, map[string]string{
+		"name": h.customName,
 	})
 
 	result = open
 
-	elem := reflect.ValueOf(a)
+	elem := reflect.ValueOf(h.attributes)
 	elemType := elem.Type()
 
 	for i := 0; i < elem.NumField(); i++ {
@@ -114,7 +113,7 @@ func (a attributes) Render(id string) (result string) {
 		}
 	}
 
-	if !a.allowSkipCompleted {
+	if !h.allowSkipCompleted {
 		result += ` required`
 	}
 

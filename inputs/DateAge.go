@@ -32,7 +32,7 @@ func (d dateAge) Render(id string) string {
 
 	tag += `<label class="age-date">`
 
-	tag += d.Render(id)
+	tag += d.input.Render(id)
 
 	tag += `</label>`
 

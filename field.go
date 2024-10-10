@@ -31,7 +31,7 @@ func setUnique(rf *reflect.StructField) bool {
 	return false
 }
 
-func (f *field) setDataBaseParams(rf *reflect.StructField) {
+func (f *field) setDataBaseParams() {
 
 	// check if the field is a primary key
 	f.PrimaryKey = f.isPrimaryKey()

@@ -56,7 +56,7 @@ func processStruct(t reflect.Type, entities *[]entity, parentField *field) {
 			Parent: &e,
 		}
 
-		newField.setDataBaseParams(&rsField)
+		newField.setDataBaseParams()
 
 		newField.setInput(&rsField)
 

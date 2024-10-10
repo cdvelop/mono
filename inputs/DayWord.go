@@ -35,7 +35,7 @@ func (d dayWord) InputName(customName, htmlName *string) {
 
 func (d dayWord) Render(id string) string {
 	tag := `<label class="date-spanish">`
-	tag += d.Render(id)
+	tag += d.input.Render(id)
 	tag += `</label>`
 	return tag
 }

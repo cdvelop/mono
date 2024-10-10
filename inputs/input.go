@@ -96,6 +96,10 @@ func (h *input) Set(params ...any) {
 		}
 	}
 
+	if h.Name == "" {
+		h.Name = h.customName
+	}
+
 	h.setDynamicTitle()
 
 }
@@ -108,7 +112,7 @@ func (h *input) setDynamicTitle() {
 	}
 
 	var parts []string
-	parts = append(parts, "texto")
+	parts = append(parts, "permitido:")
 
 	// Lógica de validación para letras
 	if h.Letters {
@@ -130,7 +134,7 @@ func (h *input) setDynamicTitle() {
 				chars = append(chars, string(char))
 			}
 		}
-		parts = append(parts, fmt.Sprintf("caracteres permitidos: %v ", strings.Join(chars, " ")))
+		parts = append(parts, fmt.Sprintf("caracteres: %v ", strings.Join(chars, " ")))
 	}
 
 	if h.Minimum != 0 {

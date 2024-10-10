@@ -38,7 +38,7 @@ func Test_TagText(t *testing.T) {
 		t.Fatal("ERROR NO TAG RENDERING ")
 	}
 
-	expected := `<input type="hidden" id="1" name="full_name" placeholder="tu nombre" title="texto letras números caracteres permitidos: ␣ . , ( )  min. 2 max. 100" data-price="100" data-name="text">`
+	expected := `<input type="hidden" id="1" name="full_name" placeholder="tu nombre" title="permitido: letras números caracteres: ␣ . , ( )  min. 2 max. 100" data-price="100" data-name="text">`
 
 	if tag != expected {
 		log.Fatalf("error:\n-resultado: \n%v\n\n-expectativa: \n%v\n", tag, expected)
