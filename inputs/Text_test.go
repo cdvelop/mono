@@ -33,7 +33,7 @@ var (
 )
 
 func Test_TagText(t *testing.T) {
-	tag := modelText.BuildHtmlInput("1")
+	tag := modelText.Render("1")
 	if tag == "" {
 		t.Fatal("ERROR NO TAG RENDERING ")
 	}

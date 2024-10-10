@@ -57,7 +57,7 @@ type Person struct {
 - si el o los inputs que necesitas no se encuentra en la librería puedes crear el método asociado a tu estructura de esta forma:
 ```go
 type input interface {
-	BuildHtmlInput(id string) string
+	Render(id string) string
 	Validate(value string) error
 }
 type Person struct {

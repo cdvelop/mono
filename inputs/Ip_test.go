@@ -37,7 +37,7 @@ func Test_InputIp(t *testing.T) {
 }
 
 func Test_TagIp(t *testing.T) {
-	tag := Ip().buildHtml("1")
+	tag := Ip().Render("1")
 	if tag == "" {
 		log.Fatalln("ERROR NO TAG RENDERING ")
 	}

@@ -9,7 +9,7 @@ import (
 )
 
 type input interface {
-	BuildHtmlInput(id string) string
+	Render(id string) string
 	MinMaxAllowedChars() (min, max int)
 	Validate(value string) error
 }

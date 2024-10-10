@@ -53,7 +53,7 @@ func Test_InputTextArea(t *testing.T) {
 }
 
 func Test_TagTextArea(t *testing.T) {
-	tag := modelTextArea.buildHtml("1")
+	tag := modelTextArea.Render("1")
 	if tag == "" {
 		log.Fatalln("ERROR NO TAG RENDERING ")
 	}

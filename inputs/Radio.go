@@ -32,7 +32,7 @@ func (r radio) Validate(value string) error {
 	return r.checkOptionKeys(value)
 }
 
-func (r radio) BuildHtmlInput(id string) string {
+func (r radio) Render(id string) string {
 	var id3 string
 
 	var tags string
@@ -46,7 +46,7 @@ func (r radio) BuildHtmlInput(id string) string {
 
 			r.Value = `value="` + value + `"`
 
-			tags += r.buildHtml(id3)
+			tags += r.input.Render(id3)
 
 			tags += `<span>` + span + `</span>`
 			tags += `</label>`

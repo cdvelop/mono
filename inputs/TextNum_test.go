@@ -25,7 +25,7 @@ var (
 )
 
 func Test_TagTextNum(t *testing.T) {
-	tag := modelTextNum.buildHtml("1")
+	tag := modelTextNum.Render("1")
 	if tag == "" {
 		log.Fatalln("ERROR NO TAG RENDERING ")
 	}

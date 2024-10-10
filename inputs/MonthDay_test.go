@@ -44,7 +44,7 @@ func Test_InputMonthDay(t *testing.T) {
 }
 
 func Test_TagMonthDay(t *testing.T) {
-	tag := modelMonthDay.buildHtml("1")
+	tag := modelMonthDay.Render("1")
 	if tag == "" {
 		log.Fatalln("ERROR NO TAG RENDERING ")
 	}

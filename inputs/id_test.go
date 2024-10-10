@@ -49,7 +49,7 @@ func Test_InputPrimaryKey(t *testing.T) {
 }
 
 func Test_TagPrimaryKey(t *testing.T) {
-	tag := ID().BuildHtmlInput("1")
+	tag := ID().Render("1")
 	if tag == "" {
 		log.Fatalln("ERROR NO TAG RENDERING ")
 	}

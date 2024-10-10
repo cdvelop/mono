@@ -33,9 +33,9 @@ func (d dayWord) InputName(customName, htmlName *string) {
 	}
 }
 
-func (d dayWord) BuildHtmlInput(id string) string {
+func (d dayWord) Render(id string) string {
 	tag := `<label class="date-spanish">`
-	tag += d.buildHtml(id)
+	tag += d.Render(id)
 	tag += `</label>`
 	return tag
 }

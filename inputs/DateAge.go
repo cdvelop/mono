@@ -26,13 +26,13 @@ type dateAge struct {
 	day date
 }
 
-func (d dateAge) BuildHtmlInput(id string) string {
+func (d dateAge) Render(id string) string {
 
 	tag := `<label class="age-number"><input data-name="age-number" type="number" min="0" max="150" oninput="AgeInputChange(this)" title="Campo Informativo"></label>`
 
 	tag += `<label class="age-date">`
 
-	tag += d.buildHtml(id)
+	tag += d.Render(id)
 
 	tag += `</label>`
 

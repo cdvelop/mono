@@ -22,7 +22,7 @@ func (d datalist) Validate(value string) error {
 	return d.checkOptionKeys(value)
 }
 
-func (d datalist) BuildHtmlInput(id string) string {
+func (d datalist) Render(id string) string {
 	var req string
 	if !d.allowSkipCompleted {
 		req = ` required`

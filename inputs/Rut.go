@@ -60,13 +60,13 @@ func Dni(params ...any) rut {
 	return Rut(options)
 }
 
-func (r rut) BuildHtmlInput(id string) string {
+func (r rut) Render(id string) string {
 
 	if r.dni_mode {
 
 		tag := `<div class="run-type">`
 
-		tag += r.buildHtml(id)
+		tag += r.input.Render(id)
 
 		tag += `<div class="rut-label-container"><label class="rut-radio-label">
 			<input type="radio" name="type-dni" data-name="dni-ch" value="ch" checked="checked" onchange="changeDniType(this)">
@@ -83,6 +83,6 @@ func (r rut) BuildHtmlInput(id string) string {
 		return tag
 
 	} else {
-		return r.buildHtml(id)
+		return r.input.Render(id)
 	}
 }

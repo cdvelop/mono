@@ -24,7 +24,7 @@ func (c check) Validate(value string) error {
 	return c.checkOptionKeys(value)
 }
 
-func (c check) BuildHtmlInput(id string) string {
+func (c check) Render(id string) string {
 	var tags string
 	for i, opt := range c.options {
 		id3 := id + "." + strconv.Itoa(i)

@@ -26,7 +26,7 @@ func (s selec) Validate(value string) error {
 	return s.checkOptionKeys(value)
 }
 
-func (s selec) BuildHtmlInput(id string) string {
+func (s selec) Render(id string) string {
 	var req string
 	if !s.allowSkipCompleted {
 		req = ` required`

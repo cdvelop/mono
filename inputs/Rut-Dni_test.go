@@ -29,7 +29,7 @@ var (
 )
 
 func Test_TagDNI(t *testing.T) {
-	tag := modelDNI.BuildHtmlInput("1")
+	tag := modelDNI.Render("1")
 	if tag == "" {
 		log.Fatalln("ERROR NO TAG RENDERING ")
 	}

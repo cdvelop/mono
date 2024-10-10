@@ -64,11 +64,7 @@ func extractValue(option, delete string) string {
 	return out
 }
 
-func (a attributes) BuildHtmlInput(id string) string {
-	return a.buildHtml(id)
-}
-
-func (a attributes) buildHtml(id string) (result string) {
+func (a attributes) Render(id string) (result string) {
 	var open = `<input`
 	var close = `>`
 	a.Type = a.htmlName

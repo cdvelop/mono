@@ -48,7 +48,7 @@ func Test_InputNumber(t *testing.T) {
 }
 
 func Test_TagNumber(t *testing.T) {
-	tag := modelNumber.buildHtml("1")
+	tag := modelNumber.Render("1")
 	if tag == "" {
 		log.Fatalln("ERROR NO TAG RENDERING ")
 	}

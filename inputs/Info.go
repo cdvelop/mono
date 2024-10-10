@@ -18,7 +18,7 @@ type info struct {
 	input
 }
 
-func (i info) BuildHtmlInput(id string) string {
+func (i info) Render(id string) string {
 	return i.Value
 }
 

@@ -22,7 +22,7 @@ func (d list) Validate(value string) error {
 	return nil
 }
 
-func (d list) BuildHtmlInput(id string) string {
+func (d list) Render(id string) string {
 
 	tag := `<ol>`
 	tag += d.getAll()
