@@ -3,8 +3,10 @@ package inputs
 // eg: options=1:Admin,2:Editor,3:Visitante
 func DataList(params ...any) datalist {
 	new := datalist{
-		attributes: attributes{
-			htmlName: "datalist",
+		input: input{
+			attributes: attributes{
+				htmlName: "datalist",
+			},
 		},
 	}
 	new.Set(params)
@@ -13,11 +15,10 @@ func DataList(params ...any) datalist {
 }
 
 type datalist struct {
-	attributes
-	dataSource
+	input
 }
 
-func (d datalist) ValidateInput(value string) error {
+func (d datalist) Validate(value string) error {
 	return d.checkOptionKeys(value)
 }
 

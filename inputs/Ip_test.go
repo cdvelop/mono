@@ -21,7 +21,7 @@ var (
 func Test_InputIp(t *testing.T) {
 	for prueba, data := range dataIp {
 		t.Run((prueba + data.inputData), func(t *testing.T) {
-			err := Ip().ValidateInput(data.inputData)
+			err := Ip().Validate(data.inputData)
 
 			var err_str string
 			if err != nil {
@@ -46,7 +46,7 @@ func Test_TagIp(t *testing.T) {
 func Test_GoodInputIp(t *testing.T) {
 	for _, data := range Ip().GoodTestData() {
 		t.Run((data), func(t *testing.T) {
-			if ok := Ip().ValidateInput(data); ok != nil {
+			if ok := Ip().Validate(data); ok != nil {
 				log.Fatalf("resultado [%v] [%v]", ok, data)
 			}
 		})
@@ -56,7 +56,7 @@ func Test_GoodInputIp(t *testing.T) {
 func Test_WrongInputIp(t *testing.T) {
 	for _, data := range Ip().WrongTestData() {
 		t.Run((data), func(t *testing.T) {
-			if ok := Ip().ValidateInput(data); ok == nil {
+			if ok := Ip().Validate(data); ok == nil {
 				log.Fatalf("resultado [%v] [%v]", ok, data)
 			}
 		})

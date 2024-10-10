@@ -2,9 +2,11 @@ package inputs
 
 func Date(params ...any) date {
 	new := date{
-		attributes: attributes{
-			Name:  "date",
-			Title: `title="formato fecha: DD-MM-YYYY"`,
+		input: input{
+			attributes: attributes{
+				htmlName: "date",
+				Title:    `title="formato fecha: DD-MM-YYYY"`,
+			},
 			// Pattern: `[0-9]{4}-(0[1-9]|1[012])-(0[1-9]|1[0-9]|2[0-9]|3[01])`,
 		},
 	}
@@ -14,11 +16,11 @@ func Date(params ...any) date {
 
 // formato fecha: DD-MM-YYYY
 type date struct {
-	attributes
+	input
 }
 
 // validación con datos de entrada
-func (d date) ValidateInput(value string) error {
+func (d date) Validate(value string) error {
 	return d.CheckDateExists(value)
 }
 

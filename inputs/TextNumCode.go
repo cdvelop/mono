@@ -4,31 +4,32 @@ import "errors"
 
 func TextNumberCode(params ...any) textNumCode {
 	new := textNumCode{
-		attributes: attributes{
-			htmlName:   "tel",
-			customName: "textNumCode",
-			// Pattern: `^[A-Za-z0-9-_]{2,15}$`,
-		},
-		permitted: permitted{
-			Letters:    true,
-			Numbers:    true,
-			Characters: []rune{'_', '-'},
-			Minimum:    2,
-			Maximum:    15,
+		input: input{
+			attributes: attributes{
+				htmlName:   "tel",
+				customName: "textNumCode",
+				// Pattern:    `^[A-Za-z0-9-_]{2,15}`,
+			},
+			permitted: permitted{
+				Letters:    true,
+				Numbers:    true,
+				Characters: []rune{'_', '-'},
+				Minimum:    2,
+				Maximum:    15,
+			},
 		},
 	}
-	new.Set(&new.permitted, params)
+	new.Set(params)
 
 	return new
 }
 
 // texto y numero para código ej: V234
 type textNumCode struct {
-	attributes
-	permitted
+	input
 }
 
-func (t textNumCode) ValidateInput(value string) error {
+func (t textNumCode) Validate(value string) error {
 
 	if len(value) >= 1 {
 		var ok bool
@@ -47,7 +48,7 @@ func (t textNumCode) ValidateInput(value string) error {
 		}
 	}
 
-	return t.Validate(value)
+	return t.permitted.Validate(value)
 }
 
 func (t textNumCode) GoodTestData() (out []string) {

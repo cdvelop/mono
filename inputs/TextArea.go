@@ -5,39 +5,36 @@ package inputs
 // cols="2" default 1
 // rows="8" default 3
 func TextArea(params ...any) textArea {
-	characters := []rune{'%', '$', '+', '#', '-', '.', ',', ':', '(', ')'}
-	var min = 5
-	var max = 1000
-
 	new := textArea{
-		attributes: attributes{
-			Rows: `rows="3"`,
-			Cols: `cols="1"`,
-			// PlaceHolder: `placeHolder="` + info + `"`,
-			// Pattern: `^[A-Za-zÑñáéíóú 0-9:$%.,+-/\\()|\n/g]{2,1000}$`,
-			Oninput: `oninput="TexAreaOninput(this)"`,
-			// Onchange: `onchange="` + DefaultValidateFunction + `"`,
-		},
-		permitted: permitted{
-			Letters:     true,
-			Tilde:       true,
-			Numbers:     true,
-			BreakLine:   true,
-			WhiteSpaces: true,
-			Tabulation:  true,
-			Characters:  characters,
-			Minimum:     min,
-			Maximum:     max,
+		input: input{
+			attributes: attributes{
+				Rows: `rows="3"`,
+				Cols: `cols="1"`,
+				// PlaceHolder: `placeHolder="` + info + `"`,
+				// Pattern: `^[A-Za-zÑñáéíóú 0-9:$%.,+-/\\()|\n/g]{2,1000}`,
+				Oninput: `oninput="TexAreaOninput(this)"`,
+				// Onchange: `onchange="` + DefaultValidateFunction + `"`,
+			},
+			permitted: permitted{
+				Letters:     true,
+				Tilde:       true,
+				Numbers:     true,
+				BreakLine:   true,
+				WhiteSpaces: true,
+				Tabulation:  true,
+				Characters:  []rune{'$', '%', '+', '#', '-', '.', ',', ':', '(', ')'},
+				Minimum:     2,
+				Maximum:     1000,
+			},
 		},
 	}
-	new.Set(&new.permitted, params)
+	new.Set(params)
 
 	return new
 }
 
 type textArea struct {
-	attributes
-	permitted
+	input
 }
 
 func (t textArea) InputName(customName, htmlName *string) {

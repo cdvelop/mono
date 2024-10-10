@@ -3,26 +3,27 @@ package inputs
 type rut struct {
 	hideTyping bool
 	dni_mode   bool
-	attributes
-	dni permitted
+	input
 }
 
 // typing="hide" ocultar información  al escribir
 // dni-mode: acepta otro documentos
 func Rut(params ...any) rut {
 	new := rut{
-		attributes: attributes{
-			htmlName:     "text",
-			customName:   "rut",
-			Autocomplete: `autocomplete="off"`,
-			Class:        []string{"rut"},
-			DataSet:      []map[string]string{{"option": "ch"}},
-		},
-		dni: permitted{
-			Letters: true,
-			Numbers: true,
-			Minimum: 9,
-			Maximum: 15,
+		input: input{
+			attributes: attributes{
+				htmlName:     "text",
+				customName:   "rut",
+				Autocomplete: `autocomplete="off"`,
+				Class:        []string{"rut"},
+				DataSet:      []map[string]string{{"option": "ch"}},
+			},
+			permitted: permitted{
+				Letters: true,
+				Numbers: true,
+				Minimum: 9,
+				Maximum: 15,
+			},
 		},
 	}
 
@@ -42,7 +43,6 @@ func Rut(params ...any) rut {
 			new.PlaceHolder = `placeholder="ej: (ch) 11222333-k  /  (ex) 1b2334"`
 		}
 
-		// new.Pattern = `^[A-Za-z0-9]{9,15}$`
 		new.Maxlength = `maxlength="15"`
 	} else {
 		new.Title = `title="rut sin puntos y con guion ejem.: 11222333-4"`
@@ -50,8 +50,6 @@ func Rut(params ...any) rut {
 			new.PlaceHolder = `placeholder="ej: 11222333-4"`
 		}
 		new.Maxlength = `maxlength="10"`
-
-		// new.Pattern = `^[0-9]+-[0-9kK]{1}$`
 	}
 
 	return new

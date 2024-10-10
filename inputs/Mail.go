@@ -7,17 +7,19 @@ import (
 
 func Mail(params ...any) mail {
 	new := mail{
-		attributes: attributes{
-			htmlName:    "mail",
-			PlaceHolder: `placeHolder="ej: mi.correo@mail.com"`,
-			// Pattern:     `[a-zA-Z0-9!#$%&'*_+-]([\.]?[a-zA-Z0-9!#$%&'*_+-])+@[a-zA-Z0-9]([^@&%$\/()=?¿!.,:;]|\d)+[a-zA-Z0-9][\.][a-zA-Z]{2,4}([\.][a-zA-Z]{2})?`,
-		},
-		per: permitted{
-			Letters:    true,
-			Numbers:    false,
-			Characters: []rune{'@', '.', '_'},
-			Minimum:    0,
-			Maximum:    0,
+		input: input{
+			attributes: attributes{
+				htmlName:    "mail",
+				PlaceHolder: `placeHolder="ej: mi.correo@mail.com"`,
+				// Pattern:     `[a-zA-Z0-9!#$%&'*_+-]([\.]?[a-zA-Z0-9!#$%&'*_+-])+@[a-zA-Z0-9]([^@&%$\/()=?¿!.,:;]|\d)+[a-zA-Z0-9][\.][a-zA-Z]{2,4}([\.][a-zA-Z]{2})?`,
+			},
+			permitted: permitted{
+				Letters:    true,
+				Numbers:    true,
+				Characters: []rune{'@', '.', '_'},
+				Minimum:    0,
+				Maximum:    0,
+			},
 		},
 	}
 	new.Set(params)
@@ -26,12 +28,11 @@ func Mail(params ...any) mail {
 }
 
 type mail struct {
-	attributes
-	per permitted
+	input
 }
 
 // validación con datos de entrada
-func (m mail) ValidateInput(value string) error {
+func (m mail) Validate(value string) error {
 
 	if strings.Contains(value, "example") {
 		return errors.New(value + " es un correo de ejemplo")
@@ -42,7 +43,7 @@ func (m mail) ValidateInput(value string) error {
 		return errors.New("error en @ del correo " + value)
 	}
 
-	return m.per.Validate(value)
+	return m.permitted.Validate(value)
 
 }
 

@@ -26,7 +26,7 @@ var (
 func Test_DataList(t *testing.T) {
 	for prueba, data := range dataList {
 		t.Run((prueba + " " + data.inputData), func(t *testing.T) {
-			err := modelDataList.ValidateInput(data.inputData)
+			err := modelDataList.Validate(data.inputData)
 
 			var err_str string
 			if err != nil {

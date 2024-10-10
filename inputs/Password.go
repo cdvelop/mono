@@ -12,16 +12,18 @@ import (
 // Pattern_end="}$"
 func Password(params ...any) password {
 	new := password{
-		attributes: attributes{
-			htmlName: "password",
-		},
-		permitted: permitted{
-			Letters:    true,
-			Tilde:      true,
-			Numbers:    true,
-			Characters: []rune{' ', '$', '#', '%', '?', '.', ',', '-', '_'},
-			Minimum:    5,
-			Maximum:    50,
+		input: input{
+			attributes: attributes{
+				htmlName: "password",
+			},
+			permitted: permitted{
+				Letters:    true,
+				Tilde:      true,
+				Numbers:    true,
+				Characters: []rune{' ', '#', '%', '?', '.', ',', '-', '_'},
+				Minimum:    5,
+				Maximum:    50,
+			},
 		},
 	}
 	new.Set(params)
@@ -40,8 +42,7 @@ func Password(params ...any) password {
 // Solo letras (en cualquier caso), números, guiones, guiones bajos y puntos.
 // (No el carácter de barra, que se usa para escapar del punto).
 type password struct {
-	attributes
-	permitted
+	input
 }
 
 func (p password) GoodTestData() (out []string) {

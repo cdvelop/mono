@@ -38,7 +38,7 @@ func Test_TagDNI(t *testing.T) {
 func Test_InputDNI(t *testing.T) {
 	for prueba, data := range dataDNI {
 		t.Run((prueba), func(t *testing.T) {
-			err := modelDNI.ValidateInput(data.inputData)
+			err := modelDNI.Validate(data.inputData)
 
 			var err_str string
 			if err != nil {
@@ -56,7 +56,7 @@ func Test_InputDNI(t *testing.T) {
 func Test_GoodInputDNI(t *testing.T) {
 	for _, data := range modelDNI.GoodTestData() {
 		t.Run((data), func(t *testing.T) {
-			if ok := modelDNI.ValidateInput(data); ok != nil {
+			if ok := modelDNI.Validate(data); ok != nil {
 				log.Fatalf("resultado [%v] [%v]", ok, data)
 			}
 		})
@@ -66,7 +66,7 @@ func Test_GoodInputDNI(t *testing.T) {
 func Test_WrongInputDNI(t *testing.T) {
 	for _, data := range modelDNI.WrongTestData() {
 		t.Run((data), func(t *testing.T) {
-			if ok := modelDNI.ValidateInput(data); ok == nil {
+			if ok := modelDNI.Validate(data); ok == nil {
 				log.Fatalf("resultado [%v] [%v]", ok, data)
 			}
 		})

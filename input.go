@@ -10,7 +10,8 @@ import (
 
 type input interface {
 	BuildHtmlInput(id string) string
-	ValidateInput(value string) error
+	MinMaxAllowedChars() (min, max int)
+	Validate(value string) error
 }
 
 func (f *field) setInput(rf *reflect.StructField) {

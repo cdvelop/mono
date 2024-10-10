@@ -6,22 +6,23 @@ import (
 
 // eg: options=1:Admin,2:Editor,3:Visitante
 func Select(params ...any) selec {
-
 	new := selec{
-		attributes: attributes{
-			htmlName: "select",
+		input: input{
+			attributes: attributes{
+				htmlName: "select",
+			},
 		},
 	}
 	new.Set(params)
+
 	return new
 }
 
 type selec struct {
-	attributes
-	dataSource
+	input
 }
 
-func (s selec) ValidateInput(value string) error {
+func (s selec) Validate(value string) error {
 	return s.checkOptionKeys(value)
 }
 

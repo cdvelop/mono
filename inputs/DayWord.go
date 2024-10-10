@@ -5,11 +5,13 @@ package inputs
 func DayWord(params ...any) dayWord {
 	new := dayWord{
 		month: MonthDay(),
-		attributes: attributes{
-			htmlName:   "text",
-			customName: "DayWord",
-			DataSet:    []map[string]string{{"spanish": ""}},
-			// Pattern: `^[0-9]{2,2}$`,
+		input: input{
+			attributes: attributes{
+				htmlName:   "text",
+				customName: "DayWord",
+				DataSet:    []map[string]string{{"spanish": ""}},
+				// Pattern: `^[0-9]{2,2}$`,
+			},
 		},
 	}
 	new.Set(params)
@@ -19,7 +21,7 @@ func DayWord(params ...any) dayWord {
 
 type dayWord struct {
 	month monthDay
-	attributes
+	input
 }
 
 func (d dayWord) InputName(customName, htmlName *string) {
@@ -38,8 +40,8 @@ func (d dayWord) BuildHtmlInput(id string) string {
 	return tag
 }
 
-func (d dayWord) ValidateInput(value string) error {
-	return d.month.ValidateInput(value)
+func (d dayWord) Validate(value string) error {
+	return d.month.Validate(value)
 }
 
 func (d dayWord) GoodTestData() (out []string) {

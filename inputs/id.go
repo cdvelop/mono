@@ -2,26 +2,27 @@ package inputs
 
 func ID(params ...any) id {
 	new := id{
-		attributes: attributes{
-			htmlName:   "hidden",
-			customName: "id",
-		},
-		permitted: permitted{
-			Letters:    false,
-			Numbers:    true,
-			Characters: []rune{'.'},
-			Minimum:    1,  //
-			Maximum:    39, //
+		input: input{
+			attributes: attributes{
+				htmlName:   "hidden",
+				customName: "id",
+			},
+			permitted: permitted{
+				Letters:    false,
+				Numbers:    true,
+				Characters: []rune{'.'},
+				Minimum:    1,  //
+				Maximum:    39, //
+			},
 		},
 	}
-	new.Set(&new.permitted, params)
+	new.Set(params)
 
 	return new
 }
 
 type id struct {
-	attributes
-	permitted
+	input
 }
 
 func (i id) GoodTestData() (out []string) {

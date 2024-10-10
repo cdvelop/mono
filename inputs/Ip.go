@@ -8,18 +8,20 @@ import (
 // dirección ip valida campos separados por puntos
 func Ip(params ...any) ip {
 	new := ip{
-		attributes: attributes{
-			htmlName:   "text",
-			customName: "ip",
-			Title:      `title="dirección ip valida campos separados por puntos ej 192.168.0.8"`,
-			// Pattern: `^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$`,
-		},
-		per: permitted{
-			Letters:    true,
-			Numbers:    true,
-			Characters: []rune{'.', ':'},
-			Minimum:    7,  //IPv4 - IPv6 es 39
-			Maximum:    39, // IPv6 - IPv4 es 15
+		input: input{
+			attributes: attributes{
+				htmlName:   "text",
+				customName: "ip",
+				Title:      `title="dirección ip valida campos separados por puntos ej 192.168.0.8"`,
+				// Pattern: `^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)`,
+			},
+			permitted: permitted{
+				Letters:    true,
+				Numbers:    true,
+				Characters: []rune{'.', ':'},
+				Minimum:    7,  //IPv4 - IPv6 es 39
+				Maximum:    39, // IPv6 - IPv4 es 15
+			},
 		},
 	}
 	new.Set(params)
@@ -28,12 +30,11 @@ func Ip(params ...any) ip {
 }
 
 type ip struct {
-	attributes
-	per permitted
+	input
 }
 
 // validación con datos de entrada
-func (i ip) ValidateInput(value string) error {
+func (i ip) Validate(value string) error {
 
 	if value == "0.0.0.0" {
 		return errors.New("ip de ejemplo no valida")
@@ -61,7 +62,7 @@ func (i ip) ValidateInput(value string) error {
 		return errors.New("formato IPv6 no valida")
 	}
 
-	return i.per.Validate(value)
+	return i.permitted.Validate(value)
 
 }
 

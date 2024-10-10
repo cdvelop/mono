@@ -33,7 +33,7 @@ func Test_TagTextSearch(t *testing.T) {
 func Test_InputTextSearch(t *testing.T) {
 	for prueba, data := range dataTextSearch {
 		t.Run((prueba + data.inputData), func(t *testing.T) {
-			err := modelTextSearch.ValidateInput(data.inputData)
+			err := modelTextSearch.Validate(data.inputData)
 
 			var err_str string
 			if err != nil {
@@ -51,7 +51,7 @@ func Test_InputTextSearch(t *testing.T) {
 func Test_GoodInputTextSearch(t *testing.T) {
 	for _, data := range modelTextSearch.GoodTestData() {
 		t.Run((data), func(t *testing.T) {
-			if ok := modelTextSearch.ValidateInput(data); ok != nil {
+			if ok := modelTextSearch.Validate(data); ok != nil {
 				log.Fatalf("resultado [%v] [%v]", ok, data)
 			}
 		})
@@ -61,7 +61,7 @@ func Test_GoodInputTextSearch(t *testing.T) {
 func Test_WrongInputTextSearch(t *testing.T) {
 	for _, data := range modelTextSearch.WrongTestData() {
 		t.Run((data), func(t *testing.T) {
-			if ok := modelTextSearch.ValidateInput(data); ok == nil {
+			if ok := modelTextSearch.Validate(data); ok == nil {
 				log.Fatalf("resultado [%v] [%v]", ok, data)
 			}
 		})

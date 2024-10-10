@@ -5,9 +5,11 @@ import "fmt"
 // ej: options=m:male,f:female
 func Radio(params ...any) radio {
 	new := radio{
-		attributes: attributes{
-			htmlName: "radio",
-			Onchange: `onchange="RadioChange(this);"`,
+		input: input{
+			attributes: attributes{
+				htmlName: "radio",
+				Onchange: `onchange="RadioChange(this);"`,
+			},
 		},
 	}
 	new.Set(params)
@@ -22,12 +24,11 @@ func RadioGender(params ...any) radio {
 }
 
 type radio struct {
-	attributes
-	dataSource
+	input
 }
 
 // validación con datos de entrada
-func (r radio) ValidateInput(value string) error {
+func (r radio) Validate(value string) error {
 	return r.checkOptionKeys(value)
 }
 

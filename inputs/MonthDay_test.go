@@ -28,7 +28,7 @@ var (
 func Test_InputMonthDay(t *testing.T) {
 	for prueba, data := range dataMonthDay {
 		t.Run((prueba + data.inputData), func(t *testing.T) {
-			err := modelMonthDay.ValidateInput(data.inputData)
+			err := modelMonthDay.Validate(data.inputData)
 
 			var err_str string
 			if err != nil {
@@ -53,7 +53,7 @@ func Test_TagMonthDay(t *testing.T) {
 func Test_GoodInputMonthDay(t *testing.T) {
 	for _, data := range modelMonthDay.GoodTestData() {
 		t.Run((data), func(t *testing.T) {
-			if ok := modelMonthDay.ValidateInput(data); ok != nil {
+			if ok := modelMonthDay.Validate(data); ok != nil {
 				log.Fatalf("resultado [%v] [%v]", ok, data)
 			}
 		})
@@ -63,7 +63,7 @@ func Test_GoodInputMonthDay(t *testing.T) {
 func Test_WrongInputMonthDay(t *testing.T) {
 	for _, data := range modelMonthDay.WrongTestData() {
 		t.Run((data), func(t *testing.T) {
-			if ok := modelMonthDay.ValidateInput(data); ok == nil {
+			if ok := modelMonthDay.Validate(data); ok == nil {
 				log.Fatalf("resultado [%v] [%v]", ok, data)
 			}
 		})

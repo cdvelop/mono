@@ -11,15 +11,17 @@ import (
 func Number(params ...any) number {
 
 	new := number{
-		attributes: attributes{
-			htmlName: "number",
-			Title:    `title="solo valores numéricos positivos >= 0 máximo 20 char 18446744073709551615"`,
-			// Pattern: `^[0-9]{1,20}$`,
-		},
-		permitted: permitted{
-			Numbers: true,
-			Minimum: 1,
-			Maximum: 20,
+		input: input{
+			attributes: attributes{
+				htmlName: "number",
+				// Title:    `title="solo valores numéricos positivos >= 0 máximo 20 char 18446744073709551615"`,
+				// Pattern: `^[0-9]{1,20}`,
+			},
+			permitted: permitted{
+				Numbers: true,
+				Minimum: 1,
+				Maximum: 20,
+			},
 		},
 	}
 	new.Set(params)
@@ -36,8 +38,7 @@ func Number(params ...any) number {
 }
 
 type number struct {
-	attributes
-	permitted
+	input
 }
 
 // func (n number) FieldAddEventListener(fieldName string) string {

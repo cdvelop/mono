@@ -32,7 +32,7 @@ var (
 func Test_InputNumber(t *testing.T) {
 	for prueba, data := range dataNumber {
 		t.Run((prueba), func(t *testing.T) {
-			err := modelNumber.ValidateInput(data.inputData)
+			err := modelNumber.Validate(data.inputData)
 
 			var err_str string
 			if err != nil {
@@ -76,7 +76,7 @@ var (
 func Test_InputPhoneNumber(t *testing.T) {
 	for prueba, data := range dataPhoneNumber {
 		t.Run((prueba), func(t *testing.T) {
-			err := Phone().ValidateInput(data.inputData)
+			err := Phone().Validate(data.inputData)
 
 			var err_str string
 			if err != nil {
@@ -94,7 +94,7 @@ func Test_InputPhoneNumber(t *testing.T) {
 func Test_GoodInputPhoneNumber(t *testing.T) {
 	for _, data := range Phone().GoodTestData() {
 		t.Run((data), func(t *testing.T) {
-			if ok := Phone().ValidateInput(data); ok != nil {
+			if ok := Phone().Validate(data); ok != nil {
 				log.Fatalf("resultado [%v] [%v]", ok, data)
 			}
 		})
@@ -104,7 +104,7 @@ func Test_GoodInputPhoneNumber(t *testing.T) {
 func Test_GoodInputNumber(t *testing.T) {
 	for _, data := range modelNumber.GoodTestData() {
 		t.Run((data), func(t *testing.T) {
-			if ok := modelNumber.ValidateInput(data); ok != nil {
+			if ok := modelNumber.Validate(data); ok != nil {
 				log.Fatalf("resultado [%v] [%v]", ok, data)
 			}
 		})
@@ -114,7 +114,7 @@ func Test_GoodInputNumber(t *testing.T) {
 func Test_WrongInputNumber(t *testing.T) {
 	for _, data := range modelNumber.WrongTestData() {
 		t.Run((data), func(t *testing.T) {
-			if ok := modelNumber.ValidateInput(data); ok == nil {
+			if ok := modelNumber.Validate(data); ok == nil {
 				log.Fatalf("resultado [%v] [%v]", ok, data)
 			}
 		})

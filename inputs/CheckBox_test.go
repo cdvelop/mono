@@ -27,7 +27,7 @@ var (
 func Test_check(t *testing.T) {
 	for prueba, data := range datacheck {
 		t.Run((prueba + " " + data.inputData), func(t *testing.T) {
-			err := modelCheck.ValidateInput(data.inputData)
+			err := modelCheck.Validate(data.inputData)
 
 			var err_str string
 			if err != nil {

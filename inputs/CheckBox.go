@@ -5,8 +5,10 @@ import "strconv"
 // eg: options=1:Admin,2:Editor,3:Visitante
 func CheckBox(params ...any) check {
 	new := check{
-		attributes: attributes{
-			htmlName: "checkbox",
+		input: input{
+			attributes: attributes{
+				htmlName: "checkbox",
+			},
 		},
 	}
 	new.Set(params)
@@ -14,12 +16,11 @@ func CheckBox(params ...any) check {
 }
 
 type check struct {
-	attributes
-	dataSource
+	input
 	onlyInternalContend bool
 }
 
-func (c check) ValidateInput(value string) error {
+func (c check) Validate(value string) error {
 	return c.checkOptionKeys(value)
 }
 

@@ -3,16 +3,18 @@ package inputs
 // options: "hidden": campo oculto para el usuario
 func MonthDay(params ...any) monthDay {
 	new := monthDay{
-		attributes: attributes{
-			htmlName:   "text",
-			customName: "monthDay",
-			// Pattern: `^[0-9]{2,2}$`,
-		},
-		permitted: permitted{
-			Numbers:    true,
-			Characters: []rune{},
-			Minimum:    2,
-			Maximum:    2,
+		input: input{
+			attributes: attributes{
+				htmlName:   "text",
+				customName: "monthDay",
+				// Pattern:    `^[0-9]{2,2}$`,
+			},
+			permitted: permitted{
+				Numbers:    true,
+				Characters: []rune{},
+				Minimum:    2,
+				Maximum:    2,
+			},
 		},
 	}
 	new.Set(params)
@@ -22,8 +24,7 @@ func MonthDay(params ...any) monthDay {
 
 // formato fecha: DD-MM
 type monthDay struct {
-	attributes
-	permitted
+	input
 }
 
 func (m monthDay) GoodTestData() (out []string) {

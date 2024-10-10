@@ -1,29 +1,29 @@
 package inputs
 
 func TextSearch(params ...any) textSearch {
-
 	new := textSearch{
-		attributes: attributes{
-			htmlName:   "search",
-			customName: "textSearch",
-			// Pattern: `^[a-zA-ZÑñ0-9- ]{2,20}$`,
-		},
-		permitted: permitted{
-			Letters:    true,
-			Tilde:      false,
-			Numbers:    true,
-			Characters: []rune{'-', ' '},
-			Minimum:    2,
-			Maximum:    20,
+		input: input{
+			attributes: attributes{
+				htmlName:   "search",
+				customName: "textSearch",
+			},
+			permitted: permitted{
+				Letters:    true,
+				Tilde:      false,
+				Numbers:    true,
+				Characters: []rune{'-', ' '},
+				Minimum:    2,
+				Maximum:    20,
+			},
 		},
 	}
-	new.Set(&new.permitted, params)
+	new.Set(params)
 	return new
+
 }
 
 type textSearch struct {
-	attributes
-	permitted
+	input
 }
 
 func (s textSearch) GoodTestData() (out []string) {

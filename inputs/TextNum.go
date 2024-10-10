@@ -2,28 +2,29 @@ package inputs
 
 func TextNumber(params ...any) textNumber {
 	new := textNumber{
-		attributes: attributes{
-			htmlName:   "text",
-			customName: "textNumber",
-			// Pattern: `^[A-Za-z0-9_]{5,20}$`,
-		},
-		permitted: permitted{
-			Letters:    true,
-			Numbers:    true,
-			Characters: []rune{'_'},
-			Minimum:    5,
-			Maximum:    20,
+		input: input{
+			attributes: attributes{
+				htmlName:   "text",
+				customName: "textNumber",
+				// Pattern:    `^[A-Za-z0-9_]{5,20}`,
+			},
+			permitted: permitted{
+				Letters:    true,
+				Numbers:    true,
+				Characters: []rune{'_'},
+				Minimum:    5,
+				Maximum:    20,
+			},
 		},
 	}
-	new.Set(&new.permitted, params)
+	new.Set(params)
 
 	return new
 }
 
 // texto, numero y guion bajo 5 a 15 caracteres
 type textNumber struct {
-	attributes
-	permitted
+	input
 }
 
 func (t textNumber) GoodTestData() (out []string) {

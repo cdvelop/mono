@@ -6,17 +6,19 @@ import "errors"
 // options: min="08:00", max="17:00"
 func Hour(params ...any) hour {
 	new := hour{
-		attributes: attributes{
-			htmlName:   "time",
-			customName: "Hour",
-			Title:      `title="formato hora: HH:MM"`,
-			// Pattern: `^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$`,
-		},
-		per: permitted{
-			Numbers:    true,
-			Characters: []rune{':'},
-			Minimum:    5,
-			Maximum:    5,
+		input: input{
+			attributes: attributes{
+				htmlName:   "time",
+				customName: "Hour",
+				Title:      `title="formato hora: HH:MM"`,
+				// Pattern: `^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]`,
+			},
+			permitted: permitted{
+				Numbers:    true,
+				Characters: []rune{':'},
+				Minimum:    5,
+				Maximum:    5,
+			},
 		},
 	}
 	new.Set(params)
@@ -25,17 +27,16 @@ func Hour(params ...any) hour {
 }
 
 type hour struct {
-	attributes
-	per permitted
+	input
 }
 
-func (h hour) ValidateInput(value string) error {
+func (h hour) Validate(value string) error {
 
 	if len(value) >= 2 && value[0] == '2' && value[1] == '4' {
 		return errors.New("la hora 24 no existe")
 	}
 
-	return h.per.Validate(value)
+	return h.permitted.Validate(value)
 
 }
 

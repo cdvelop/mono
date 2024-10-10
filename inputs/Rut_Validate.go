@@ -7,7 +7,7 @@ import (
 )
 
 // validación con datos de entrada
-func (r rut) ValidateInput(value string) error {
+func (r rut) Validate(value string) error {
 
 	const hidden_err = "campo invalido"
 
@@ -29,7 +29,7 @@ func (r rut) ValidateInput(value string) error {
 
 	if r.dni_mode {
 		if !strings.Contains(value, `-`) {
-			err := r.dni.Validate(value)
+			err := r.permitted.Validate(value)
 			if err != nil && r.hideTyping {
 				return errors.New(hidden_err)
 			}

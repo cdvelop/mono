@@ -3,8 +3,10 @@ package inputs
 // eg: options=1:Admin,2:Editor,3:Visitante
 func List(params ...any) list {
 	new := list{
-		attributes: attributes{
-			htmlName: "ol",
+		input: input{
+			attributes: attributes{
+				htmlName: "ol",
+			},
 		},
 	}
 	new.Set(params)
@@ -13,11 +15,10 @@ func List(params ...any) list {
 }
 
 type list struct {
-	attributes
-	dataSource
+	input
 }
 
-func (d list) ValidateInput(value string) error {
+func (d list) Validate(value string) error {
 	return nil
 }
 

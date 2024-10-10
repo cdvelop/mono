@@ -2,9 +2,7 @@ package inputs
 
 import (
 	"errors"
-	"fmt"
 	"strconv"
-	"strings"
 )
 
 type permitted struct {
@@ -140,46 +138,6 @@ var valid_number = map[rune]bool{
 	'0': true, '1': true, '2': true, '3': true, '4': true, '5': true, '6': true, '7': true, '8': true, '9': true,
 }
 
-func (p permitted) ValidateInput(value string) error {
-	return p.Validate(value)
-}
-
-// Método para generar dinámicamente el título
-func (p *permitted) setDynamicTitle(attr *attributes) {
-	var parts []string
-	parts = append(parts, "texto")
-
-	// Lógica de validación para letras
-	if p.Letters {
-		parts = append(parts, "letras")
-	}
-
-	// Lógica de validación para números
-	if p.Numbers {
-		parts = append(parts, "números")
-	}
-
-	// Lógica de validación para caracteres permitidos
-	if len(p.Characters) > 0 {
-		var chars []string
-		for _, char := range p.Characters {
-			if char == ' ' {
-				chars = append(chars, "␣") // Reemplaza el espacio con el carácter visible '␣'
-			} else {
-				chars = append(chars, string(char))
-			}
-		}
-		parts = append(parts, fmt.Sprintf("caracteres permitidos: %v ", strings.Join(chars, " ")))
-	}
-
-	if p.Minimum != 0 {
-		parts = append(parts, fmt.Sprintf("min. %d", p.Minimum))
-	}
-
-	if p.Maximum != 0 {
-		parts = append(parts, fmt.Sprintf("max. %d", p.Maximum))
-	}
-
-	// Generar el valor final para el atributo Title
-	attr.Title = strings.Join(parts, " ")
+func (p permitted) MinMaxAllowedChars() (min, max int) {
+	return p.Minimum, p.Maximum
 }

@@ -33,7 +33,7 @@ func Test_TagSelect(t *testing.T) {
 func Test_Select(t *testing.T) {
 	for prueba, data := range dataSelect {
 		t.Run((prueba + " " + data.inputData), func(t *testing.T) {
-			err := modelSelect.ValidateInput(data.inputData)
+			err := modelSelect.Validate(data.inputData)
 
 			var err_str string
 			if err != nil {
@@ -50,7 +50,7 @@ func Test_Select(t *testing.T) {
 func Test_GoodInputSelect(t *testing.T) {
 	for _, data := range modelSelect.GoodTestData() {
 		t.Run((data), func(t *testing.T) {
-			if ok := modelSelect.ValidateInput(data); ok != nil {
+			if ok := modelSelect.Validate(data); ok != nil {
 				log.Fatalf("resultado [%v] [%v]", ok, data)
 			}
 		})
@@ -60,7 +60,7 @@ func Test_GoodInputSelect(t *testing.T) {
 func Test_WrongInputSelect(t *testing.T) {
 	for _, data := range modelSelect.WrongTestData() {
 		t.Run((data), func(t *testing.T) {
-			if ok := modelSelect.ValidateInput(data); ok == nil {
+			if ok := modelSelect.Validate(data); ok == nil {
 				log.Fatalf("resultado [%v] [%v]", ok, data)
 			}
 		})

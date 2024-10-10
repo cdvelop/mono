@@ -34,7 +34,7 @@ func Test_InputPrimaryKey(t *testing.T) {
 
 	for prueba, data := range idTestData {
 		t.Run((prueba + ": " + data.inputData), func(t *testing.T) {
-			err := data.input.ValidateInput(data.inputData)
+			err := data.input.Validate(data.inputData)
 			var resp string
 			if err != nil {
 				resp = err.Error()

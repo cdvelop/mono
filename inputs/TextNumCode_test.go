@@ -36,7 +36,7 @@ var (
 func Test_InputTextNumCode(t *testing.T) {
 	for prueba, data := range dataTextNumCode {
 		t.Run((prueba + data.inputData), func(t *testing.T) {
-			err := modelTextNumCode.ValidateInput(data.inputData)
+			err := modelTextNumCode.Validate(data.inputData)
 
 			var err_str string
 			if err != nil {
@@ -60,7 +60,7 @@ func Test_TagTextNumCode(t *testing.T) {
 func Test_GoodInputTextNumCode(t *testing.T) {
 	for _, data := range modelTextNumCode.GoodTestData() {
 		t.Run((data), func(t *testing.T) {
-			if ok := modelTextNumCode.ValidateInput(data); ok != nil {
+			if ok := modelTextNumCode.Validate(data); ok != nil {
 				log.Fatalf("resultado [%v] [%v]", ok, data)
 			}
 		})
@@ -70,7 +70,7 @@ func Test_GoodInputTextNumCode(t *testing.T) {
 func Test_WrongInputTextNumCode(t *testing.T) {
 	for _, data := range modelTextNumCode.WrongTestData() {
 		t.Run((data), func(t *testing.T) {
-			if ok := modelTextNumCode.ValidateInput(data); ok == nil {
+			if ok := modelTextNumCode.Validate(data); ok == nil {
 				log.Fatalf("resultado [%v] [%v]", ok, data)
 			}
 		})

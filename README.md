@@ -27,7 +27,7 @@ es un proyecto grande si, llevo trabando en el desde el 2020 pero con librerías
 - [ ] Validación en el lado del servidor (Go)
 
 ### base de datos
-solo se trabajara con almacenamiento del tipo texto que es el que todas las base de datos soportan, por ende la validación de datos se hará en el lado del servidor y el front con go + webAssembly. asi se evita configuraciones interminables en las estructuras de datos.
+solo se trabajara con almacenamiento del tipo texto  que es el que todas las base de datos soportan, por ende la validación de datos se hará en el lado del servidor y el front con go + webAssembly. asi se evita configuraciones interminables en las estructuras de datos.
 
 ### json
 - [ ] Generación de json
@@ -58,7 +58,7 @@ type Person struct {
 ```go
 type input interface {
 	BuildHtmlInput(id string) string
-	ValidateInput(value string) error
+	Validate(value string) error
 }
 type Person struct {
 	Name string `Legend:"Nombre" Input:"NewInputText()"`

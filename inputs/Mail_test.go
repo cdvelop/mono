@@ -28,7 +28,7 @@ func Test_TagMail(t *testing.T) {
 func Test_InputMail(t *testing.T) {
 	for prueba, data := range dataMail {
 		t.Run((prueba + data.inputData), func(t *testing.T) {
-			err := modelMail.ValidateInput(data.inputData)
+			err := modelMail.Validate(data.inputData)
 
 			var err_str string
 			if err != nil {
@@ -46,7 +46,7 @@ func Test_InputMail(t *testing.T) {
 func Test_GoodInputMail(t *testing.T) {
 	for _, data := range modelMail.GoodTestData() {
 		t.Run((data), func(t *testing.T) {
-			if ok := modelMail.ValidateInput(data); ok != nil {
+			if ok := modelMail.Validate(data); ok != nil {
 				log.Fatalf("resultado [%v] [%v]", ok, data)
 			}
 		})
@@ -56,7 +56,7 @@ func Test_GoodInputMail(t *testing.T) {
 func Test_WrongInputMail(t *testing.T) {
 	for _, data := range modelMail.WrongTestData() {
 		t.Run((data), func(t *testing.T) {
-			if ok := modelMail.ValidateInput(data); ok == nil {
+			if ok := modelMail.Validate(data); ok == nil {
 				log.Fatalf("resultado [%v] [%v]", ok, data)
 			}
 		})

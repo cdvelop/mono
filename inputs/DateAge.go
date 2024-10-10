@@ -4,13 +4,15 @@ package inputs
 // options: `title="xxx"`
 func DateAge(params ...any) dateAge {
 	new := dateAge{
-		attributes: attributes{
-			htmlName:   "date",
-			customName: "DateAge",
-			Title:      `title="formato fecha: DD-MM-YYYY"`,
-			// Pattern: `[0-9]{4}-(0[1-9]|1[012])-(0[1-9]|1[0-9]|2[0-9]|3[01])`,
-			// Onkeyup:  `onkeyup="DateAgeChange(this)"`,
-			Onchange: `onchange="DateAgeChange(this)"`,
+		input: input{
+			attributes: attributes{
+				htmlName:   "date",
+				customName: "DateAge",
+				Title:      `title="formato fecha: DD-MM-YYYY"`,
+				// Pattern: `[0-9]{4}-(0[1-9]|1[012])-(0[1-9]|1[0-9]|2[0-9]|3[01])`,
+				// Onkeyup:  `onkeyup="DateAgeChange(this)"`,
+				Onchange: `onchange="DateAgeChange(this)"`,
+			},
 		},
 		day: Date(),
 	}
@@ -20,7 +22,7 @@ func DateAge(params ...any) dateAge {
 }
 
 type dateAge struct {
-	attributes
+	input
 	day date
 }
 
@@ -37,7 +39,7 @@ func (d dateAge) BuildHtmlInput(id string) string {
 	return tag
 }
 
-func (d dateAge) ValidateInput(value string) error { //en realidad es YYYY-MM-DD
+func (d dateAge) Validate(value string) error { //en realidad es YYYY-MM-DD
 	return d.day.CheckDateExists(value)
 }
 

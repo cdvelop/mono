@@ -25,7 +25,7 @@ var (
 func Test_InputHour(t *testing.T) {
 	for prueba, data := range dataHour {
 		t.Run((prueba + " " + data.inputData), func(t *testing.T) {
-			err := modelHour.ValidateInput(data.inputData)
+			err := modelHour.Validate(data.inputData)
 
 			var err_str string
 			if err != nil {
@@ -50,7 +50,7 @@ func Test_TagHour(t *testing.T) {
 func Test_GoodInputHour(t *testing.T) {
 	for _, data := range modelHour.GoodTestData() {
 		t.Run((data), func(t *testing.T) {
-			if ok := modelHour.ValidateInput(data); ok != nil {
+			if ok := modelHour.Validate(data); ok != nil {
 				log.Fatalf("resultado [%v] [%v]", ok, data)
 			}
 		})
@@ -60,7 +60,7 @@ func Test_GoodInputHour(t *testing.T) {
 func Test_WrongInputHour(t *testing.T) {
 	for _, data := range modelHour.WrongTestData() {
 		t.Run((data), func(t *testing.T) {
-			if ok := modelHour.ValidateInput(data); ok == nil {
+			if ok := modelHour.Validate(data); ok == nil {
 				log.Fatalf("resultado [%v] [%v]", ok, data)
 			}
 		})

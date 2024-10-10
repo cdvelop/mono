@@ -30,35 +30,6 @@ func TestSnakeCase(t *testing.T) {
 	}
 }
 
-func compareFieldsInStructOLD(expected, got reflect.Value) error {
-	t := expected.Type()
-
-	for i := 0; i < expected.NumField(); i++ {
-		field1 := expected.Field(i)
-		field2 := got.Field(i)
-		fieldName := t.Field(i).Name
-
-		if field1.Kind() == reflect.Slice {
-			if field1.Len() != field2.Len() {
-				return fmt.Errorf("%s: slice lengths differ. Expected %d, got %d", fieldName, field1.Len(), field2.Len())
-			}
-
-			for j := 0; j < field1.Len(); j++ {
-				if err := compareValues(field1.Index(j), field2.Index(j), fmt.Sprintf("%s[%d]", fieldName, j)); err != nil {
-					return err
-				}
-			}
-
-		} else {
-			if err := compareValues(field1, field2, fieldName); err != nil {
-				return err
-			}
-		}
-	}
-
-	return nil
-}
-
 func compareFieldsInStruct(expected, got reflect.Value) error {
 	t := expected.Type()
 

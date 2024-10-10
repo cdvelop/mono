@@ -4,25 +4,26 @@ package inputs
 // "hidden" si se vera oculto o no.
 func TextOnly(params ...any) textOnly {
 	new := textOnly{
-		attributes: attributes{
-			htmlName:   "text",
-			customName: "textOnly",
-		},
-		permitted: permitted{
-			Letters:    true,
-			Minimum:    3,
-			Maximum:    50,
-			Characters: []rune{' '},
+		input: input{
+			attributes: attributes{
+				htmlName:   "text",
+				customName: "textOnly",
+			},
+			permitted: permitted{
+				Letters:    true,
+				Minimum:    3,
+				Maximum:    50,
+				Characters: []rune{' '},
+			},
 		},
 	}
-	new.Set(&new.permitted, params)
+	new.Set(params)
 
 	return new
 }
 
 type textOnly struct {
-	attributes
-	permitted
+	input
 }
 
 func (t textOnly) GoodTestData() (out []string) {

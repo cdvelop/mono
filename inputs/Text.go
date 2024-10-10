@@ -4,28 +4,28 @@ import "strings"
 
 func Text(params ...any) text {
 	new := text{
-		attributes: attributes{
-			htmlName: "text",
-			// Pattern: `^[a-zA-ZÑñ]{2,100}[a-zA-ZÑñ0-9()., ]*$`,
-		},
-		permitted: permitted{
-			Letters:    true,
-			Tilde:      false,
-			Numbers:    true,
-			Characters: []rune{' ', '.', ',', '(', ')'},
-			Minimum:    2,
-			Maximum:    100,
+		input: input{
+			attributes: attributes{
+				htmlName: "text",
+			},
+			permitted: permitted{
+				Letters:    true,
+				Tilde:      false,
+				Numbers:    true,
+				Characters: []rune{' ', '.', ',', '(', ')'},
+				Minimum:    2,
+				Maximum:    100,
+			},
 		},
 	}
-	new.Set(&new.permitted, params)
+	new.Set(params)
 
 	return new
 }
 
 // texto,punto,coma, paréntesis o números permitidos
 type text struct {
-	attributes
-	permitted
+	input
 }
 
 // options: first_name,last_name, phrase

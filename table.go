@@ -12,7 +12,7 @@ const (
 
 type FieldType string
 
-func (t entity) GenerateSQL() string {
+func (t entity) CreateTableSQL() string {
 	var sb strings.Builder
 	sb.WriteString(fmt.Sprintf("CREATE TABLE IF NOT EXISTS %s (\n", t.TableName))
 

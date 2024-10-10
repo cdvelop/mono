@@ -34,7 +34,7 @@ var (
 func Test_InputRut(t *testing.T) {
 	for prueba, data := range dataRut {
 		t.Run((prueba), func(t *testing.T) {
-			err := modelRut.ValidateInput(data.inputData)
+			err := modelRut.Validate(data.inputData)
 
 			var err_str string
 			if err != nil {
@@ -65,7 +65,7 @@ func Test_RutDigito(t *testing.T) {
 func Test_GoodInputRut(t *testing.T) {
 	for _, data := range modelRut.GoodTestData() {
 		t.Run((data), func(t *testing.T) {
-			if ok := modelRut.ValidateInput(data); ok != nil {
+			if ok := modelRut.Validate(data); ok != nil {
 				log.Fatalf("resultado [%v] [%v]", ok, data)
 			}
 		})
@@ -75,7 +75,7 @@ func Test_GoodInputRut(t *testing.T) {
 func Test_WrongInputRut(t *testing.T) {
 	for _, data := range modelRut.WrongTestData() {
 		t.Run((data), func(t *testing.T) {
-			if ok := modelRut.ValidateInput(data); ok == nil {
+			if ok := modelRut.Validate(data); ok == nil {
 				log.Fatalf("resultado [%v] [%v]", ok, data)
 			}
 		})
