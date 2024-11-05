@@ -7,7 +7,7 @@ label.date-spanish {
 label.date-spanish::before {
     text-transform: capitalize;
     content: attr(data-spanish);
-    color: var(--col-cua);
+    color: var(--color-quaternary);
     position: relative;
     top: 10px;
     /* margin-top: auto; */

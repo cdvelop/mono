@@ -14,8 +14,11 @@ type entity struct {
 	// Legend        string // e.g.: Person, User, Product
 	IsTable   bool
 	TableName string //table name db ej: user, product
-	Fields    []field
+	// ParentStruct any
+	Fields []field
 	// StructHandler *structHandler
+
+	HtmlForm string //html form
 }
 
 func CreateEntityFromStruct(structIN ...any) []entity {
@@ -26,7 +29,7 @@ func CreateEntityFromStruct(structIN ...any) []entity {
 	return entities
 }
 
-func processStruct(t reflect.Type, entities *[]entity, parentField *field) {
+func processStruct(t reflect.Type, entities *[]entity, foreignField *field) {
 
 	if t.Kind() == reflect.Ptr {
 		t = t.Elem()
@@ -36,17 +39,18 @@ func processStruct(t reflect.Type, entities *[]entity, parentField *field) {
 		Name:      strings.ToLower(t.String()), // the package name + "." + structure name e.g.: attention.person
 		TableName: snakeCase(t.Name()),
 		Fields:    []field{},
+		// ParentStruct: parentStruct,
 	}
 
 	fmt.Println("processing struct:", t.Name())
 
 	for i := 0; i < t.NumField(); i++ {
-		rsField := t.Field(i)
-
 		// skip if it starts with lowercase
 		if !unicode.IsUpper([]rune(t.Field(i).Name)[0]) {
 			continue
 		}
+
+		rsField := t.Field(i)
 
 		newField := field{
 			Index:  uint32(len(e.Fields)),
@@ -58,7 +62,7 @@ func processStruct(t reflect.Type, entities *[]entity, parentField *field) {
 
 		newField.setDataBaseParams()
 
-		newField.setInput(&rsField)
+		var structureFrom reflect.Type
 
 		// skip unsupported fields
 		switch rsField.Type.Kind() {
@@ -74,12 +78,14 @@ func processStruct(t reflect.Type, entities *[]entity, parentField *field) {
 		case reflect.Slice:
 			// Handle one-to-many relationship
 			if rsField.Type.Elem().Kind() == reflect.Struct {
+				structureFrom = rsField.Type.Elem()
 				processStruct(rsField.Type.Elem(), entities, &newField)
 				// continue // Skip adding this field to the current table
 			}
 
 		case reflect.Struct:
 			// Handle one-to-many relationship
+			structureFrom = rsField.Type.Elem()
 			processStruct(rsField.Type, entities, &newField)
 			// continue // Skip adding this field to the current table
 
@@ -89,22 +95,24 @@ func processStruct(t reflect.Type, entities *[]entity, parentField *field) {
 
 		}
 
+		newField.setInput(structureFrom, &rsField)
+
 		e.Fields = append(e.Fields, newField)
 
 	}
 
 	// Add foreign key for one-to-many relationship
-	if parentField != nil {
+	if foreignField != nil {
 
-		fmt.Println("parentField:", parentField.Parent.TableName)
+		fmt.Println("foreignField:", foreignField.Parent.TableName)
 
 		e.Fields = append(e.Fields, field{
 			Index:      uint32(len(e.Fields)),
-			Name:       prefixNameID + parentField.Parent.TableName,
+			Name:       prefixNameID + foreignField.Parent.TableName,
 			Legend:     "Id",
 			PrimaryKey: false,
 			NotNull:    true,
-			ForeignKey: parentField.Parent,
+			ForeignKey: foreignField.Parent,
 			Input:      inputs.ID(),
 			Parent:     &e,
 		})

@@ -6,7 +6,7 @@
 
 .age-number:after,
 .age-date::before {
-    color: var(--col-ter);
+    color: var(--color-tertiary);
     /* font-size: 70%; */
     font-size: .8rem;
 }

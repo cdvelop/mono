@@ -3,6 +3,7 @@ package inputs
 import (
 	"errors"
 	"reflect"
+	"strconv"
 	"strings"
 	"unicode"
 )
@@ -10,10 +11,12 @@ import (
 type attributes struct {
 	allowSkipCompleted bool //permite que el campo no sea completado
 
-	Type     string // ej : text, password, email
+	Type     string // eg : text, password, email
 	htmlName string //eg input,select,textarea
-	Id       string // id="123"
 	Name     string //eg address,phone
+	Id       string
+	entity   string //eg: user, product, order
+	legend   string
 
 	PlaceHolder string
 	Title       string //info
@@ -63,7 +66,7 @@ func extractValue(option, delete string) string {
 	return out
 }
 
-func (h input) Render(id string) (result string) {
+func (h *input) Render(tabIndex int) (result string) {
 	var open = `<input`
 	var close = `>`
 	h.Type = h.htmlName
@@ -74,7 +77,7 @@ func (h input) Render(id string) (result string) {
 		h.Type = ""
 	}
 
-	h.Id = id
+	h.Id = h.inputIdTemplate()
 
 	h.DataSet = append(h.DataSet, map[string]string{
 		"name": h.customName,
@@ -119,7 +122,36 @@ func (h input) Render(id string) (result string) {
 
 	result += close
 
-	return result
+	return h.InputLayout(result, tabIndex)
+}
+
+func (h input) InputLayout(inputHtml string, tabindex int) string {
+
+	st_index := strconv.Itoa(tabindex)
+
+	return `<fieldset data-name="` + h.Name + `" tabindex="` + st_index + `"` + h.getClassNames() + ` onclick="internalFocus(this)">
+	<legend class="basic-legend"><label for="` + h.Id + `">` + h.legend + `</label></legend>
+	` + inputHtml + `
+    </fieldset>`
+}
+
+// getClassNames retorna los nombres de múltiples clases concatenados para HTML
+func (h input) getClassNames() string {
+	var names []string
+	for _, class := range h.cssClasses {
+		if class != nil {
+			names = append(names, class.GetClassName())
+		}
+	}
+
+	if len(names) == 0 {
+		return ""
+	}
+	return ` class="` + strings.Join(names, " ") + `"`
+}
+
+func (h input) inputIdTemplate() string {
+	return h.entity + `.` + h.Name
 }
 
 func htmlAttribute(out *string, key, value string) {

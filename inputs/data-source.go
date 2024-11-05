@@ -1,13 +1,16 @@
 package inputs
 
-import "fmt"
+import (
+	"fmt"
+)
 
-// type dataSource interface {
-// 	DataSource() any
-// }
+type sourceData interface {
+	DataSource() any
+}
 
 type dataSource struct {
 	// 	DataSource() []map[string]string
+	data sourceData
 }
 
 func (d dataSource) DataSource() {

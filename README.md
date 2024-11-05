@@ -67,6 +67,8 @@ type Person struct {
 func (p *Person) Inputs() []input {
 	return p.myInputs
 }
+
+
 ```
  un crear uno nuevo y agregarlo a la librería.
 
@@ -90,7 +92,7 @@ func (p *Person) Inputs() []input {
 - numbers (números permitidos) ej: `Input:"Text(numbers)"`
 - chars (caracteres permitidos) ej : `Input:"Text(chars=':','-','+',' ')"`
 
-* para combinar separar con ; ej: `Input:"Text(data=price:100;!required letters;numbers;char=:)"`
+* para combinar separar con ; ej: `Input:"Text(data=price:100;!required letters;numbers)"`
 
 ## Participar
 si quieres participar en el proyecto puedes contactarme con un mensaje privado 

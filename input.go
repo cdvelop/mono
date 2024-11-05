@@ -9,31 +9,36 @@ import (
 )
 
 type input interface {
-	Render(id string) string
-	MinMaxAllowedChars() (min, max int)
+	Render(tabIndex int) string
 	Validate(value string) error
 }
 
-func (f *field) setInput(rf *reflect.StructField) {
+func (f *field) setInput(structureFrom reflect.Type, rf *reflect.StructField) {
+
+	var params []any
+
+	if structureFrom != nil {
+		params = append(params, structureFrom)
+	}
 
 	inputData := rf.Tag.Get("Input")
 	if inputData == "" {
 		return
 	}
+	params = append(params, getParams(inputData))
 
 	inputType := strings.Split(inputData, "(")[0]
 	if inputType == "" {
 		return
 	}
 	// fmt.Println("field name:", f.Name)
-
-	// fmt.Println("inputType", inputType)
-	var params []any
-	params = append(params, getParams(inputData))
-
 	params = append(params, `name=`+f.Name)
+	params = append(params, `entity=`+f.Parent.Name)
+	params = append(params, `legend=`+f.Legend)
 
 	fmt.Println("setInput params:", params)
+	// fmt.Println("inputType", inputType)
+
 	switch inputType {
 	case "Checkbox":
 		f.Input = inputs.CheckBox(params...)

@@ -2,19 +2,33 @@ package inputs
 
 import (
 	"fmt"
+	"reflect"
 	"strings"
+
+	"github.com/cdvelop/godi/css"
 )
 
 type input struct {
 	attributes
 	permitted
 	dataSource
+	fieldset
+}
+
+type fieldset struct {
+	cssClasses []*css.Class
+}
+
+type container struct {
+	cssClasses []*css.Class
 }
 
 func (h *input) Set(params ...any) {
 	if h.customName == "" {
 		h.customName = h.htmlName
 	}
+
+	// h.searchDataSourceImplementation(params...)
 
 	options := h.separateOptions(params...)
 
@@ -48,8 +62,14 @@ func (h *input) Set(params ...any) {
 		case strings.Contains(option, "class="):
 			h.Class = append(h.Class, extractValue(option, "class"))
 
+		case strings.Contains(option, "entity="):
+			h.entity = extractValue(option, "entity")
+
 		case strings.Contains(option, "name="):
 			h.Name = extractValue(option, "name")
+
+		case strings.Contains(option, "legend="):
+			h.legend = extractValue(option, "legend")
 
 		case strings.Contains(option, "min="):
 			h.Min = extractValue(option, "min")
@@ -151,28 +171,45 @@ func (h *input) setDynamicTitle() {
 
 func (h *input) separateOptions(params ...any) (options []string) {
 	for _, param := range params {
-		options = h.processParam(param, options)
+		h.processParam(param, &options)
 	}
 	return
 }
 
-func (h *input) processParam(param any, options []string) []string {
+func (h *input) processParam(param any, options *[]string) {
 	switch v := param.(type) {
 	case string:
-		options = append(options, splitAndTrimOptions(v)...)
+		*options = append(*options, splitAndTrimOptions(v)...)
 	case []string:
 		for _, s := range v {
-			options = append(options, splitAndTrimOptions(s)...)
+			*options = append(*options, splitAndTrimOptions(s)...)
 		}
 
 	case []any:
 		for _, item := range v {
-			options = h.processParam(item, options)
+			h.processParam(item, options)
 		}
+
+	default:
+		h.handleUnknownType(param)
 	}
-	return options
 }
 
+func (h *input) handleUnknownType(param any) {
+	if t, ok := param.(reflect.Type); ok {
+		fmt.Println("*Tipo de reflect.Type:", t.Name())
+
+		// Param is of type reflect.Type
+		if sd, ok := reflect.New(t).Interface().(sourceData); ok {
+			fmt.Printf("El tipo %s implementa la interfaz sourceData\n", t.Name())
+			h.data = sd
+		}
+
+		return
+	}
+	// Handle other unknown types or add default behavior
+
+}
 func splitAndTrimOptions(opt string) []string {
 	var result []string
 	if strings.Contains(opt, ";") {

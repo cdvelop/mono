@@ -1,24 +1,31 @@
 {
 	"folders": [
 		{
-			"name": "object",
-			"path": "../object"
-		},
-		{
-			"name": "godi",
 			"path": "."
 		},
 		{
-			"name": "model",
-			"path": "../model"
-		},
-		{
-			"name": "unixid",
 			"path": "../unixid"
 		},
 		{
-			"path": "../../../Notes/Go"
+			"path": "../objectdb"
+		},
+		{
+			"path": "../object"
+		},
+		{
+			"path": "../model"
+		},
+		{
+			"path": "../formclient"
+		},
+		{
+			"path": "../platform"
+		},
+		{
+			"path": "../../../Code/html/clinic-demo"
 		}
 	],
-	"settings": {}
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "clinic-demo"
+	}
 }
