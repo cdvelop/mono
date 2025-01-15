@@ -1,7 +1,7 @@
 package inputs
 
-func TextSearch(params ...any) textSearch {
-	new := textSearch{
+func TextSearch(params ...any) *textSearch {
+	new := &textSearch{
 		input: input{
 			attributes: attributes{
 				htmlName:   "search",

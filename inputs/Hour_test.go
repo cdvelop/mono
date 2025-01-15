@@ -41,7 +41,7 @@ func Test_InputHour(t *testing.T) {
 }
 
 func Test_TagHour(t *testing.T) {
-	tag := modelHour.Render("1")
+	tag := modelHour.Render(1)
 	if tag == "" {
 		log.Fatalln("ERROR NO TAG RENDERING ")
 	}

@@ -8,7 +8,7 @@ import (
 
 var (
 	idTestData = map[string]struct {
-		input     id
+		input     *id
 		inputData string
 		expected  string
 	}{
@@ -49,7 +49,8 @@ func Test_InputPrimaryKey(t *testing.T) {
 }
 
 func Test_TagPrimaryKey(t *testing.T) {
-	tag := ID().Render("1")
+
+	tag := ID().Render(1)
 	if tag == "" {
 		log.Fatalln("ERROR NO TAG RENDERING ")
 	}

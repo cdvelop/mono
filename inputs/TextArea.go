@@ -4,8 +4,8 @@ package inputs
 // title="permitido letras números - , :"
 // cols="2" default 1
 // rows="8" default 3
-func TextArea(params ...any) textArea {
-	new := textArea{
+func TextArea(params ...any) *textArea {
+	new := &textArea{
 		input: input{
 			attributes: attributes{
 				Rows: `rows="3"`,

@@ -34,7 +34,7 @@ var (
 )
 
 func Test_TagTextOnly(t *testing.T) {
-	tag := modelTextOnly.Render("1")
+	tag := modelTextOnly.Render(1)
 	if tag == "" {
 		log.Fatalln("ERROR NO TAG RENDERING ")
 	}

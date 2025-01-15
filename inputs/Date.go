@@ -1,7 +1,7 @@
 package inputs
 
-func Date(params ...any) date {
-	new := date{
+func Date(params ...any) *date {
+	new := &date{
 		input: input{
 			attributes: attributes{
 				htmlName: "date",

@@ -8,8 +8,8 @@ type rut struct {
 
 // typing="hide" ocultar información  al escribir
 // dni-mode: acepta otro documentos
-func Rut(params ...any) rut {
-	new := rut{
+func Rut(params ...any) *rut {
+	new := &rut{
 		input: input{
 			attributes: attributes{
 				htmlName:     "text",
@@ -55,18 +55,18 @@ func Rut(params ...any) rut {
 	return new
 }
 
-func Dni(params ...any) rut {
+func Dni(params ...any) *rut {
 	options := "dni-mode"
 	return Rut(options)
 }
 
-func (r rut) Render(id string) string {
+func (r rut) Render(tabIndex int) string {
 
 	if r.dni_mode {
 
 		tag := `<div class="run-type">`
 
-		tag += r.input.Render(id)
+		tag += r.input.Render(tabIndex)
 
 		tag += `<div class="rut-label-container"><label class="rut-radio-label">
 			<input type="radio" name="type-dni" data-name="dni-ch" value="ch" checked="checked" onchange="changeDniType(this)">
@@ -83,6 +83,6 @@ func (r rut) Render(id string) string {
 		return tag
 
 	} else {
-		return r.input.Render(id)
+		return r.input.Render(tabIndex)
 	}
 }

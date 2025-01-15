@@ -6,8 +6,8 @@ import (
 )
 
 // dirección ip valida campos separados por puntos
-func Ip(params ...any) ip {
-	new := ip{
+func Ip(params ...any) *ip {
+	new := &ip{
 		input: input{
 			attributes: attributes{
 				htmlName:   "text",

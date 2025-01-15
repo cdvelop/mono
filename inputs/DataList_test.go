@@ -43,7 +43,7 @@ func Test_DataList(t *testing.T) {
 }
 
 func Test_TagDataList(t *testing.T) {
-	tag := modelDataList.Render("1")
+	tag := modelDataList.Render(1)
 	if tag == "" {
 		log.Fatalln("ERROR NO TAG RENDERING ")
 	}

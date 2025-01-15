@@ -27,7 +27,7 @@ func (radio) SourceData() map[string]string {
 }
 
 func Test_TagRadio(t *testing.T) {
-	tag := modelRadio.Render("1")
+	tag := modelRadio.Render(1)
 	if tag == "" {
 		log.Fatalln("ERROR NO TAG RENDERING ")
 	}

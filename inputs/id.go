@@ -1,7 +1,7 @@
 package inputs
 
-func ID(params ...any) id {
-	new := id{
+func ID(params ...any) *id {
+	new := &id{
 		input: input{
 			attributes: attributes{
 				htmlName:   "hidden",

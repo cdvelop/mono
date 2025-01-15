@@ -1,8 +1,8 @@
 package inputs
 
 //value="valor a mostrar"
-func Info(params ...any) info {
-	new := info{
+func Info(params ...any) *info {
+	new := &info{
 		input: input{
 			attributes: attributes{
 				htmlName:   "text",
@@ -18,7 +18,7 @@ type info struct {
 	input
 }
 
-func (i info) Render(id string) string {
+func (i info) Render(tabIndex int) string {
 	return i.Value
 }
 

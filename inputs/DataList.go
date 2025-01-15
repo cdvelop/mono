@@ -1,8 +1,10 @@
 package inputs
 
+import "strconv"
+
 // eg: options=1:Admin,2:Editor,3:Visitante
-func DataList(params ...any) datalist {
-	new := datalist{
+func DataList(params ...any) *datalist {
+	new := &datalist{
 		input: input{
 			attributes: attributes{
 				htmlName: "datalist",
@@ -22,14 +24,14 @@ func (d datalist) Validate(value string) error {
 	return d.checkOptionKeys(value)
 }
 
-func (d datalist) Render(id string) string {
+func (d datalist) Render(tabIndex int) string {
 	var req string
 	if !d.allowSkipCompleted {
 		req = ` required`
 	}
 
-	tag := `<input list="` + d.Name + `" name="` + d.Name + `" id="` + id + `"` + req + `>`
-	tag += `<datalist id="` + id + `">`
+	tag := `<input list="` + d.Name + `" name="` + d.Name + `" id="` + d.Name + `"` + req + `>`
+	tag += `<datalist id="` + d.Name + strconv.Itoa(tabIndex) + `">`
 	tag += d.GetAllTagOption()
 	tag += `</datalist>`
 

@@ -1,8 +1,8 @@
 package inputs
 
 // eg: options=1:Admin,2:Editor,3:Visitante
-func List(params ...any) list {
-	new := list{
+func List(params ...any) *list {
+	new := &list{
 		input: input{
 			attributes: attributes{
 				htmlName: "ol",
@@ -22,7 +22,7 @@ func (d list) Validate(value string) error {
 	return nil
 }
 
-func (d list) Render(id string) string {
+func (d list) Render(tabIndex int) string {
 
 	tag := `<ol>`
 	tag += d.getAll()

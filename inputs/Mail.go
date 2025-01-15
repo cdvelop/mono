@@ -5,8 +5,8 @@ import (
 	"strings"
 )
 
-func Mail(params ...any) mail {
-	new := mail{
+func Mail(params ...any) *mail {
+	new := &mail{
 		input: input{
 			attributes: attributes{
 				htmlName:    "mail",

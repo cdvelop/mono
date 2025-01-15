@@ -2,8 +2,8 @@ package inputs
 
 // formato fecha: DD-MM-YYYY
 // options: `title="xxx"`
-func DateAge(params ...any) dateAge {
-	new := dateAge{
+func DateAge(params ...any) *dateAge {
+	new := &dateAge{
 		input: input{
 			attributes: attributes{
 				htmlName:   "date",
@@ -23,16 +23,16 @@ func DateAge(params ...any) dateAge {
 
 type dateAge struct {
 	input
-	day date
+	day *date
 }
 
-func (d dateAge) Render(id string) string {
+func (d dateAge) Render(tabIndex int) string {
 
 	tag := `<label class="age-number"><input data-name="age-number" type="number" min="0" max="150" oninput="AgeInputChange(this)" title="Campo Informativo"></label>`
 
 	tag += `<label class="age-date">`
 
-	tag += d.input.Render(id)
+	tag += d.input.Render(tabIndex)
 
 	tag += `</label>`
 

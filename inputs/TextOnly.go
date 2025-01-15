@@ -2,8 +2,8 @@ package inputs
 
 // parámetros opcionales:
 // "hidden" si se vera oculto o no.
-func TextOnly(params ...any) textOnly {
-	new := textOnly{
+func TextOnly(params ...any) *textOnly {
+	new := &textOnly{
 		input: input{
 			attributes: attributes{
 				htmlName:   "text",

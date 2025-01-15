@@ -124,7 +124,7 @@ func (h *input) Set(params ...any) {
 
 }
 
-// Método para generar dinámicamente el título
+// Method to dynamically generate the title
 func (h *input) setDynamicTitle() {
 
 	if h.Title != "" {
@@ -132,29 +132,29 @@ func (h *input) setDynamicTitle() {
 	}
 
 	var parts []string
-	parts = append(parts, "permitido:")
+	parts = append(parts, "allowed:")
 
-	// Lógica de validación para letras
+	// Validation logic for letters
 	if h.Letters {
-		parts = append(parts, "letras")
+		parts = append(parts, "letters")
 	}
 
-	// Lógica de validación para números
+	// Validation logic for numbers
 	if h.Numbers {
-		parts = append(parts, "números")
+		parts = append(parts, "numbers")
 	}
 
-	// Lógica de validación para caracteres permitidos
+	// Validation logic for allowed characters
 	if len(h.Characters) > 0 {
 		var chars []string
 		for _, char := range h.Characters {
 			if char == ' ' {
-				chars = append(chars, "␣") // Reemplaza el espacio con el carácter visible '␣'
+				chars = append(chars, "␣") // Replace space with visible character '␣'
 			} else {
 				chars = append(chars, string(char))
 			}
 		}
-		parts = append(parts, fmt.Sprintf("caracteres: %v ", strings.Join(chars, " ")))
+		parts = append(parts, fmt.Sprintf("characters: %v ", strings.Join(chars, " ")))
 	}
 
 	if h.Minimum != 0 {
@@ -165,7 +165,7 @@ func (h *input) setDynamicTitle() {
 		parts = append(parts, fmt.Sprintf("max. %d", h.Maximum))
 	}
 
-	// Generar el valor final para el atributo Title
+	// Generate the final value for the Title attribute
 	h.Title = strings.Join(parts, " ")
 }
 

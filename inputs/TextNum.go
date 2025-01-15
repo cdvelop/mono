@@ -1,7 +1,7 @@
 package inputs
 
-func TextNumber(params ...any) textNumber {
-	new := textNumber{
+func TextNumber(params ...any) *textNumber {
+	new := &textNumber{
 		input: input{
 			attributes: attributes{
 				htmlName:   "text",

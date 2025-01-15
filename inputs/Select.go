@@ -5,7 +5,7 @@ import (
 )
 
 // eg: options=1:Admin,2:Editor,3:Visitante
-func Select(params ...any) selec {
+func Select(params ...any) *selec {
 	new := selec{
 		input: input{
 			attributes: attributes{
@@ -15,7 +15,7 @@ func Select(params ...any) selec {
 	}
 	new.Set(params)
 
-	return new
+	return &new
 }
 
 type selec struct {
@@ -26,7 +26,7 @@ func (s selec) Validate(value string) error {
 	return s.checkOptionKeys(value)
 }
 
-func (s selec) Render(id string) string {
+func (s selec) Render(tabIndex int) string {
 	var req string
 	if !s.allowSkipCompleted {
 		req = ` required`

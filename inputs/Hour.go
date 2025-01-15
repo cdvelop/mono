@@ -4,8 +4,8 @@ import "errors"
 
 // formato 08:00
 // options: min="08:00", max="17:00"
-func Hour(params ...any) hour {
-	new := hour{
+func Hour(params ...any) *hour {
+	new := &hour{
 		input: input{
 			attributes: attributes{
 				htmlName:   "time",

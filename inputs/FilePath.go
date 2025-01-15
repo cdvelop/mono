@@ -9,8 +9,8 @@ import (
 // "multiple"
 // accept="image/*"
 // title="Imágenes jpg"
-func FilePath(params ...any) filePath {
-	new := filePath{
+func FilePath(params ...any) *filePath {
+	new := &filePath{
 		input: input{
 			attributes: attributes{
 				htmlName:   "file",

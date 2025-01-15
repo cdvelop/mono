@@ -45,7 +45,7 @@ func Test_InputDate(t *testing.T) {
 }
 
 func Test_TagDate(t *testing.T) {
-	tag := modelDate.Render("1")
+	tag := modelDate.Render(1)
 	if tag == "" {
 		log.Fatalln("ERROR NO TAG RENDERING ")
 	}

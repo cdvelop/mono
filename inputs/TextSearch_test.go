@@ -24,7 +24,7 @@ var (
 )
 
 func Test_TagTextSearch(t *testing.T) {
-	tag := modelTextSearch.Render("1")
+	tag := modelTextSearch.Render(1)
 	if tag == "" {
 		log.Fatalln("ERROR NO TAG RENDERING ")
 	}

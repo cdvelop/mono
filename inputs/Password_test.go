@@ -42,7 +42,7 @@ func Test_InputPassword(t *testing.T) {
 }
 
 func Test_TagPassword(t *testing.T) {
-	tag := modelPassword.Render("1")
+	tag := modelPassword.Render(1)
 	if tag == "" {
 		log.Fatalln("ERROR NO TAG RENDERING ")
 	}

@@ -19,7 +19,7 @@ var (
 )
 
 func Test_TagMail(t *testing.T) {
-	tag := modelMail.Render("1")
+	tag := modelMail.Render(1)
 	if tag == "" {
 		log.Fatalln("ERROR NO TAG RENDERING ")
 	}

@@ -8,9 +8,9 @@ import (
 // hidden, el campo se mantendrá oculto
 // title="xxx"
 // for phone ej: `min="7"`, `max="11"`
-func Number(params ...any) number {
+func Number(params ...any) *number {
 
-	new := number{
+	new := &number{
 		input: input{
 			attributes: attributes{
 				htmlName: "number",

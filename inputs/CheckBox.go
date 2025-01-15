@@ -3,8 +3,8 @@ package inputs
 import "strconv"
 
 // eg: options=1:Admin,2:Editor,3:Visitante
-func CheckBox(params ...any) check {
-	new := check{
+func CheckBox(params ...any) *check {
+	new := &check{
 		input: input{
 			attributes: attributes{
 				htmlName: "checkbox",
@@ -24,10 +24,10 @@ func (c check) Validate(value string) error {
 	return c.checkOptionKeys(value)
 }
 
-func (c check) Render(id string) string {
+func (c check) Render(tabIndex int) string {
 	var tags string
 	for i, opt := range c.options {
-		id3 := id + "." + strconv.Itoa(i)
+		id3 := strconv.Itoa(tabIndex) + "." + strconv.Itoa(i)
 		var field_value string
 		var text_field string
 

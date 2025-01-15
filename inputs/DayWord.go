@@ -2,8 +2,8 @@ package inputs
 
 // formato dia DD como palabra ej. Lunes 24 Diciembre
 // options: title="xxx"
-func DayWord(params ...any) dayWord {
-	new := dayWord{
+func DayWord(params ...any) *dayWord {
+	new := &dayWord{
 		month: MonthDay(),
 		input: input{
 			attributes: attributes{
@@ -20,7 +20,7 @@ func DayWord(params ...any) dayWord {
 }
 
 type dayWord struct {
-	month monthDay
+	month *monthDay
 	input
 }
 
@@ -33,9 +33,9 @@ func (d dayWord) InputName(customName, htmlName *string) {
 	}
 }
 
-func (d dayWord) Render(id string) string {
+func (d dayWord) Render(tabIndex int) string {
 	tag := `<label class="date-spanish">`
-	tag += d.input.Render(id)
+	tag += d.input.Render(tabIndex)
 	tag += `</label>`
 	return tag
 }

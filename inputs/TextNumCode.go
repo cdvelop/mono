@@ -2,8 +2,8 @@ package inputs
 
 import "errors"
 
-func TextNumberCode(params ...any) textNumCode {
-	new := textNumCode{
+func TextNumberCode(params ...any) *textNumCode {
+	new := &textNumCode{
 		input: input{
 			attributes: attributes{
 				htmlName:   "tel",

@@ -2,8 +2,8 @@ package inputs
 
 import "strings"
 
-func Text(params ...any) text {
-	new := text{
+func Text(params ...any) *text {
+	new := &text{
 		input: input{
 			attributes: attributes{
 				htmlName: "text",

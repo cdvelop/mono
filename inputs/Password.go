@@ -10,8 +10,8 @@ import (
 // max máximo de caracteres permitidos ej: 20 50 ... max default 50
 // Pattern_start="^[A-Za-zÑñ 0-9:.-]{"
 // Pattern_end="}$"
-func Password(params ...any) password {
-	new := password{
+func Password(params ...any) *password {
+	new := &password{
 		input: input{
 			attributes: attributes{
 				htmlName: "password",

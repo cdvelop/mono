@@ -24,7 +24,7 @@ var (
 )
 
 func Test_TagSelect(t *testing.T) {
-	tag := modelSelect.Render("1")
+	tag := modelSelect.Render(1)
 	if tag == "" {
 		log.Fatalln("ERROR NO TAG RENDERING ")
 	}

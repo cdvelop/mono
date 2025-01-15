@@ -44,7 +44,7 @@ func Test_check(t *testing.T) {
 }
 
 func Test_TagCheck(t *testing.T) {
-	tag := modelCheck.Render("1")
+	tag := modelCheck.Render(1)
 	if tag == "" {
 		log.Fatalln("ERROR NO TAG RENDERING ")
 	}

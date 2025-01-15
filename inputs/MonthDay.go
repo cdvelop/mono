@@ -1,8 +1,8 @@
 package inputs
 
 // options: "hidden": campo oculto para el usuario
-func MonthDay(params ...any) monthDay {
-	new := monthDay{
+func MonthDay(params ...any) *monthDay {
+	new := &monthDay{
 		input: input{
 			attributes: attributes{
 				htmlName:   "text",
