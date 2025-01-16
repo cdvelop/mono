@@ -22,7 +22,7 @@ var (
 		"numero al inicio y texto con espacios ok":  {"9equipo01 2equipo2", "", permitted{Letters: true, Numbers: true, Characters: []rune{' '}}},
 		"error solo números no letras si espacios ": {"9equipo01 2equipo2", "carácter e no permitido", permitted{Numbers: true, Characters: []rune{' '}}},
 		"correo con punto y @ ok":                   {"mi.correo1@mail.com", "", permitted{Characters: []rune{'@', '.'}, Numbers: true, Letters: true}},
-		"error correo con tilde no permitido":       {"mí.correo@mail.com", "í con tilde no permitida", permitted{Characters: []rune{'@', '.'}, Numbers: true, Letters: true}},
+		"error correo con tilde no permitido":       {"mí.correo@mail.com", "carácter í con tilde no permitida", permitted{Characters: []rune{'@', '.'}, Numbers: true, Letters: true}},
 	}
 )
 

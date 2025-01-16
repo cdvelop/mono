@@ -22,7 +22,7 @@ var (
 		"incorrecto 14080717-0":       {"14080717-0", "dígito verificador 0 inválido"},
 		"correcto cero al inicio? ":   {"07863697-1", errCeroRut},
 		"data correcta solo espacio?": {" ", "tamaño mínimo 9 caracteres"},
-		"caracteres permitidos?":      {`%$"1 uut4%%oo`, "% no es un numero"},
+		"caracteres permitidos?":      {`%$"1 uut4%%oo`, "carácter % no es un numero"},
 		"pasaporte ax001223b ok?":     {"ax001223b", ""},
 		"caída con dato":              {"123", "tamaño mínimo 9 caracteres"},
 	}

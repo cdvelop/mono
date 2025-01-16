@@ -15,7 +15,7 @@ func Rut(params ...any) *rut {
 				htmlName:     "text",
 				customName:   "rut",
 				Autocomplete: `autocomplete="off"`,
-				Class:        []string{"rut"},
+				Class:        []className{"rut"},
 				DataSet:      []map[string]string{{"option": "ch"}},
 			},
 			permitted: permitted{

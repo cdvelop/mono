@@ -14,9 +14,9 @@ var (
 		expected string
 	}{
 		"nombre correcto con punto?":       {"Dr. Maria Jose Diaz Cadiz", "carácter . no permitido"},
-		"palabras con tilde?":              {"María Jose Diáz Cadíz", "í con tilde no permitida"},
+		"palabras con tilde?":              {"María Jose Diáz Cadíz", "carácter í con tilde no permitida"},
 		"caracteres 47 ok?":                {"juan marcos antonio del rosario de las carmenes", ""},
-		"tilde ok ? ":                      {"peréz del rozal", "é con tilde no permitida"},
+		"tilde ok ? ":                      {"peréz del rozal", "carácter é con tilde no permitida"},
 		"texto con ñ?":                     {"Ñuñez perez", ""},
 		"texto correcto + 3 caracteres ":   {"juli", ""},
 		"texto correcto 3 caracteres ":     {"luz", ""},

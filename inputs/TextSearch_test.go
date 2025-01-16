@@ -15,7 +15,7 @@ var (
 	}{
 		"palabra solo texto 15 caracteres?": {"Maria Jose Diaz", ""},
 		"texto con ñ ok?":                   {"Ñuñez perez", ""},
-		"tilde permitido?":                  {"peréz del rozal", "é con tilde no permitida"},
+		"tilde permitido?":                  {"peréz del rozal", "carácter é con tilde no permitida"},
 		"mas de 20 caracteres permitidos?":  {"hola son mas de 21 ca", "tamaño máximo 20 caracteres"},
 		"guion permitido":                   {"12038-0", ""},
 		"fecha correcta?":                   {"1990-07-21", ""},

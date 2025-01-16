@@ -2,19 +2,18 @@ package inputs
 
 import (
 	"errors"
-	"strconv"
 )
 
 type permitted struct {
 	Letters     bool
 	Tilde       bool
 	Numbers     bool
-	BreakLine   bool   // saltos de linea permitidos
-	WhiteSpaces bool   // permitidos espacios en blanco
-	Tabulation  bool   // permitido tabular
-	Characters  []rune // otros caracteres especiales ej: '\','/','@'
-	Minimum     int    //caracteres min ej 2 "lo" ok default 0 no defined
-	Maximum     int    //caracteres max ej 1 "l" ok default 0 no defined
+	BreakLine   bool   // line breaks allowed
+	WhiteSpaces bool   // white spaces allowed
+	Tabulation  bool   // tabulation allowed
+	Characters  []rune // other special characters eg: '\','/','@'
+	Minimum     int    // min characters eg 2 "lo" ok default 0 no defined
+	Maximum     int    // max characters eg 1 "l" ok default 0 no defined}
 }
 
 const tabulation = '	'
@@ -22,20 +21,19 @@ const white_space = ' '
 const break_line = '\n'
 
 // const carriage_return = '\r'
-const errorWhiteSpace = "espacios en blanco no permitidos"
 
 func (p permitted) Validate(text string) error {
 	var err error
 
 	if p.Minimum != 0 {
 		if len(text) < p.Minimum {
-			return errors.New("tamaño mínimo " + strconv.Itoa(p.Minimum) + " caracteres")
+			return errors.New(Lang.TNum("min_size", p.Minimum))
 		}
 	}
 
 	if p.Maximum != 0 {
 		if len(text) > p.Maximum {
-			return errors.New("tamaño máximo " + strconv.Itoa(p.Maximum) + " caracteres")
+			return errors.New(Lang.TNum("max_size", p.Maximum))
 		}
 	}
 
@@ -54,7 +52,7 @@ func (p permitted) Validate(text string) error {
 
 		if p.Letters {
 			if !valid_letters[char] {
-				err = errors.New(string(char) + " no es una letra")
+				err = errors.New(Lang.TChar("not_letter", string(char)))
 			} else {
 				err = nil
 				continue
@@ -63,7 +61,7 @@ func (p permitted) Validate(text string) error {
 
 		if p.Tilde {
 			if !valid_tilde[char] {
-				err = errors.New("tilde " + string(char) + " no soportada")
+				err = errors.New(Lang.TChar("unsupported_tilde", string(char)))
 			} else {
 				err = nil
 				continue
@@ -73,9 +71,9 @@ func (p permitted) Validate(text string) error {
 		if p.Numbers {
 			if !valid_number[char] {
 				if char == ' ' {
-					err = errors.New(errorWhiteSpace)
+					err = errors.New(Lang.T("white_spaces"))
 				} else {
-					err = errors.New(string(char) + " no es un numero")
+					err = errors.New(Lang.TChar("not_number", string(char)))
 				}
 			} else {
 				err = nil
@@ -97,15 +95,15 @@ func (p permitted) Validate(text string) error {
 				continue
 			} else {
 				if char == white_space {
-					return errors.New("espacios en blanco no permitidos")
+					return errors.New(Lang.T("white_spaces"))
 				} else if valid_tilde[char] {
-					return errors.New(string(char) + " con tilde no permitida")
+					return errors.New(Lang.TChar("tilde_not_allowed", string(char)))
 				} else if char == tabulation {
-					return errors.New("tabulation de texto no permitida")
+					return errors.New(Lang.T("tab_not_allowed"))
 				} else if char == break_line {
-					return errors.New("salto de linea no permitido")
+					return errors.New(Lang.T("newline_not_allowed"))
 				}
-				return errors.New("carácter " + string(char) + " no permitido")
+				return errors.New(Lang.TChar("not_allowed", string(char)))
 			}
 		}
 

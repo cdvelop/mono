@@ -25,16 +25,43 @@ func (f *field) setInput(structureFrom reflect.Type, rf *reflect.StructField) {
 	if inputData == "" {
 		return
 	}
+	// Get base params from input tag
 	params = append(params, getParams(inputData))
 
+	// Get input type
 	inputType := strings.Split(inputData, "(")[0]
 	if inputType == "" {
 		return
 	}
-	// fmt.Println("field name:", f.Name)
-	params = append(params, `name=`+f.Name)
-	params = append(params, `entity=`+f.Parent.Name)
-	params = append(params, `legend=`+f.Legend)
+
+	// Add common params
+	params = append(params,
+		"name="+f.Name,
+		"entity="+f.Parent.Name,
+	)
+
+	if f.Legend != "" {
+		params = append(params, "legend="+f.Legend)
+	}
+
+	// Handle specific input types
+	switch inputType {
+	case "Text":
+		f.Input = inputs.Text(params...)
+	case "Date":
+		f.Input = inputs.Date(params...)
+	case "RadioGender":
+		f.Input = inputs.RadioGender(params...)
+	case "Phone":
+		f.Input = inputs.Phone(params...)
+	case "Select":
+		if structureFrom != nil {
+			params = append(params, "structure="+structureFrom.String())
+		}
+		f.Input = inputs.Select(params...)
+	default:
+		return
+	}
 
 	fmt.Println("setInput params:", params)
 	// fmt.Println("inputType", inputType)

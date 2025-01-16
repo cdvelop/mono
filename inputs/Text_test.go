@@ -14,7 +14,7 @@ var (
 		expected string
 	}{
 		"nombre correcto con punto?":         {"Dr. Maria Jose Diaz Cadiz", ""},
-		"no tilde ":                          {"peréz del rozal", "é con tilde no permitida"},
+		"no tilde ":                          {"peréz del rozal", "carácter é con tilde no permitida"},
 		"texto con ñ ":                       {"Ñuñez perez", ""},
 		"texto correcto + 3 caracteres ":     {"hola", ""},
 		"texto correcto 3 caracteres ":       {"los", ""},
@@ -33,15 +33,17 @@ var (
 )
 
 func Test_TagText(t *testing.T) {
-	tag := modelText.Render(1)
-	if tag == "" {
+	result := modelText.Render(1)
+	if result == "" {
 		t.Fatal("ERROR NO TAG RENDERING ")
 	}
 
-	expected := `<input type="hidden" id="1" name="full_name" placeholder="tu nombre" title="permitido: letras números caracteres: ␣ . , ( )  min. 2 max. 100" data-price="100" data-name="text">`
+	expected := `<fieldset data-name="full_name" tabindex="1"">
+	<legend class="basic-legend"><label for="17"></label></legend>
+	<input type="hidden" name="full_name" id="17" placeholder="tu nombre" title="permitido: letras números caracteres: ␣ . , ( ) mín. 2 máx. 100" data-price="100" data-name="text"></fieldset>`
 
-	if tag != expected {
-		log.Fatalf("error:\n-result: \n%v\n\n-expected: \n%v\n", tag, expected)
+	if result != expected {
+		t.Fatalf("error:\n-result: \n%v\n\n-expected: \n%v\n", result, expected)
 	}
 
 }

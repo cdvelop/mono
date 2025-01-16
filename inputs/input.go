@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"reflect"
 	"strings"
-
-	"github.com/cdvelop/godi/css"
 )
 
 type input struct {
@@ -16,11 +14,11 @@ type input struct {
 }
 
 type fieldset struct {
-	cssClasses []*css.Class
+	cssClasses []className
 }
 
 type container struct {
-	cssClasses []*css.Class
+	cssClasses []className
 }
 
 func (h *input) Set(params ...any) {
@@ -60,7 +58,7 @@ func (h *input) Set(params ...any) {
 			extractData(extractValue(option, "options"), &h.options)
 
 		case strings.Contains(option, "class="):
-			h.Class = append(h.Class, extractValue(option, "class"))
+			h.Class = append(h.Class, className(extractValue(option, "class")))
 
 		case strings.Contains(option, "entity="):
 			h.entity = extractValue(option, "entity")
@@ -126,46 +124,41 @@ func (h *input) Set(params ...any) {
 
 // Method to dynamically generate the title
 func (h *input) setDynamicTitle() {
-
 	if h.Title != "" {
 		return
 	}
 
 	var parts []string
-	parts = append(parts, "allowed:")
+	parts = append(parts, Lang.T("allowed"))
 
-	// Validation logic for letters
 	if h.Letters {
-		parts = append(parts, "letters")
+		parts = append(parts, Lang.T("letters"))
 	}
 
-	// Validation logic for numbers
 	if h.Numbers {
-		parts = append(parts, "numbers")
+		parts = append(parts, Lang.T("numbers"))
 	}
 
-	// Validation logic for allowed characters
 	if len(h.Characters) > 0 {
 		var chars []string
 		for _, char := range h.Characters {
 			if char == ' ' {
-				chars = append(chars, "␣") // Replace space with visible character '␣'
+				chars = append(chars, "␣")
 			} else {
 				chars = append(chars, string(char))
 			}
 		}
-		parts = append(parts, fmt.Sprintf("characters: %v ", strings.Join(chars, " ")))
+		parts = append(parts, fmt.Sprintf("%v %v", Lang.T("characters"), strings.Join(chars, " ")))
 	}
 
 	if h.Minimum != 0 {
-		parts = append(parts, fmt.Sprintf("min. %d", h.Minimum))
+		parts = append(parts, fmt.Sprintf("%v %d", Lang.T("min"), h.Minimum))
 	}
 
 	if h.Maximum != 0 {
-		parts = append(parts, fmt.Sprintf("max. %d", h.Maximum))
+		parts = append(parts, fmt.Sprintf("%v %d", Lang.T("max"), h.Maximum))
 	}
 
-	// Generate the final value for the Title attribute
 	h.Title = strings.Join(parts, " ")
 }
 
@@ -197,11 +190,11 @@ func (h *input) processParam(param any, options *[]string) {
 
 func (h *input) handleUnknownType(param any) {
 	if t, ok := param.(reflect.Type); ok {
-		fmt.Println("*Tipo de reflect.Type:", t.Name())
+		// fmt.Println("*Tipo de reflect.Type:", t.Name())
 
 		// Param is of type reflect.Type
 		if sd, ok := reflect.New(t).Interface().(sourceData); ok {
-			fmt.Printf("El tipo %s implementa la interfaz sourceData\n", t.Name())
+			// fmt.Printf("El tipo %s implementa la interfaz sourceData\n", t.Name())
 			h.data = sd
 		}
 

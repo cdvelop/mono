@@ -46,7 +46,7 @@ type attributes struct {
 
 	customName string //eg onlyText,onlyNumber...
 
-	Class []string // clase css ej: class="age"
+	Class []className // clase css ej: class="age"
 
 	DataSet []map[string]string // dataset ej: data-id="123" = map[string]string{"id": "123"}
 
@@ -77,7 +77,7 @@ func (h *input) Render(tabIndex int) (result string) {
 		h.Type = ""
 	}
 
-	h.Id = h.inputIdTemplate()
+	h.Id = h.htmlID()
 
 	h.DataSet = append(h.DataSet, map[string]string{
 		"name": h.customName,
@@ -129,18 +129,17 @@ func (h input) InputLayout(inputHtml string, tabindex int) string {
 
 	st_index := strconv.Itoa(tabindex)
 
-	return `<fieldset data-name="` + h.Name + `" tabindex="` + st_index + `"` + h.getClassNames() + ` onclick="internalFocus(this)">
+	return `<fieldset data-name="` + h.Name + `" tabindex="` + st_index + `"` + h.getClassNames() + `">
 	<legend class="basic-legend"><label for="` + h.Id + `">` + h.legend + `</label></legend>
-	` + inputHtml + `
-    </fieldset>`
+	` + inputHtml + `</fieldset>`
 }
 
 // getClassNames retorna los nombres de múltiples clases concatenados para HTML
 func (h input) getClassNames() string {
 	var names []string
-	for _, class := range h.cssClasses {
-		if class != nil {
-			names = append(names, class.GetClassName())
+	for _, className := range h.cssClasses {
+		if className != "" {
+			names = append(names, string(className))
 		}
 	}
 
@@ -150,8 +149,11 @@ func (h input) getClassNames() string {
 	return ` class="` + strings.Join(names, " ") + `"`
 }
 
-func (h input) inputIdTemplate() string {
-	return h.entity + `.` + h.Name
+var inputId int
+
+func (h input) htmlID() string {
+	inputId++
+	return strconv.Itoa(inputId)
 }
 
 func htmlAttribute(out *string, key, value string) {

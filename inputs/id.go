@@ -4,8 +4,9 @@ func ID(params ...any) *id {
 	new := &id{
 		input: input{
 			attributes: attributes{
-				htmlName:   "hidden",
-				customName: "id",
+				allowSkipCompleted: true,
+				htmlName:           "hidden",
+				customName:         "id",
 			},
 			permitted: permitted{
 				Letters:    false,

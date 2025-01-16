@@ -1,35 +1,42 @@
 package inputs
 
-import "github.com/cdvelop/godi/css"
+type className string
 
-func (h *input) setCssClasses() string {
+const (
+	cssClassNormal    className = "normal"
+	cssClassBorder    className = "border"
+	cssClassAllWidth  className = "all-width"
+	cssClassWidthAuto className = "width-auto"
+)
 
-	h.cssClasses = []*css.Class{}
+// func (h *input) setCssClasses() string {
 
-	var class = `normal border`
+// 	h.cssClasses = []*css.class{}
 
-	switch h.attributes.htmlName {
+// 	var class = `normal border`
 
-	case "checkbox", "textarea":
+// 	switch h.attributes.htmlName {
 
-		h.cssClasses = append(h.cssClasses, &css.Class{
-			Name: "all-width",
-			Properties: []string{
-				"width: 100%",
-				"min-width: 100%",
-			},
-		})
+// 	case "checkbox", "textarea":
 
-	default:
-		h.cssClasses = append(h.cssClasses, &css.Class{
-			Name: "width-auto",
-			Properties: []string{
-				"max-height: 5em",
-			},
-		})
+// 		h.cssClasses = append(h.cssClasses, &css.class{
+// 			Name: "all-width",
+// 			Properties: []string{
+// 				"width: 100%",
+// 				"min-width: 100%",
+// 			},
+// 		})
 
-		class += ` width-auto`
-	}
+// 	default:
+// 		h.cssClasses = append(h.cssClasses, &css.class{
+// 			Name: "width-auto",
+// 			Properties: []string{
+// 				"max-height: 5em",
+// 			},
+// 		})
 
-	return ` class="` + class + `"`
-}
+// 		class += ` width-auto`
+// 	}
+
+// 	return ` class="` + class + `"`
+// }

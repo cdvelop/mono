@@ -34,9 +34,7 @@ func (e *entity) FormRender(attributes ...string) string {
 			continue
 		}
 
-		if f.Legend != "" {
-			e.HtmlForm += f.Input.Render(i)
-		}
+		e.HtmlForm += f.Input.Render(i)
 	}
 
 	e.HtmlForm += `</form>`

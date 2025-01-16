@@ -14,7 +14,7 @@ var (
 		expected string
 	}{
 		"dia ok?":                     {"01", ""},
-		"caracteres?":                 {"0l", "l no es un numero"},
+		"caracteres?":                 {"0l", "carácter l no es un numero"},
 		"mes ok?":                     {"31", ""},
 		"fecha recortada sin año ok?": {"31-01", "tamaño máximo 2 caracteres"},
 		"correcto ?":                  {"1-1", "tamaño máximo 2 caracteres"},

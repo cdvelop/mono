@@ -22,10 +22,10 @@ var (
 		"int 32 -o+ 10  char": {"2147483647", ""},
 		"18 cifras":           {"100002323262637278", ""},
 
-		"grande y letra":          {"10000232E26263727", "E no es un numero"},
-		"numero negativo -100 ":   {"-100", "- no es un numero"},
-		"texto en vez de numero ": {"h", "h no es un numero"},
-		"texto y numero":          {"h1", "h no es un numero"},
+		"grande y letra":          {"10000232E26263727", "carácter E no es un numero"},
+		"numero negativo -100 ":   {"-100", "carácter - no es un numero"},
+		"texto en vez de numero ": {"h", "carácter h no es un numero"},
+		"texto y numero":          {"h1", "carácter h no es un numero"},
 	}
 )
 
