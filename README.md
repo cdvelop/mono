@@ -1,18 +1,24 @@
-# GoDI
+# MonoGO
 
+framework de desarrollo fullstack en go, 
+
+Define una estructura de datos una vez y genera automáticamente formularios HTML, API HTTP y consultas SQL.
+
+con soporte a webAssembly y tinygo.
 - # ! ADVERTENCIA API EN DESARROLLO ! 
 
-"Go Object Data Interchange" 
-(protocolo de intercambio de información con go)
+# ejemplo
+```go	
+package main
 
-## Motivación:
+```
 
-me gusta la programación pero no me gusta repetirme, la idea de esta herramienta es definir una sola vez la estructura de datos y que el resto de la aplicación se genere automáticamente tanto el front los formularios html y en el  back la api http y generación de tablas y consultas sql dinámicas.
+
 
 ### por que no solo unir json gorm?
 json de la librería estándar y gorm usan reflect y eso si lo llevamos a un dispositivo de bajo rendimiento se vuelve lento, si a eso le sumamos que queremos compilar a tinygo (que es la única forma de reducir el tamaño del binario resultante para webAssembly) necesitamos que el resultado sea optimo, sin dependencias externas y soporte a webAssembly + tinygo.
 
-### godi no usa reflect?
+### monogo no usa reflect?
 si lo usa pero una sola vez es como un json con asteroides. crea una imagen de cada estructura de tu programa cuando este arranca y lo mantiene en memoria para que no tenga que ser generado en tiempo de ejecución.
 
 
@@ -53,7 +59,7 @@ type Person struct {
 	Age   uint8  `Input:"Number(min=0;max=120)"` 
 }
 ```
-- tipos de inputs soportados en ..godi/inputs eg:
+- tipos de inputs soportados en ..monogo/inputs eg:
 - si el o los inputs que necesitas no se encuentra en la librería puedes crear el método asociado a tu estructura de esta forma:
 ```go
 type input interface {

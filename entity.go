@@ -1,4 +1,4 @@
-package godi
+package monogo
 
 import (
 	"fmt"
@@ -6,7 +6,7 @@ import (
 	"strings"
 	"unicode"
 
-	"github.com/cdvelop/godi/inputs"
+	"github.com/cdvelop/monogo/inputs"
 )
 
 type entity struct {
@@ -55,7 +55,6 @@ func processStruct(t reflect.Type, entities *[]entity, foreignField *field) {
 		newField := field{
 			Index:  uint32(len(e.Fields)),
 			Name:   snakeCase(t.Field(i).Name),
-			Legend: rsField.Tag.Get("Legend"),
 			Unique: setUnique(&rsField),
 			Parent: &e,
 		}
@@ -94,6 +93,7 @@ func processStruct(t reflect.Type, entities *[]entity, foreignField *field) {
 			continue
 
 		}
+		newField.setLegend(&rsField)
 
 		newField.setInput(structureFrom, &rsField)
 

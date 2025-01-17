@@ -1,4 +1,4 @@
-package godi
+package monogo
 
 import (
 	"strings"

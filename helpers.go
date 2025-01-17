@@ -1,4 +1,4 @@
-package godi
+package monogo
 
 import (
 	"reflect"
@@ -36,20 +36,27 @@ func isNumericValue(refValue *reflect.Value) (numStr string, size uint8, ok bool
 	return numStr, uint8(len(numStr)), ok
 }
 
+// snakeCase converts a string to snake_case format.
+// Example:
+//
+//	Input: "camelCase" -> Output: "camel_case"
+//	Input: "PascalCase" -> Output: "pascal_case"
+//	Input: "APIResponse" -> Output: "api_response"
+//	Input: "user123Name" -> Output: "user123_name"
 func snakeCase(str string) string {
-	var result string
+	var out string
 	for i, r := range str {
 		if unicode.IsUpper(r) {
-			// Si es mayúscula y no es el primer caracter, añadimos "_"
+			// If it's uppercase and not the first character, add "_"
 			if i > 0 && (unicode.IsLower(rune(str[i-1])) || unicode.IsDigit(rune(str[i-1]))) {
-				result += "_"
+				out += "_"
 			}
-			// Convertimos la mayúscula a minúscula
-			result += strings.ToLower(string(r))
+			// Convert uppercase to lowercase
+			out += strings.ToLower(string(r))
 		} else {
-			// Si no es mayúscula, simplemente lo añadimos
-			result += string(r)
+			// If it's not uppercase, simply add it
+			out += string(r)
 		}
 	}
-	return result
+	return out
 }

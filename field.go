@@ -1,9 +1,9 @@
-package godi
+package monogo
 
 import (
 	"reflect"
 
-	"github.com/cdvelop/godi/inputs"
+	"github.com/cdvelop/monogo/inputs"
 )
 
 type field struct {
@@ -39,7 +39,7 @@ func (f *field) setDataBaseParams() {
 		f.Parent.IsTable = true
 		f.Unique = true
 
-		f.Name = prefixNameID + f.Parent.TableName
+		// f.Name = prefixNameID + f.Parent.TableName
 
 		// check input is not set
 		if f.Input == nil {

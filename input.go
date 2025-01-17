@@ -1,11 +1,13 @@
-package godi
+package monogo
 
 import (
 	"fmt"
 	"reflect"
 	"strings"
 
-	"github.com/cdvelop/godi/inputs"
+	"github.com/cdvelop/monogo/inputs"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
 )
 
 type input interface {
@@ -22,17 +24,23 @@ func (f *field) setInput(structureFrom reflect.Type, rf *reflect.StructField) {
 	}
 
 	inputData := rf.Tag.Get("Input")
-	if inputData == "" {
-		return
-	}
-	// Get base params from input tag
-	params = append(params, getParams(inputData))
+	var inputType string
+	if inputData != "" {
 
-	// Get input type
-	inputType := strings.Split(inputData, "(")[0]
-	if inputType == "" {
-		return
+		// Get base params from input tag
+		params = append(params, getParams(inputData))
+
+		// Get input type from input tag
+		inputType = strings.Split(inputData, "(")[0]
 	}
+
+	if inputType == "" {
+		// set input type by field name
+		inputType = f.Name
+		fmt.Println("SET inputType ", inputType)
+	}
+
+	inputType = snakeCase(inputType)
 
 	// Add common params
 	params = append(params,
@@ -44,83 +52,67 @@ func (f *field) setInput(structureFrom reflect.Type, rf *reflect.StructField) {
 		params = append(params, "legend="+f.Legend)
 	}
 
+	// fmt.Println("setInput params:", params)
+
 	// Handle specific input types
 	switch inputType {
-	case "Text":
-		f.Input = inputs.Text(params...)
-	case "Date":
+	case "checkbox":
+		f.Input = inputs.CheckBox(params...)
+	case "datalist":
+		f.Input = inputs.DataList(params...)
+	case "date", "birth_date":
 		f.Input = inputs.Date(params...)
-	case "RadioGender":
-		f.Input = inputs.RadioGender(params...)
-	case "Phone":
+	case "date_age":
+		f.Input = inputs.DateAge(params...)
+	case "day_word":
+		f.Input = inputs.DayWord(params...)
+	case "file_path":
+		f.Input = inputs.FilePath(params...)
+	case "hour":
+		f.Input = inputs.Hour(params...)
+	case "id":
+		f.Input = inputs.ID(params...)
+	case "info":
+		f.Input = inputs.Info(params...)
+	case "ip":
+		f.Input = inputs.Ip(params...)
+	case "list":
+		f.Input = inputs.List(params...)
+	case "mail":
+		f.Input = inputs.Mail(params...)
+	case "month_day":
+		f.Input = inputs.MonthDay(params...)
+	case "number":
+		f.Input = inputs.Number(params...)
+	case "password":
+		f.Input = inputs.Password(params...)
+	case "phone":
 		f.Input = inputs.Phone(params...)
-	case "Select":
+	case "radio":
+		f.Input = inputs.Radio(params...)
+	case "gender":
+		f.Input = inputs.RadioGender(params...)
+	case "rut":
+		f.Input = inputs.Rut(params...)
+	case "select":
 		if structureFrom != nil {
 			params = append(params, "structure="+structureFrom.String())
 		}
 		f.Input = inputs.Select(params...)
-	default:
-		return
-	}
-
-	fmt.Println("setInput params:", params)
-	// fmt.Println("inputType", inputType)
-
-	switch inputType {
-	case "Checkbox":
-		f.Input = inputs.CheckBox(params...)
-	case "DataList":
-		f.Input = inputs.DataList(params...)
-	case "Date":
-		f.Input = inputs.Date(params...)
-	case "DateAge":
-		f.Input = inputs.DateAge(params...)
-	case "DayWord":
-		f.Input = inputs.DayWord(params...)
-	case "FilePath":
-		f.Input = inputs.FilePath(params...)
-	case "Hour":
-		f.Input = inputs.Hour(params...)
-	case "Id":
-		f.Input = inputs.ID(params...)
-	case "Info":
-		f.Input = inputs.Info(params...)
-	case "Ip":
-		f.Input = inputs.Ip(params...)
-	case "List":
-		f.Input = inputs.List(params...)
-	case "Mail":
-		f.Input = inputs.Mail(params...)
-	case "MonthDay":
-		f.Input = inputs.MonthDay(params...)
-	case "Number":
-		f.Input = inputs.Number(params...)
-	case "Password":
-		f.Input = inputs.Password(params...)
-	case "Phone":
-		f.Input = inputs.Phone(params...)
-	case "Radio":
-		f.Input = inputs.Radio(params...)
-	case "RadioGender":
-		f.Input = inputs.RadioGender(params...)
-	case "Rut":
-		f.Input = inputs.Rut(params...)
-	case "Select":
-		f.Input = inputs.Select(params...)
-	case "TextArea":
+	case "text":
+		f.Input = inputs.Text(params...)
+	case "text_area":
 		f.Input = inputs.TextArea(params...)
-	case "TextNumber":
+	case "text_number":
 		f.Input = inputs.TextNumber(params...)
-	case "TextNumberCode":
+	case "text_number_code":
 		f.Input = inputs.TextNumberCode(params...)
-	case "TextOnly":
+	case "text_only":
 		f.Input = inputs.TextOnly(params...)
-	case "TextSearch":
+	case "text_search":
 		f.Input = inputs.TextSearch(params...)
-	default: //"Text"
 		f.Input = inputs.Text(params...)
 	}
-
 }
 
 func getParams(inputTag string) []string {
@@ -131,4 +123,19 @@ func getParams(inputTag string) []string {
 	}
 	paramsStr := inputTag[start+1 : end]
 	return strings.Split(paramsStr, ",")
+}
+
+func (f *field) setLegend(rf *reflect.StructField) {
+
+	f.Legend = rf.Tag.Get("Legend")
+	if f.Legend == "" {
+
+		name := Lang.T(f.Name)
+		// f.Legend = cases.Title(language.Und).String(strings.ToLower(name))
+
+		c := cases.Title(language.English)
+		f.Legend = c.String(name)
+
+	}
+
 }
