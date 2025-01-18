@@ -26,10 +26,10 @@ func (a *Address) DataSource() any {
 
 type Person struct {
 	Id        string
-	Name      string    `Legend:"Nombre" Input:"Text()"`
-	BirthDate string    // expected: 2000-01-01
-	Gender    string    `Input:"RadioGender()"`
-	Phone     string    `Input:"Phone()"`
+	Name      string
+	BirthDate string
+	Gender    string
+	Phone     string
 	Addresses []Address `Legend:"Direcciones" Input:"Select()"` //foreign key expected
 }
 
@@ -55,11 +55,11 @@ func TestBuildEntity(t *testing.T) {
 		IsTable:   true,
 		// ReflectValue: gotPerson.ReflectValue,
 		Fields: []field{
-			{Index: 0, Name: "id", Legend: "Id", PrimaryKey: true, Unique: true, Input: inputs.ID("entity=monogo.person"), Parent: gotPerson},
+			{Index: 0, Name: "id", Legend: "Id", PrimaryKey: true, Unique: true, Input: inputs.ID("entity=monogo.person", "legend=Id"), Parent: gotPerson},
 			{Index: 1, Name: "name", Legend: "Nombre", Input: inputs.Text("name=name", "entity=monogo.person", "legend=Nombre"), Parent: gotPerson},
-			{Index: 2, Name: "birth_date", Legend: "Fecha De Nacimiento", Input: inputs.Date("entity=monogo.person"), Parent: gotPerson},
-			{Index: 3, Name: "gender", Input: inputs.RadioGender("entity=monogo.person"), Parent: gotPerson},
-			{Index: 4, Name: "phone", Input: inputs.Phone(), Parent: gotPerson},
+			{Index: 2, Name: "birth_date", Legend: "Fecha De Nacimiento", Input: inputs.Date("name=birth_date", "entity=monogo.person", "legend=Fecha De Nacimiento"), Parent: gotPerson},
+			{Index: 3, Name: "gender", Legend: "Género", Input: inputs.RadioGender("entity=monogo.person", "legend=Género"), Parent: gotPerson},
+			{Index: 4, Name: "phone", Legend: "Teléfono", Input: inputs.Phone(), Parent: gotPerson},
 			{Index: 5, Name: "addresses", Legend: "Direcciones", Input: inputs.Select(structureAddressFrom, "name=addresses", "entity=monogo.person", "legend=Direcciones"), Parent: gotPerson},
 		},
 	}
@@ -70,7 +70,7 @@ func TestBuildEntity(t *testing.T) {
 		IsTable:   true,
 		// ReflectValue: gotAddress.ReflectValue,
 		Fields: []field{
-			{Index: 0, Name: "id", Legend: "Id", PrimaryKey: true, Unique: true, Input: inputs.ID(), Parent: gotAddress},
+			{Index: 0, Name: "id", Legend: "Id", PrimaryKey: true, Unique: true, Input: inputs.ID("entity=monogo.address", "legend=Id"), Parent: gotAddress},
 			{Index: 1, Name: "street", Legend: "Calle", Input: inputs.Text("name=street", "entity=monogo.address", "legend=Calle"), Parent: gotAddress},
 			{Index: 2, Name: "city", Legend: "Ciudad", Input: inputs.Text("name=city", "entity=monogo.address", "legend=Ciudad"), Parent: gotAddress},
 			{Index: 3, Name: "zip_code", Legend: "Código Postal", Input: inputs.Text("name=zip_code", "entity=monogo.address", "legend=Código Postal"), Parent: gotAddress},
@@ -92,25 +92,32 @@ func TestBuildEntity(t *testing.T) {
 }
 
 func compareFormParts(t *testing.T, entity *entity) {
-	form := entity.FormRender()
+	formOriginal := entity.FormRender()
+
+	formWithOutSpaces := strings.ReplaceAll(formOriginal, " ", "")
 
 	// Check form opening
-	expectedOpen := `<form name="monogo.person" class="form-distributed-fields" autocomplete="off" spellcheck="false">`
-	if !strings.Contains(form, expectedOpen) {
-		t.Fatalf("\nIncorrect form opening\nExpected: %v\nGot: %v", expectedOpen, form[:len(expectedOpen)])
+	expectedOpenOriginal := `<form name="monogo.person" class="form-distributed-fields" autocomplete="off" spellcheck="false">`
+
+	expectedOpenWithOutSpaces := strings.ReplaceAll(expectedOpenOriginal, " ", "")
+
+	if !strings.Contains(formWithOutSpaces, expectedOpenWithOutSpaces) {
+		t.Fatalf("\nIncorrect form opening\nExpected: %v\nGot: %v", expectedOpenOriginal, formOriginal[:len(expectedOpenOriginal)])
 	}
 
 	// Check form closing
-	expectedClose := `</form>`
-	if !strings.HasSuffix(form, expectedClose) {
+	if !strings.HasSuffix(formWithOutSpaces, `</form>`) {
 		t.Fatal("Incorrect form closing")
 	}
 
 	// Check each field
 	for index, field := range entity.Fields {
-		fieldHTML := field.Input.Render(index)
-		if !strings.Contains(form, fieldHTML) {
-			t.Fatalf("\nIncorrect field: %s\nExpected:\n%v\n", field.Name, fieldHTML)
+		expectedTagFieldOriginal := field.Input.Render(index)
+
+		expectedTagFieldWithOutSpaces := strings.ReplaceAll(expectedTagFieldOriginal, " ", "")
+
+		if !strings.Contains(formWithOutSpaces, expectedTagFieldWithOutSpaces) {
+			t.Fatalf("\nIncorrect field: %s\nExpected:\n%v\n❌Form:\n%v", field.Name, expectedTagFieldOriginal, formOriginal)
 		}
 	}
 }

@@ -37,10 +37,9 @@ func Test_TagText(t *testing.T) {
 	if result == "" {
 		t.Fatal("ERROR NO TAG RENDERING ")
 	}
+	id := modelText.input.Id
 
-	expected := `<fieldset data-name="full_name" tabindex="1"">
-	<legend class="basic-legend"><label for="17"></label></legend>
-	<input type="hidden" name="full_name" id="17" placeholder="tu nombre" title="permitido: letras números caracteres: ␣ . , ( ) mín. 2 máx. 100" data-price="100" data-name="text"></fieldset>`
+	expected := `<input type="hidden" name="full_name" id="` + id + `" data-price="100">`
 
 	if result != expected {
 		t.Fatalf("error:\n-result: \n%v\n\n-expected: \n%v\n", result, expected)

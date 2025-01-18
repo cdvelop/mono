@@ -1,7 +1,6 @@
 package inputs
 
 import (
-	"errors"
 	"reflect"
 	"strconv"
 	"strings"
@@ -66,7 +65,38 @@ func extractValue(option, delete string) string {
 	return out
 }
 
-func (h *input) Render(tabIndex int) (result string) {
+func (h *input) Render(tabIndex int) string {
+
+	var tags string
+
+	for _, opt := range h.options {
+		h.Id = h.htmlID()
+
+		var key, value string
+		for key, value = range opt {
+		}
+
+		switch h.htmlName {
+		case "checkbox":
+			h.Value = key
+			tags += `<label for="` + h.Id + `">`
+			tags += h.renderOneInput()
+			tags += `<span>` + value + `</span>`
+			tags += `</label>`
+			h.allowSkipCompleted = true // avoid required appearing again
+		case "select":
+
+		default:
+			tags += h.renderOneInput()
+
+		}
+
+	}
+
+	return h.renderInputLayout(tags, tabIndex)
+}
+
+func (h *input) renderOneInput() (result string) {
 	var open = `<input`
 	var close = `>`
 	h.Type = h.htmlName
@@ -76,12 +106,6 @@ func (h *input) Render(tabIndex int) (result string) {
 		close = `></textarea>`
 		h.Type = ""
 	}
-
-	h.Id = h.htmlID()
-
-	h.DataSet = append(h.DataSet, map[string]string{
-		"name": h.customName,
-	})
 
 	result = open
 
@@ -122,16 +146,19 @@ func (h *input) Render(tabIndex int) (result string) {
 
 	result += close
 
-	return h.InputLayout(result, tabIndex)
+	return result
 }
 
-func (h input) InputLayout(inputHtml string, tabindex int) string {
+func (h input) renderInputLayout(inputHtml string, tabindex int) string {
 
-	st_index := strconv.Itoa(tabindex)
+	if h.htmlName == "hidden" {
+		return inputHtml
+	}
 
-	return `<fieldset data-name="` + h.Name + `" tabindex="` + st_index + `"` + h.getClassNames() + `">
-	<legend class="basic-legend"><label for="` + h.Id + `">` + h.legend + `</label></legend>
-	` + inputHtml + `</fieldset>`
+	return `<fieldset tabindex="` + strconv.Itoa(tabindex) + `"` + h.getClassNames() + `">
+	<legend><label for="` + h.Id + `">` + h.legend + `</label></legend>
+	` + inputHtml + `
+</fieldset>`
 }
 
 // getClassNames retorna los nombres de múltiples clases concatenados para HTML
@@ -152,6 +179,11 @@ func (h input) getClassNames() string {
 var inputId int
 
 func (h input) htmlID() string {
+
+	if h.Id != "" {
+		return h.Id
+	}
+
 	inputId++
 	return strconv.Itoa(inputId)
 }
@@ -175,56 +207,4 @@ func extractData(dataIn string, out *[]map[string]string) {
 			*out = append(*out, map[string]string{key: value})
 		}
 	}
-}
-func (a attributes) checkOptionKeys(value string) error {
-
-	dataInArray := strings.Split(value, ",")
-
-	for _, keyIn := range dataInArray {
-
-		if keyIn == "" {
-			return errors.New("selección requerida campo " + a.Name)
-		}
-
-		var exist bool
-		// fmt.Println("a.optionKeys", a.optionKeys)
-		for _, opt := range a.options {
-			if _, exist = opt[keyIn]; exist {
-				break
-			}
-		}
-
-		if !exist {
-			return errors.New("valor " + keyIn + " no permitido en " + a.htmlName + " " + a.Name)
-		}
-
-	}
-
-	return nil
-
-}
-
-func (a attributes) GoodTestData() (out []string) {
-	for _, opt := range a.options {
-		for k := range opt {
-			out = append(out, k)
-		}
-	}
-	return
-}
-
-func (a attributes) WrongTestData() (out []string) {
-	for _, wd := range wrong_data {
-		found := false
-		for _, opt := range a.options {
-			if _, exists := opt[wd]; exists {
-				found = true
-				break
-			}
-		}
-		if !found {
-			out = append(out, wd)
-		}
-	}
-	return
 }

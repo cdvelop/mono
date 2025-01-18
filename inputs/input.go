@@ -58,8 +58,17 @@ func (h *input) Set(params ...any) {
 			extractData(extractValue(option, "options"), &h.options)
 
 		case strings.Contains(option, "class="):
-			h.Class = append(h.Class, className(extractValue(option, "class")))
-
+			newClass := className(extractValue(option, "class"))
+			exists := false
+			for _, class := range h.Class {
+				if class == newClass {
+					exists = true
+					break
+				}
+			}
+			if !exists {
+				h.Class = append(h.Class, newClass)
+			}
 		case strings.Contains(option, "entity="):
 			h.entity = extractValue(option, "entity")
 
@@ -118,7 +127,18 @@ func (h *input) Set(params ...any) {
 		h.Name = h.customName
 	}
 
-	h.setDynamicTitle()
+	if h.htmlName != "hidden" {
+		h.setDynamicTitle()
+	} else {
+		h.Title = ""
+		h.PlaceHolder = ""
+	}
+
+	if len(h.options) == 0 {
+		h.options = []map[string]string{
+			{"": ""},
+		}
+	}
 
 }
 

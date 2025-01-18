@@ -2,6 +2,7 @@ package inputs
 
 import (
 	"errors"
+	"strings"
 )
 
 type permitted struct {
@@ -23,6 +24,7 @@ const break_line = '\n'
 // const carriage_return = '\r'
 
 func (p permitted) Validate(text string) error {
+
 	var err error
 
 	if p.Minimum != 0 {
@@ -113,6 +115,59 @@ func (p permitted) Validate(text string) error {
 	}
 
 	return err
+}
+
+func (a attributes) checkOptionKeys(value string) error {
+
+	dataInArray := strings.Split(value, ",")
+
+	for _, keyIn := range dataInArray {
+
+		if keyIn == "" {
+			return errors.New("selección requerida campo " + a.Name)
+		}
+
+		var exist bool
+		// fmt.Println("a.optionKeys", a.optionKeys)
+		for _, opt := range a.options {
+			if _, exist = opt[keyIn]; exist {
+				break
+			}
+		}
+
+		if !exist {
+			return errors.New("valor " + keyIn + " no permitido en " + a.htmlName + " " + a.Name)
+		}
+
+	}
+
+	return nil
+
+}
+
+func (a attributes) GoodTestData() (out []string) {
+	for _, opt := range a.options {
+		for k := range opt {
+			out = append(out, k)
+		}
+	}
+	return
+}
+
+func (a attributes) WrongTestData() (out []string) {
+	for _, wd := range wrong_data {
+		found := false
+		for _, opt := range a.options {
+			if _, exists := opt[wd]; exists {
+				found = true
+				break
+			}
+		}
+		if !found {
+			out = append(out, wd)
+		}
+	}
+	return
 }
 
 // Define un mapa de caracteres válidos

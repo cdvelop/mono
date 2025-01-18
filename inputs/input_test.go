@@ -36,7 +36,7 @@ func Test_check(t *testing.T) {
 
 			if err_str != data.expected {
 				log.Println(prueba)
-				log.Fatalf("resultado: [%v] expectativa: [%v]\n%v", err, data.expected, data.inputData)
+				t.Fatalf("\ngot:\n[%v]\nexpect:\n[%v]\n%v", err, data.expected, data.inputData)
 			}
 
 		})
@@ -46,6 +46,6 @@ func Test_check(t *testing.T) {
 func Test_TagCheck(t *testing.T) {
 	tag := modelCheck.Render(1)
 	if tag == "" {
-		log.Fatalln("ERROR NO TAG RENDERING ")
+		t.Fatal("ERROR NO TAG RENDERING ")
 	}
 }

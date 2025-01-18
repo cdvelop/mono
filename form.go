@@ -26,7 +26,9 @@ func (e *entity) FormRender(attributes ...string) string {
 		}
 	}
 
-	e.HtmlForm = `<form name="` + e.Name + `"` + class + autocomplete + spellcheck + `>`
+	e.HtmlForm = `<form name="` + e.Name + `"` + class + autocomplete + spellcheck + `>
+	
+	`
 
 	for i, f := range e.Fields {
 
@@ -35,9 +37,11 @@ func (e *entity) FormRender(attributes ...string) string {
 		}
 
 		e.HtmlForm += f.Input.Render(i)
+		e.HtmlForm += "\n\n"
 	}
 
-	e.HtmlForm += `</form>`
+	e.HtmlForm += `
+	</form>`
 
 	return e.HtmlForm
 }

@@ -1,7 +1,6 @@
 package monogo
 
 import (
-	"fmt"
 	"reflect"
 	"strings"
 
@@ -37,7 +36,7 @@ func (f *field) setInput(structureFrom reflect.Type, rf *reflect.StructField) {
 	if inputType == "" {
 		// set input type by field name
 		inputType = f.Name
-		fmt.Println("SET inputType ", inputType)
+		// fmt.Println("SET inputType ", inputType)
 	}
 
 	inputType = snakeCase(inputType)
@@ -99,7 +98,7 @@ func (f *field) setInput(structureFrom reflect.Type, rf *reflect.StructField) {
 			params = append(params, "structure="+structureFrom.String())
 		}
 		f.Input = inputs.Select(params...)
-	case "text":
+	case "text", "name":
 		f.Input = inputs.Text(params...)
 	case "text_area":
 		f.Input = inputs.TextArea(params...)
