@@ -1,13 +1,11 @@
 package inputs
 
-import "errors"
-
 func TextNumberCode(params ...any) *textNumCode {
 	new := &textNumCode{
 		input: input{
 			attributes: attributes{
 				htmlName:   "tel",
-				customName: "textNumCode",
+				customName: "textNumberCode",
 				// Pattern:    `^[A-Za-z0-9-_]{2,15}`,
 			},
 			permitted: permitted{
@@ -29,27 +27,27 @@ type textNumCode struct {
 	input
 }
 
-func (t textNumCode) Validate(value string) error {
+// func (t textNumCode) Validate(value string) error {
 
-	if len(value) >= 1 {
-		var ok bool
-		char := value[0]
+// 	if len(value) >= 1 {
+// 		var ok bool
+// 		char := value[0]
 
-		if valid_letters[rune(char)] {
-			ok = true
-		}
+// 		if valid_letters[rune(char)] {
+// 			ok = true
+// 		}
 
-		if valid_number[rune(char)] {
-			ok = true
-		}
+// 		if valid_number[rune(char)] {
+// 			ok = true
+// 		}
 
-		if !ok {
-			return errors.New("no se puede comenzar con " + string(char))
-		}
-	}
+// 		if !ok {
+// 			return errors.New("no se puede comenzar con " + string(char))
+// 		}
+// 	}
 
-	return t.permitted.Validate(value)
-}
+// 	return t.Validate(value)
+// }
 
 func (t textNumCode) GoodTestData() (out []string) {
 

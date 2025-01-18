@@ -1,10 +1,5 @@
 package inputs
 
-import (
-	"errors"
-	"strings"
-)
-
 func Mail(params ...any) *mail {
 	new := &mail{
 		input: input{
@@ -32,20 +27,20 @@ type mail struct {
 }
 
 // validación con datos de entrada
-func (m mail) Validate(value string) error {
+// func (m mail) Validate(value string) error {
 
-	if strings.Contains(value, "example") {
-		return errors.New(value + " es un correo de ejemplo")
-	}
+// 	if strings.Contains(value, "example") {
+// 		return errors.New(value + " es un correo de ejemplo")
+// 	}
 
-	parts := strings.Split(value, "@")
-	if len(parts) != 2 {
-		return errors.New("error en @ del correo " + value)
-	}
+// 	parts := strings.Split(value, "@")
+// 	if len(parts) != 2 {
+// 		return errors.New("error en @ del correo " + value)
+// 	}
 
-	return m.permitted.Validate(value)
+// 	return m.Validate(value)
 
-}
+// }
 
 func (mail) GoodTestData() (out []string) {
 

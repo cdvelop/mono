@@ -5,54 +5,88 @@ import (
 	"strings"
 )
 
-type permitted struct {
-	Letters     bool
-	Tilde       bool
-	Numbers     bool
-	BreakLine   bool   // line breaks allowed
-	WhiteSpaces bool   // white spaces allowed
-	Tabulation  bool   // tabulation allowed
-	Characters  []rune // other special characters eg: '\','/','@'
-	Minimum     int    // min characters eg 2 "lo" ok default 0 no defined
-	Maximum     int    // max characters eg 1 "l" ok default 0 no defined}
-}
-
 const tabulation = '	'
 const white_space = ' '
 const break_line = '\n'
 
-// const carriage_return = '\r'
+var valid_letters = map[rune]bool{
+	'a': true, 'b': true, 'c': true, 'd': true, 'e': true, 'f': true, 'g': true, 'h': true, 'i': true,
+	'j': true, 'k': true, 'l': true, 'm': true, 'n': true, 'o': true, 'p': true, 'q': true, 'r': true,
+	's': true, 't': true, 'u': true, 'v': true, 'w': true, 'x': true, 'y': true, 'z': true,
+	'ñ': true,
 
-func (p permitted) Validate(text string) error {
+	'A': true, 'B': true, 'C': true, 'D': true, 'E': true, 'F': true, 'G': true, 'H': true, 'I': true,
+	'J': true, 'K': true, 'L': true, 'M': true, 'N': true, 'O': true, 'P': true, 'Q': true, 'R': true,
+	'S': true, 'T': true, 'U': true, 'V': true, 'W': true, 'X': true, 'Y': true, 'Z': true,
+	'Ñ': true,
+}
 
+var valid_tilde = map[rune]bool{
+	'á': true, 'é': true, 'í': true, 'ó': true, 'ú': true,
+}
+
+var valid_number = map[rune]bool{
+	'0': true, '1': true, '2': true, '3': true, '4': true, '5': true, '6': true, '7': true, '8': true, '9': true,
+}
+
+type permitted struct {
+	Letters      bool
+	Tilde        bool
+	Numbers      bool
+	BreakLine    bool   // line breaks allowed
+	WhiteSpaces  bool   // white spaces allowed
+	Tabulation   bool   // tabulation allowed
+	Characters   []rune // other special characters eg: '\','/','@'
+	Minimum      int    // min characters eg 2 "lo" ok default 0 no defined
+	Maximum      int    // max characters eg 1 "l" ok default 0 no defined}
+	NotStartWith []rune // characters not allowed at the beginning
+}
+
+func (h input) Validate(text string) error {
 	var err error
 
-	if p.Minimum != 0 {
-		if len(text) < p.Minimum {
-			return errors.New(Lang.TNum("min_size", p.Minimum))
+	// Validar caracteres no permitidos al inicio
+	if len(h.NotStartWith) > 0 && len(text) > 0 {
+		firstChar := rune(text[0])
+		for _, char := range h.NotStartWith {
+			if firstChar == char {
+
+				arg := string(char)
+				if char == ' ' {
+					arg = Lang.T("white_spaces")
+				}
+
+				return errors.New(Lang.T("do_not_start_with", arg))
+			}
 		}
 	}
 
-	if p.Maximum != 0 {
-		if len(text) > p.Maximum {
-			return errors.New(Lang.TNum("max_size", p.Maximum))
+	if h.Minimum != 0 {
+		if len(text) < h.Minimum {
+			return errors.New(Lang.TNum("min_size", h.Minimum))
+		}
+	}
+
+	if h.Maximum != 0 {
+		if len(text) > h.Maximum {
+			return errors.New(Lang.TNum("max_size", h.Maximum))
 		}
 	}
 
 	for _, char := range text {
-		if char == tabulation && p.Tabulation {
+		if char == tabulation && h.Tabulation {
 			continue
 		}
 
-		if char == white_space && p.WhiteSpaces {
+		if char == white_space && h.WhiteSpaces {
 			continue
 		}
 
-		if char == break_line && p.BreakLine {
+		if char == break_line && h.BreakLine {
 			continue
 		}
 
-		if p.Letters {
+		if h.Letters {
 			if !valid_letters[char] {
 				err = errors.New(Lang.TChar("not_letter", string(char)))
 			} else {
@@ -61,7 +95,7 @@ func (p permitted) Validate(text string) error {
 			}
 		}
 
-		if p.Tilde {
+		if h.Tilde {
 			if !valid_tilde[char] {
 				err = errors.New(Lang.TChar("unsupported_tilde", string(char)))
 			} else {
@@ -70,10 +104,10 @@ func (p permitted) Validate(text string) error {
 			}
 		}
 
-		if p.Numbers {
+		if h.Numbers {
 			if !valid_number[char] {
 				if char == ' ' {
-					err = errors.New(Lang.T("white_spaces"))
+					err = errors.New(Lang.T("white_spaces_not_allowed"))
 				} else {
 					err = errors.New(Lang.TChar("not_number", string(char)))
 				}
@@ -83,9 +117,9 @@ func (p permitted) Validate(text string) error {
 			}
 		}
 
-		if len(p.Characters) != 0 {
+		if len(h.Characters) != 0 {
 			var found bool
-			for _, c := range p.Characters {
+			for _, c := range h.Characters {
 				if c == char {
 					found = true
 					break
@@ -97,7 +131,7 @@ func (p permitted) Validate(text string) error {
 				continue
 			} else {
 				if char == white_space {
-					return errors.New(Lang.T("white_spaces"))
+					return errors.New(Lang.T("white_spaces_not_allowed"))
 				} else if valid_tilde[char] {
 					return errors.New(Lang.TChar("tilde_not_allowed", string(char)))
 				} else if char == tabulation {
@@ -116,6 +150,8 @@ func (p permitted) Validate(text string) error {
 
 	return err
 }
+
+// const carriage_return = '\r'
 
 func (a attributes) checkOptionKeys(value string) error {
 
@@ -171,25 +207,6 @@ func (a attributes) WrongTestData() (out []string) {
 }
 
 // Define un mapa de caracteres válidos
-var valid_letters = map[rune]bool{
-	'a': true, 'b': true, 'c': true, 'd': true, 'e': true, 'f': true, 'g': true, 'h': true, 'i': true,
-	'j': true, 'k': true, 'l': true, 'm': true, 'n': true, 'o': true, 'p': true, 'q': true, 'r': true,
-	's': true, 't': true, 'u': true, 'v': true, 'w': true, 'x': true, 'y': true, 'z': true,
-	'ñ': true,
-
-	'A': true, 'B': true, 'C': true, 'D': true, 'E': true, 'F': true, 'G': true, 'H': true, 'I': true,
-	'J': true, 'K': true, 'L': true, 'M': true, 'N': true, 'O': true, 'P': true, 'Q': true, 'R': true,
-	'S': true, 'T': true, 'U': true, 'V': true, 'W': true, 'X': true, 'Y': true, 'Z': true,
-	'Ñ': true,
-}
-
-var valid_tilde = map[rune]bool{
-	'á': true, 'é': true, 'í': true, 'ó': true, 'ú': true,
-}
-
-var valid_number = map[rune]bool{
-	'0': true, '1': true, '2': true, '3': true, '4': true, '5': true, '6': true, '7': true, '8': true, '9': true,
-}
 
 func (p permitted) MinMaxAllowedChars() (min, max int) {
 	return p.Minimum, p.Maximum

@@ -1,7 +1,6 @@
 package inputs
 
 import (
-	"log"
 	"testing"
 )
 
@@ -30,7 +29,8 @@ func Test_Valid(t *testing.T) {
 
 	for prueba, data := range validTestData {
 		t.Run((prueba + " " + data.text), func(t *testing.T) {
-			err := data.Validate(data.text)
+			tempInput := input{permitted: data.permitted}
+			err := tempInput.Validate(data.text)
 
 			var err_str string
 			if err != nil {
@@ -38,8 +38,8 @@ func Test_Valid(t *testing.T) {
 			}
 
 			if err_str != data.expected {
-				log.Println(prueba)
-				log.Fatalf("expectativa [%v] resultado [%v]\n%v", data.expected, err, data.text)
+				// log.Println(prueba)
+				t.Fatalf("\nexpected:\n[%v]\n\nresult:\n[%v]\n%v\n", data.expected, err, data.text)
 			}
 
 		})

@@ -36,7 +36,7 @@ func (h hour) Validate(value string) error {
 		return errors.New("la hora 24 no existe")
 	}
 
-	return h.permitted.Validate(value)
+	return h.Validate(value)
 
 }
 

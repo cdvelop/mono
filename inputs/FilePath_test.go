@@ -24,7 +24,7 @@ var (
 		"ruta con nombres de directorio con guiones bajos": {".\\mi_directorio\\sub_directorio\\", ""},
 		"un numero es una ruta valida?":                    {"5", ""},
 		"una sola palabra es una ruta valida?":             {"ruta", ""},
-		"espacios en blanco permitidos?":                   {".\\ruta con espacio en blanco\\", Lang.T("white_spaces")},
+		"espacios en blanco permitidos?":                   {".\\ruta con espacio en blanco\\", Lang.T("white_spaces_not_allowed")},
 	}
 )
 

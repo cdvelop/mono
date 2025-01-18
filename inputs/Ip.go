@@ -62,7 +62,7 @@ func (i ip) Validate(value string) error {
 		return errors.New("formato IPv6 no valida")
 	}
 
-	return i.permitted.Validate(value)
+	return i.Validate(value)
 
 }
 
