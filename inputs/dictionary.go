@@ -15,6 +15,8 @@ type dictionary struct {
 	DoesNotExist      string `es:"no existe"`
 	DoesNotHave       string `es:"no tiene"`
 	DoNotStartWith    string `es:"no debe comenzar con"`
+	Digit             string `es:"dígito"`
+	Verifier          string `es:"verificador"`
 	Email             string `es:"correo electrónico"`
 	Empty             string `es:"vacío"`
 	Example           string `es:"ejemplo"`
@@ -22,6 +24,7 @@ type dictionary struct {
 	Format            string `es:"Formato"`
 	Gender            string `es:"género"`
 	Hour              string `es:"hora"`
+	HyphenMissing     string `es:"guion faltante"`
 	In                string `es:"en"`
 	Is                string `es:"es"`
 	LastName          string `es:"apellido"`

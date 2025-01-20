@@ -12,23 +12,23 @@ func Test_InputRut(t *testing.T) {
 
 		dataRut = map[string]struct {
 			inputData string
-
-			expected string
+			expected  string
 		}{
-			"sin guion 15890022k":         {"15890022k", errGuionRut},
-			"no tiene guion 177344788":    {"177344788", errGuionRut},
+			"without hyphen 15890022k":    {"15890022k", Lang.T(D.HyphenMissing)},
+			"no hyphen 177344788":         {"177344788", Lang.T(D.HyphenMissing)},
 			"ok 7863697-1":                {"7863697-1", ""},
 			"ok 20373221-K":               {"20373221-k", ""},
-			"run validado? permitido?":    {"7863697-W", "dígito verificador W inválido"},
-			"cambio dígito a k 7863697-k": {"7863697-k", "dígito verificador k inválido"},
-			"cambio dígito a 0 7863697-0": {"7863697-0", "dígito verificador 0 inválido"},
+			"valid run? allowed?":         {"7863697-W", Lang.T(D.Digit, D.Verifier, "W", D.NotValid)},
+			"change digit to k 7863697-k": {"7863697-k", Lang.T(D.Digit, D.Verifier, "k", D.NotValid)},
+			"change digit to 0 7863697-0": {"7863697-0", Lang.T(D.Digit, D.Verifier, 0, D.NotValid)},
 			"ok 14080717-6":               {"14080717-6", ""},
-			"incorrecto 14080717-0":       {"14080717-0", "dígito verificador 0 inválido"},
-			"correcto cero al inicio? ":   {"07863697-1", errCeroRut},
-			"data correcta solo espacio?": {" ", errRut01},
+			"incorrect 14080717-0":        {"14080717-0", Lang.T(D.Digit, D.Verifier, 0, D.NotValid)},
+			"correct zero at start?":      {"07863697-1", Lang.T(D.DoNotStartWith, D.Digit, 0, D.NotValid)},
+			"correct data only space?":    {" ", Lang.T(D.MinSize, 9, D.Chars)},
 			"ok 17734478-8":               {"17734478-8", ""},
-			"caracteres permitidos?":      {`%$"1 `, errGuionRut},
-			"no tiene guion 20373221K":    {"20373221k", errGuionRut},
+			"allowed characters?":         {`%$"1 `, Lang.T(D.Chars, D.NotAllowed)},
+			"pasaporte ax001223b ok?":     {"ax001223b", ""},
+			"caída con dato":              {"123", Lang.T(D.MinSize, 9, D.Chars)},
 		}
 	)
 	for prueba, data := range dataRut {
