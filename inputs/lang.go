@@ -31,7 +31,14 @@ func init() {
 	Lang = lang{
 		current: "es",
 		translations: map[string]map[string]string{
-			"en": {},
+			"en": {
+				"maximum size 20 characters":  "maximum size 20 characters",
+				"character E is not a number": "character E is not a number",
+				"character - is not a number": "character - is not a number",
+				"character h is not a number": "character h is not a number",
+				"maximum size 11 characters":  "maximum size 11 characters",
+				"minimum size 7 characters":   "minimum size 7 characters",
+			},
 		},
 		err: &errMessage{
 			message: "",

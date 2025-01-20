@@ -165,7 +165,20 @@ func stringToDateNumberSeparate(date string) (year, month, day int, err error) {
 //   - err: error if the day is not valid or cannot be converted
 func validateDay(dayTxt string) (day int, err error) {
 
-	errOut := Lang.Err(dayTxt, D.Format, D.Day, D.NotValid, D.Example, ':', "01 - 31")
+	errOut := Lang.Err(D.Field, D.Day, D.NotValid)
+
+	if len(dayTxt) > 2 {
+		err = Lang.Err(D.MaxSize, "2", D.Chars)
+		return
+	}
+
+	// Verificar que todos los caracteres sean dígitos
+	for _, c := range dayTxt {
+		if c < '0' || c > '9' {
+			err = Lang.Err(D.NotNumber)
+			return
+		}
+	}
 
 	if dayTxt >= "01" && dayTxt <= "09" {
 		day, err = strconv.Atoi(string(dayTxt[1]))

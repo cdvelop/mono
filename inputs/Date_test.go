@@ -78,11 +78,11 @@ func Test_InputMonthDay(t *testing.T) {
 			expected  string
 		}{
 			"day ok?":               {"01", ""},
-			"characters?":           {"0l", Lang.T(D.NotNumber)},
+			"characters not number": {"0l", Lang.T(D.NotNumber)},
 			"month ok?":             {"31", ""},
 			"date without year ok?": {"31-01", Lang.T(D.MaxSize, "2", D.Chars)},
 			"incorrect":             {"2002-12-03", Lang.T(D.MaxSize, "2", D.Chars)},
-			"incorrect format":      {"21/12", Lang.T(D.MaxSize, "2", D.Chars)},
+			"incorrect format":      {"21/12", Lang.T(D.MaxSize, 2, D.Chars)},
 			"incorrect data":        {"0000-00-00", Lang.T(D.MaxSize, "2", D.Chars)},
 			"empty data":            {"", Lang.T(D.Field, D.Empty, D.NotAllowed)},
 			"incorrect 32 day":      {"32", Lang.T(D.Field, D.Day, D.NotValid)},

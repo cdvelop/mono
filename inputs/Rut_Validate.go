@@ -7,43 +7,43 @@ import (
 )
 
 // validación con datos de entrada
-// func (r rut) Validate(value string) error {
+func (r rut) Validate(value string) error {
 
-// 	const hidden_err = "campo invalido"
+	const hidden_err = "campo invalido"
 
-// 	// for _, doc := range options {
-// 	// 	if doc == "ex" {
-// 	// 		err := r.dni.Validate(value)
-// 	// 		if err != nil && r.hideTyping {
-// 	// 			return errors.New(hidden_err)
-// 	// 		}
-// 	// 		return err
-// 	// 	} else {
-// 	// 		err := r.runValidate(value)
-// 	// 		if err != nil && r.hideTyping {
-// 	// 			return errors.New(hidden_err)
-// 	// 		}
-// 	// 		return err
-// 	// 	}
-// 	// }
+	for _, doc := range r.options {
+		if doc == "ex" {
+			err := r.dni.Validate(value)
+			if err != nil && r.hideTyping {
+				return errors.New(hidden_err)
+			}
+			return err
+		} else {
+			err := r.runValidate(value)
+			if err != nil && r.hideTyping {
+				return errors.New(hidden_err)
+			}
+			return err
+		}
+	}
 
-// 	if r.dni_mode {
-// 		if !strings.Contains(value, `-`) {
-// 			err := r.Validate(value)
-// 			if err != nil && r.hideTyping {
-// 				return errors.New(hidden_err)
-// 			}
-// 			return err
-// 		}
-// 	}
+	if r.dni_mode {
+		if !strings.Contains(value, `-`) {
+			err := r.Validate(value)
+			if err != nil && r.hideTyping {
+				return errors.New(hidden_err)
+			}
+			return err
+		}
+	}
 
-// 	err := r.runValidate(value)
-// 	if err != nil && r.hideTyping {
-// 		return errors.New(hidden_err)
-// 	}
+	err := r.runValidate(value)
+	if err != nil && r.hideTyping {
+		return errors.New(hidden_err)
+	}
 
-// 	return err
-// }
+	return err
+}
 
 const errCeroRut = "primer dígito no puede ser 0"
 
