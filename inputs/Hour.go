@@ -1,7 +1,5 @@
 package inputs
 
-import "errors"
-
 // formato 08:00
 // options: min="08:00", max="17:00"
 func Hour(params ...any) *hour {
@@ -10,14 +8,14 @@ func Hour(params ...any) *hour {
 			attributes: attributes{
 				htmlName:   "time",
 				customName: "Hour",
-				Title:      `title="formato hora: HH:MM"`,
-				// Pattern: `^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]`,
+				Title:      `title="` + Lang.T(D.Format, D.Hour, ':') + ` HH:MM"`,
 			},
 			permitted: permitted{
-				Numbers:    true,
-				Characters: []rune{':'},
-				Minimum:    5,
-				Maximum:    5,
+				Numbers:        true,
+				Characters:     []rune{':'},
+				Minimum:        5,
+				Maximum:        5,
+				TextNotAllowed: []string{"24:"},
 			},
 		},
 	}
@@ -28,16 +26,6 @@ func Hour(params ...any) *hour {
 
 type hour struct {
 	input
-}
-
-func (h hour) Validate(value string) error {
-
-	if len(value) >= 2 && value[0] == '2' && value[1] == '4' {
-		return errors.New("la hora 24 no existe")
-	}
-
-	return h.Validate(value)
-
 }
 
 func (h hour) GoodTestData() (out []string) {

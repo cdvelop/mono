@@ -1,26 +1,26 @@
 package inputs
 
 import (
-	"errors"
 	"strings"
 )
 
-// dirección ip valida campos separados por puntos
+// valid ip address with dot-separated fields
 func Ip(params ...any) *ip {
 	new := &ip{
 		input: input{
 			attributes: attributes{
 				htmlName:   "text",
 				customName: "ip",
-				Title:      `title="dirección ip valida campos separados por puntos ej 192.168.0.8"`,
+				Title:      `title="` + Lang.T(D.Example, ':') + ` 192.168.0.8"`,
 				// Pattern: `^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)`,
 			},
 			permitted: permitted{
-				Letters:    true,
-				Numbers:    true,
-				Characters: []rune{'.', ':'},
-				Minimum:    7,  //IPv4 - IPv6 es 39
-				Maximum:    39, // IPv6 - IPv4 es 15
+				Letters:         true,
+				Numbers:         true,
+				Characters:      []rune{'.', ':'},
+				Minimum:         7,  //IPv4 - IPv6 es 39
+				Maximum:         39, // IPv6 - IPv4 es 15
+				ExtraValidation: &ip{},
 			},
 		},
 	}
@@ -33,14 +33,13 @@ type ip struct {
 	input
 }
 
-// validación con datos de entrada
-func (i ip) Validate(value string) error {
-
-	if value == "0.0.0.0" {
-		return errors.New("ip de ejemplo no valida")
-	}
+func (i ip) ExtraValidation(value string) error {
 
 	var ipV string
+
+	if value == "0.0.0.0" {
+		return Lang.Err(D.Example, "IP", D.NotAllowed, ':', "0.0.0.0")
+	}
 
 	if strings.Contains(value, ":") { //IPv6
 		ipV = ":"
@@ -48,21 +47,17 @@ func (i ip) Validate(value string) error {
 		ipV = "."
 	}
 
-	if ipV == "" {
-		return errors.New("version IPv4 o 6 no encontrada")
-	}
-
 	part := strings.Split(value, ipV)
 
 	if ipV == "." && len(part) != 4 {
-		return errors.New("formato IPv4 no valida")
+		return Lang.Err(D.Format, "IPv4", D.NotValid)
 	}
 
 	if ipV == ":" && len(part) != 8 {
-		return errors.New("formato IPv6 no valida")
+		return Lang.Err(D.Format, "IPv6", D.NotValid)
 	}
 
-	return i.Validate(value)
+	return nil
 
 }
 

@@ -5,24 +5,23 @@ import (
 	"testing"
 )
 
-var (
-	modelHour = Hour()
-
-	dataHour = map[string]struct {
-		inputData string
-		expected  string
-	}{
-		"correcto":    {"23:59", ""},
-		"correcto 00": {"00:00", ""},
-		"correcto 12": {"12:00", ""},
-
-		"incorrecto 24":       {"24:00", "la hora 24 no existe"},
-		"incorrecto sin data": {"", "tamaño mínimo 5 caracteres"},
-		"incorrecto carácter": {"13-34", "carácter - no permitido"},
-	}
-)
-
 func Test_InputHour(t *testing.T) {
+	var (
+		modelHour = Hour()
+
+		dataHour = map[string]struct {
+			inputData string
+			expected  string
+		}{
+			"correct":    {"23:59", ""},
+			"correct 00": {"00:00", ""},
+			"correct 12": {"12:00", ""},
+
+			"incorrect 24":        {"24:00", Lang.T(D.NotAllowed, ':', "24:")},
+			"incorrect no data":   {"", Lang.T(D.Field, D.Empty, D.NotAllowed)},
+			"incorrect character": {"13-34", Lang.T(D.Char, "-", D.NotAllowed)},
+		}
+	)
 	for prueba, data := range dataHour {
 		t.Run((prueba + " " + data.inputData), func(t *testing.T) {
 			err := modelHour.Validate(data.inputData)
@@ -41,6 +40,7 @@ func Test_InputHour(t *testing.T) {
 }
 
 func Test_TagHour(t *testing.T) {
+	modelHour := Hour()
 	tag := modelHour.Render(1)
 	if tag == "" {
 		log.Fatalln("ERROR NO TAG RENDERING ")
@@ -48,6 +48,7 @@ func Test_TagHour(t *testing.T) {
 }
 
 func Test_GoodInputHour(t *testing.T) {
+	modelHour := Hour()
 	for _, data := range modelHour.GoodTestData() {
 		t.Run((data), func(t *testing.T) {
 			if ok := modelHour.Validate(data); ok != nil {
@@ -58,6 +59,7 @@ func Test_GoodInputHour(t *testing.T) {
 }
 
 func Test_WrongInputHour(t *testing.T) {
+	modelHour := Hour()
 	for _, data := range modelHour.WrongTestData() {
 		t.Run((data), func(t *testing.T) {
 			if ok := modelHour.Validate(data); ok == nil {

@@ -5,30 +5,26 @@ import (
 	"testing"
 )
 
-var (
-	filePathTestData = map[string]struct {
-		inputData string
-		expected  string
-	}{
-		// "tres rutas separadas por comas":       {`.\\files\\1234\\,.\\files\\5678\\,.\\images\\ok\\`, "false"},
-		"dirección correcta":                               {".\\files\\1234\\", ""},
-		"dirección correcta sin punto inicio?":             {"\\files\\1234\\", errPath.Error()},
-		"ruta relativa con directorios":                    {".\\files\\1234\\", ""},
-		"ruta relativa sin punto de inicio":                {"\\files\\1234\\", errPath.Error()},
-		"ruta absoluta en Linux":                           {"/home/user/files/", ""},
-		"ruta absoluta sin punto de inicio":                {"/files/1234/", ""},
-		"ruta relativa sin directorios ok?":                {".\\", ""},
-		"ruta relativa sin barra final":                    {"./files/1234", ""},
-		"ruta relativa con barra final":                    {"./files/1234/", ""},
-		"ruta con nombre de archivo":                       {".\\files\\1234\\archivo.txt", ""},
-		"ruta con nombres de directorio con guiones bajos": {".\\mi_directorio\\sub_directorio\\", ""},
-		"un numero es una ruta valida?":                    {"5", ""},
-		"una sola palabra es una ruta valida?":             {"ruta", ""},
-		"espacios en blanco permitidos?":                   {".\\ruta con espacio en blanco\\", Lang.T("white_spaces_not_allowed")},
-	}
-)
+func Test_FilePath(t *testing.T) {
 
-func Test_Check(t *testing.T) {
+	var (
+		filePathTestData = map[string]struct {
+			inputData string
+			expected  string
+		}{
+			"correct path":                                {".\\files\\1234\\", ""},
+			"correct path without starting point?":        {"\\files\\1234\\", Lang.Err(D.DoNotStartWith, '\\').Error()},
+			"absolute path in Linux":                      {"/home/user/files/", ""},
+			"absolute path without starting point":        {"/files/1234/", ""},
+			"relative path without directories ok?":       {".\\", ""},
+			"relative path with final slash":              {"./files/1234/", ""},
+			"path with filename":                          {".\\files\\1234\\archivo.txt", ""},
+			"path with directory names using underscores": {".\\mi_directorio\\sub_directorio\\", ""},
+			"is a number a valid path?":                   {"5", ""},
+			"is a single word a valid path?":              {"path", ""},
+			"white spaces allowed?":                       {".\\path with white space\\", Lang.T(D.WhiteSpace, D.NotAllowed)},
+		}
+	)
 
 	for prueba, data := range filePathTestData {
 		t.Run((prueba + " " + data.inputData), func(t *testing.T) {
@@ -41,7 +37,7 @@ func Test_Check(t *testing.T) {
 
 			if err_str != data.expected {
 				log.Println(prueba)
-				log.Fatalf("resultado: [%v] expectativa: [%v]\n%v", err, data.expected, data.inputData)
+				log.Fatalf("got: [%v] expected: [%v]\n%v", err, data.expected, data.inputData)
 			}
 		})
 	}

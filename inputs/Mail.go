@@ -1,5 +1,7 @@
 package inputs
 
+import "strings"
+
 func Mail(params ...any) *mail {
 	new := &mail{
 		input: input{
@@ -9,11 +11,12 @@ func Mail(params ...any) *mail {
 				// Pattern:     `[a-zA-Z0-9!#$%&'*_+-]([\.]?[a-zA-Z0-9!#$%&'*_+-])+@[a-zA-Z0-9]([^@&%$\/()=?¿!.,:;]|\d)+[a-zA-Z0-9][\.][a-zA-Z]{2,4}([\.][a-zA-Z]{2})?`,
 			},
 			permitted: permitted{
-				Letters:    true,
-				Numbers:    true,
-				Characters: []rune{'@', '.', '_'},
-				Minimum:    0,
-				Maximum:    0,
+				Letters:         true,
+				Numbers:         true,
+				Characters:      []rune{'@', '.', '_'},
+				Minimum:         0,
+				Maximum:         0,
+				ExtraValidation: &mail{},
 			},
 		},
 	}
@@ -26,21 +29,20 @@ type mail struct {
 	input
 }
 
-// validación con datos de entrada
-// func (m mail) Validate(value string) error {
+func (m mail) ExtraValidation(value string) error {
 
-// 	if strings.Contains(value, "example") {
-// 		return errors.New(value + " es un correo de ejemplo")
-// 	}
+	if strings.Contains(value, "example") {
+		return Lang.Err(D.Example, D.Email, D.NotAllowed)
+	}
 
-// 	parts := strings.Split(value, "@")
-// 	if len(parts) != 2 {
-// 		return errors.New("error en @ del correo " + value)
-// 	}
+	parts := strings.Split(value, "@")
+	if len(parts) != 2 {
+		return Lang.Err(D.Format, D.Email, D.NotValid)
+	}
 
-// 	return m.Validate(value)
+	return nil
 
-// }
+}
 
 func (mail) GoodTestData() (out []string) {
 

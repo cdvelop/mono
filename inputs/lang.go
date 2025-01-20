@@ -1,81 +1,131 @@
 package inputs
 
-import "strconv"
+import (
+	"fmt"
+	"reflect"
+	"strconv"
+	"strings"
+)
 
 type lang struct {
-	Current string // "es" or "en"
+	current      string // "es" or "en"
+	translations map[string]map[string]string
+	out          strings.Builder
+	err          *errMessage
 }
 
-var Lang = lang{
-	Current: "es",
+type errMessage struct {
+	message string
 }
 
-var translations = map[string]map[string]string{
-	"en": {
-		"allowed":                  "allowed:",
-		"not_allowed":              " not allowed",
-		"character":                "character ",
-		"characters":               "characters:",
-		"chars":                    " characters",
-		"letters":                  "letters",
-		"max":                      "max.",
-		"max_size":                 "maximum size ",
-		"min":                      "min.",
-		"min_size":                 "minimum size ",
-		"newline_not_allowed":      "line break not allowed",
-		"not_letter":               " is not a letter",
-		"not_number":               " is not a number",
-		"numbers":                  "numbers",
-		"tab_not_allowed":          "text tabulation not allowed",
-		"tilde_not_allowed":        " with tilde not allowed",
-		"unsupported_tilde":        "unsupported tilde ",
-		"white_spaces_not_allowed": "white spaces not allowed",
-		"white_spaces":             "white spaces",
-		"do_not_start_with":        "do not start with",
-		"space":                    "space",
-	},
-	"es": {
-		"allowed":                  "permitido:",
-		"not_allowed":              " no permitido",
-		"character":                "carácter ",
-		"characters":               "caracteres:",
-		"chars":                    " caracteres",
-		"letters":                  "letras",
-		"max":                      "máx.",
-		"max_size":                 "tamaño máximo ",
-		"min":                      "mín.",
-		"min_size":                 "tamaño mínimo ",
-		"newline_not_allowed":      "salto de linea no permitido",
-		"not_letter":               " no es una letra",
-		"not_number":               " no es un numero",
-		"numbers":                  "números",
-		"tab_not_allowed":          "tabulation de texto no permitida",
-		"tilde_not_allowed":        " con tilde no permitida",
-		"unsupported_tilde":        "tilde ",
-		"white_spaces_not_allowed": "espacios en blanco no permitidos",
-		"white_spaces":             "espacios en blanco",
-		"do_not_start_with":        "no debe comenzar con ",
-		"space":                    "espacio",
-	},
-}
+// var Lang lang
+var Lang lang
 
-func (l lang) T(key string, args ...string) string {
-	if trans, ok := translations[l.Current][key]; ok {
-		result := trans
-		var space string
-		for _, arg := range args {
-			result += space + arg
-			space = " "
-		}
-		return result
+// var d dictionary
+var D dictionary
+
+func init() {
+
+	langSupported := []string{"es"}
+
+	Lang = lang{
+		current: "es",
+		translations: map[string]map[string]string{
+			"en": {},
+		},
+		err: &errMessage{
+			message: "",
+		},
 	}
-	return key
+
+	// initialize translations map
+	for _, lang := range langSupported {
+		Lang.translations[lang] = map[string]string{}
+	}
+
+	v := reflect.ValueOf(&D).Elem()
+	t := v.Type()
+
+	for i := 0; i < v.NumField(); i++ {
+		field := v.Field(i)
+		fieldType := t.Field(i)
+
+		if field.CanSet() {
+			// Convert field name to: snake case
+			fieldName := snakeCase(fieldType.Name, " ")
+			// Assign field name to dictionary structure
+			field.SetString(fieldName)
+			// Update translations map
+			Lang.translations["en"][fieldName] = fieldName
+			for _, lang := range langSupported {
+				// Get tags for other languages "es","pt"
+				esTag := fieldType.Tag.Get(lang)
+				if esTag != "" {
+					Lang.translations[lang][fieldName] = esTag
+				}
+			}
+		}
+	}
+	// fmt.Println("dictionary initialized", Lang)
 }
 
-func (l lang) TNum(key string, num int) string {
-	return l.T(key) + strconv.Itoa(num) + l.T("chars")
+// Set set the language eg: "es", "en", "pt", "fr"
+func (l *lang) Set(lang string) {
+	l.current = lang
 }
 
-func (l lang) TChar(key, char string) string {
-	return l.T("character") + char + l.T(key)
+// T returns the translation of the given arguments.
+// eg: Lang.T("hello", "world") returns "hello world"
+func (l *lang) T(args ...interface{}) string {
+	l.out.Reset()
+	var space string
+	for _, arg := range args {
+		switch v := arg.(type) {
+		case string:
+			if trans, ok := l.translations[l.current][v]; ok {
+				l.out.WriteString(space + trans)
+			} else {
+				l.out.WriteString(space + v)
+			}
+		case []string:
+			for _, s := range v {
+				if trans, ok := l.translations[l.current][s]; ok {
+					l.out.WriteString(space + trans)
+				} else {
+					l.out.WriteString(space + s)
+				}
+				space = " "
+			}
+		case rune:
+
+			if v == ':' {
+				l.out.WriteString(":")
+				continue
+			}
+
+			l.out.WriteString(space + string(v))
+		case int:
+			l.out.WriteString(space + strconv.Itoa(v))
+		case float64:
+			l.out.WriteString(space + strconv.FormatFloat(v, 'f', -1, 64))
+		case bool:
+			l.out.WriteString(space + strconv.FormatBool(v))
+		case error:
+			l.out.WriteString(space + v.Error())
+		default:
+			l.out.WriteString(space + fmt.Sprint(v))
+		}
+		space = " "
+	}
+	return l.out.String()
+}
+
+func (l lang) Err(args ...any) error {
+	l.T(args...)
+	l.err.message = l.out.String()
+	return l.err
+}
+
+func (e errMessage) Error() string {
+	return e.message
 }

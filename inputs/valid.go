@@ -1,7 +1,6 @@
 package inputs
 
 import (
-	"errors"
 	"strings"
 )
 
@@ -30,46 +29,68 @@ var valid_number = map[rune]bool{
 }
 
 type permitted struct {
-	Letters      bool
-	Tilde        bool
-	Numbers      bool
-	BreakLine    bool   // line breaks allowed
-	WhiteSpaces  bool   // white spaces allowed
-	Tabulation   bool   // tabulation allowed
-	Characters   []rune // other special characters eg: '\','/','@'
-	Minimum      int    // min characters eg 2 "lo" ok default 0 no defined
-	Maximum      int    // max characters eg 1 "l" ok default 0 no defined}
-	NotStartWith []rune // characters not allowed at the beginning
+	Letters         bool
+	Tilde           bool
+	Numbers         bool
+	BreakLine       bool     // line breaks allowed
+	WhiteSpaces     bool     // white spaces allowed
+	Tabulation      bool     // tabulation allowed
+	TextNotAllowed  []string // text not allowed eg: "hola" not allowed
+	Characters      []rune   // other special characters eg: '\','/','@'
+	Minimum         int      // min characters eg 2 "lo" ok default 0 no defined
+	Maximum         int      // max characters eg 1 "l" ok default 0 no defined}
+	ExtraValidation extraValidation
+	StartWith       *permitted // characters allowed at the beginning
+}
+
+type extraValidation interface {
+	ExtraValidation(text string) error
 }
 
 func (h input) Validate(text string) error {
-	var err error
 
-	// Validar caracteres no permitidos al inicio
-	if len(h.NotStartWith) > 0 && len(text) > 0 {
-		firstChar := rune(text[0])
-		for _, char := range h.NotStartWith {
-			if firstChar == char {
+	// Validar empty string
+	if len(text) == 0 {
+		if h.allowSkipCompleted {
+			return nil
+		}
+		return Lang.Err(D.Field, D.Empty, D.NotAllowed)
+	}
 
-				arg := string(char)
-				if char == ' ' {
-					arg = Lang.T("white_spaces")
-				}
-
-				return errors.New(Lang.T("do_not_start_with", arg))
-			}
+	if h.StartWith != nil {
+		if err := h.StartWith.validate(text[0:1]); err != nil {
+			return Lang.Err(D.DoNotStartWith, text[0:1])
 		}
 	}
 
+	if h.ExtraValidation != nil {
+		if err := h.ExtraValidation.ExtraValidation(text); err != nil {
+			return err
+		}
+	}
+
+	return h.permitted.validate(text)
+}
+
+func (h permitted) validate(text string) (err error) {
+
 	if h.Minimum != 0 {
 		if len(text) < h.Minimum {
-			return errors.New(Lang.TNum("min_size", h.Minimum))
+			return Lang.Err(D.MinSize, h.Minimum, D.Chars)
 		}
 	}
 
 	if h.Maximum != 0 {
 		if len(text) > h.Maximum {
-			return errors.New(Lang.TNum("max_size", h.Maximum))
+			return Lang.Err(D.MaxSize, h.Maximum, D.Chars)
+		}
+	}
+
+	if len(h.TextNotAllowed) != 0 {
+		for _, notAllowed := range h.TextNotAllowed {
+			if strings.Contains(text, notAllowed) {
+				return Lang.Err(D.NotAllowed, ':', h.TextNotAllowed)
+			}
 		}
 	}
 
@@ -88,7 +109,7 @@ func (h input) Validate(text string) error {
 
 		if h.Letters {
 			if !valid_letters[char] {
-				err = errors.New(Lang.TChar("not_letter", string(char)))
+				err = Lang.Err(char, D.NotLetter)
 			} else {
 				err = nil
 				continue
@@ -97,7 +118,7 @@ func (h input) Validate(text string) error {
 
 		if h.Tilde {
 			if !valid_tilde[char] {
-				err = errors.New(Lang.TChar("unsupported_tilde", string(char)))
+				err = Lang.Err(char, D.TildeNotAllowed)
 			} else {
 				err = nil
 				continue
@@ -107,9 +128,9 @@ func (h input) Validate(text string) error {
 		if h.Numbers {
 			if !valid_number[char] {
 				if char == ' ' {
-					err = errors.New(Lang.T("white_spaces_not_allowed"))
+					err = Lang.Err(D.WhiteSpace, D.NotAllowed)
 				} else {
-					err = errors.New(Lang.TChar("not_number", string(char)))
+					err = Lang.Err(char, D.NotNumber)
 				}
 			} else {
 				err = nil
@@ -131,15 +152,15 @@ func (h input) Validate(text string) error {
 				continue
 			} else {
 				if char == white_space {
-					return errors.New(Lang.T("white_spaces_not_allowed"))
+					return Lang.Err(D.WhiteSpace, D.NotAllowed)
 				} else if valid_tilde[char] {
-					return errors.New(Lang.TChar("tilde_not_allowed", string(char)))
+					return Lang.Err(char, D.TildeNotAllowed)
 				} else if char == tabulation {
-					return errors.New(Lang.T("tab_not_allowed"))
+					return Lang.Err(D.TabText, D.NotAllowed)
 				} else if char == break_line {
-					return errors.New(Lang.T("newline_not_allowed"))
+					return Lang.Err(D.Newline, D.NotAllowed)
 				}
-				return errors.New(Lang.TChar("not_allowed", string(char)))
+				return Lang.Err(D.Char, char, D.NotAllowed)
 			}
 		}
 
@@ -160,7 +181,7 @@ func (a attributes) checkOptionKeys(value string) error {
 	for _, keyIn := range dataInArray {
 
 		if keyIn == "" {
-			return errors.New("selección requerida campo " + a.Name)
+			return Lang.Err(D.RequiredSelection, D.Field, a.Name)
 		}
 
 		var exist bool
@@ -172,7 +193,7 @@ func (a attributes) checkOptionKeys(value string) error {
 		}
 
 		if !exist {
-			return errors.New("valor " + keyIn + " no permitido en " + a.htmlName + " " + a.Name)
+			return Lang.Err(D.Value, keyIn, D.NotAllowed, D.In, a.htmlName, a.Name)
 		}
 
 	}
@@ -207,7 +228,6 @@ func (a attributes) WrongTestData() (out []string) {
 }
 
 // Define un mapa de caracteres válidos
-
 func (p permitted) MinMaxAllowedChars() (min, max int) {
 	return p.Minimum, p.Maximum
 }

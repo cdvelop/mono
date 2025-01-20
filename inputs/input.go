@@ -1,7 +1,6 @@
 package inputs
 
 import (
-	"fmt"
 	"reflect"
 	"strings"
 )
@@ -149,14 +148,14 @@ func (h *input) setDynamicTitle() {
 	}
 
 	var parts []string
-	parts = append(parts, Lang.T("allowed"))
+	parts = append(parts, Lang.T(D.Allowed))
 
 	if h.Letters {
-		parts = append(parts, Lang.T("letters"))
+		parts = append(parts, Lang.T(D.Letters))
 	}
 
 	if h.Numbers {
-		parts = append(parts, Lang.T("numbers"))
+		parts = append(parts, Lang.T(D.Numbers))
 	}
 
 	if len(h.Characters) > 0 {
@@ -168,15 +167,15 @@ func (h *input) setDynamicTitle() {
 				chars = append(chars, string(char))
 			}
 		}
-		parts = append(parts, fmt.Sprintf("%v %v", Lang.T("characters"), strings.Join(chars, " ")))
+		parts = append(parts, Lang.T(D.Chars, chars))
 	}
 
 	if h.Minimum != 0 {
-		parts = append(parts, fmt.Sprintf("%v %d", Lang.T("min"), h.Minimum))
+		parts = append(parts, Lang.T("min", h.Minimum))
 	}
 
 	if h.Maximum != 0 {
-		parts = append(parts, fmt.Sprintf("%v %d", Lang.T("max"), h.Maximum))
+		parts = append(parts, Lang.T("max", h.Maximum))
 	}
 
 	h.Title = strings.Join(parts, " ")
