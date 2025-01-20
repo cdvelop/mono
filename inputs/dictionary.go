@@ -9,9 +9,11 @@ type dictionary struct {
 	City              string `es:"ciudad"`
 	ConfirmPassword   string `es:"confirmar contraseña"`
 	Country           string `es:"país"`
+	Date              string `es:"fecha"`
 	Day               string `es:"día"`
 	Days              string `es:"días"`
 	DoesNotExist      string `es:"no existe"`
+	DoesNotHave       string `es:"no tiene"`
 	DoNotStartWith    string `es:"no debe comenzar con"`
 	Email             string `es:"correo electrónico"`
 	Empty             string `es:"vacío"`
@@ -50,7 +52,7 @@ type dictionary struct {
 	YearOutOfRange    string `es:"año fuera de rango"`
 	MonthOutOfRange   string `es:"mes fuera de rango"`
 	DayCannotBeZero   string `es:"día no puede ser cero"`
-	InvalidDateFormat string `es:"formato de fecha ingresado incorrecto ej: 2006-01-02"`
+	InvalidDateFormat string `es:"formato de fecha ingresado incorrecto"`
 	Year              string `es:"año"`
 	Month             string `es:"mes"`
 	January           string `es:"Enero"`

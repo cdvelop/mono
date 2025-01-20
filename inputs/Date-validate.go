@@ -1,7 +1,6 @@
 package inputs
 
 import (
-	"errors"
 	"strconv"
 )
 
@@ -35,13 +34,13 @@ func (d date) CheckDateExists(date string) error {
 	}
 
 	if day > month_days {
-		errMsg := d.NameMonths()[month] + " " + Lang.T(D.DoesNotExist) + " " + strconv.Itoa(day) + " " + Lang.T(D.Day) + "."
+		errMsg := Lang.T(d.NameMonths()[month], D.DoesNotHave, day, D.Days)
 
 		if !d.IsLeap(year) && month == 2 {
-			errMsg += " " + Lang.T(D.Year) + " " + date[:4] + " " + Lang.T(D.NotValid) + "."
+			errMsg += Lang.T(" ", Lang.T(D.Year), date[:4])
 		}
 
-		return errors.New(errMsg)
+		return Lang.Err(errMsg)
 	}
 
 	return nil
@@ -120,7 +119,8 @@ func (d date) IsLeap(year int) bool {
 	return year%4 == 0 && year%100 != 0 || year%400 == 0
 }
 
-// formato fecha "2006-01-02" retorna: 2006,1,2. NOTA: NO VERIFICA EL FORMATO INGRESADO
+// date format "2006-01-02" returns: 2006,1,2.
+// NOTE: DOES NOT VERIFY THE INPUT FORMAT
 func stringToDateNumberSeparate(date string) (year, month, day int, err error) {
 
 	//YEAR
@@ -145,15 +145,36 @@ func stringToDateNumberSeparate(date string) (year, month, day int, err error) {
 	}
 
 	//DAY
-	dayTxt := date[8:10]
+	day, err = validateDay(date[8:10])
+	if err != nil {
+		return
+	}
+
+	return
+}
+
+// validateDay validates and converts a day string to an integer
+// Parameters:
+//   - dayTxt: string representing a day in format "01" to "31"
+//
+// Returns:
+//   - day: integer value of the day
+//   - err: error if the day is not valid or cannot be converted
+func validateDay(dayTxt string) (day int, err error) {
+
+	errOut := Lang.Err(dayTxt, D.Format, D.Day, D.NotValid, D.Example, ':', "01 - 31")
 
 	if dayTxt >= "01" && dayTxt <= "09" {
 		day, err = strconv.Atoi(string(dayTxt[1]))
 	} else if dayTxt >= "10" && dayTxt <= "31" {
 		day, err = strconv.Atoi(dayTxt)
+	} else {
+		err = errOut
+		return
 	}
 
 	if err != nil {
+		err = errOut
 		return
 	}
 

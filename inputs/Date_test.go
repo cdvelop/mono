@@ -5,27 +5,26 @@ import (
 	"testing"
 )
 
-var (
-	modelDate = Date()
-
-	dataDate = map[string]struct {
-		inputData string
-		expected  string
-	}{
-		"correcto ":                      {"2002-12-03", ""},
-		"dia 29 febrero año bisiesto":    {"2020-02-29", ""},
-		"dia 29 febrero año no bisiesto": {"2023-02-29", Lang.T(D.February, D.DoesNotExist, "29", D.Days) + ". " + Lang.T(D.Year, "2023", D.Is, D.NotValid) + "."},
-		"junio no tiene 31 días":         {"2023-06-31", Lang.T(D.June, D.DoesNotExist, "31", D.Days) + "."},
-		"carácter de mas incorrecto ":    {"2002-12-03-", Lang.T(D.InvalidDateFormat, "2006-01-02")},
-		"formato incorrecto ":            {"21/12/1998", Lang.T(D.InvalidDateFormat, "2006-01-02")},
-		"fecha incorrecta ":              {"2020-31-01", " error 31 " + Lang.T(D.Is, D.InvalidDateFormat, D.Month)},
-		"fecha recortada sin año ok?":    {"31-01", Lang.T(D.InvalidDateFormat, "2006-01-02")},
-		"data incorrecta ":               {"0000-00-00", " error 00 " + Lang.T(D.Is, D.InvalidDateFormat, D.Month)},
-		"toda la data correcta?":         {"", Lang.T(D.InvalidDateFormat, "2006-01-02")},
-	}
-)
-
 func Test_InputDate(t *testing.T) {
+	var (
+		modelDate = Date()
+
+		dataDate = map[string]struct {
+			inputData string
+			expected  string
+		}{
+			"correct ":                        {"2002-12-03", ""},
+			"February 29th leap year":         {"2020-02-29", ""},
+			"February 29th non leap year":     {"2023-02-29", Lang.T(D.February, D.DoesNotHave, "29", D.Days, D.Year, "2023")},
+			"June does not have 31 days":      {"2023-06-31", Lang.T(D.June, D.DoesNotHave, "31", D.Days)},
+			"incorrect extra character ":      {"2002-12-03-", Lang.T(D.InvalidDateFormat, "2006-01-02")},
+			"incorrect format ":               {"21/12/1998", Lang.T(D.InvalidDateFormat, "2006-01-02")},
+			"incorrect date ":                 {"2020-31-01", " error 31 " + Lang.T(D.Is, D.InvalidDateFormat, D.Month)},
+			"shortened date without year ok?": {"31-01", Lang.T(D.InvalidDateFormat, "2006-01-02")},
+			"incorrect data ":                 {"0000-00-00", Lang.T(D.InvalidDateFormat)},
+			"all data correct?":               {"", Lang.T(D.InvalidDateFormat, "2006-01-02")}}
+	)
+
 	for prueba, data := range dataDate {
 		t.Run((prueba + data.inputData), func(t *testing.T) {
 			err := modelDate.Validate(data.inputData)
@@ -44,16 +43,16 @@ func Test_InputDate(t *testing.T) {
 }
 
 func Test_TagDate(t *testing.T) {
-	tag := modelDate.Render(1)
+	tag := Date().Render(1)
 	if tag == "" {
 		t.Fatal("ERROR NO TAG RENDERING ")
 	}
 }
 
 func Test_GoodInputDate(t *testing.T) {
-	for _, data := range modelDate.GoodTestData() {
+	for _, data := range Date().GoodTestData() {
 		t.Run((data), func(t *testing.T) {
-			if ok := modelDate.Validate(data); ok != nil {
+			if ok := Date().Validate(data); ok != nil {
 				t.Fatalf("result [%v] [%v]", ok, data)
 			}
 		})
@@ -61,9 +60,9 @@ func Test_GoodInputDate(t *testing.T) {
 }
 
 func Test_WrongInputDate(t *testing.T) {
-	for _, data := range modelDate.WrongTestData() {
+	for _, data := range Date().WrongTestData() {
 		t.Run((data), func(t *testing.T) {
-			if ok := modelDate.Validate(data); ok == nil {
+			if ok := Date().Validate(data); ok == nil {
 				t.Fatalf("result [%v] [%v]", ok, data)
 			}
 		})
