@@ -25,7 +25,7 @@ func (d date) CheckDateExists(date string) error {
 	}
 
 	if month < 1 || month > 12 {
-		return Lang.Err(D.MonthOutOfRange)
+		return Lang.Err(strconv.Itoa(day), D.Is, D.InvalidDateFormat, D.Month)
 	}
 
 	month_days := d.MonthDays(year)[month]
@@ -34,13 +34,13 @@ func (d date) CheckDateExists(date string) error {
 	}
 
 	if day > month_days {
-		errMsg := Lang.T(d.NameMonths()[month], D.DoesNotHave, day, D.Days)
-
-		if !d.IsLeap(year) && month == 2 {
-			errMsg += Lang.T(" ", Lang.T(D.Year), date[:4])
+		var yearMsg string
+		// Solo agregar el año para febrero en años no bisiestos
+		if month == 2 && !d.IsLeap(year) {
+			yearMsg = Lang.T(D.Year, date[:4])
 		}
 
-		return Lang.Err(errMsg)
+		return Lang.Err(d.NameMonths()[month], D.DoesNotHave, strconv.Itoa(day), D.Days, yearMsg)
 	}
 
 	return nil
@@ -129,18 +129,24 @@ func stringToDateNumberSeparate(date string) (year, month, day int, err error) {
 		return
 	}
 
-	//MONTH
+	// MONTH
 	monthText := date[5:7]
+
+	if monthText == "00" {
+		err = Lang.Err(D.InvalidDateFormat)
+		return
+	}
 
 	if monthText >= "01" && monthText <= "09" {
 		month, err = strconv.Atoi(string(monthText[1]))
 	} else if monthText >= "10" && monthText <= "12" {
 		month, err = strconv.Atoi(monthText)
 	} else {
-		err = Lang.Err(monthText, D.Format, D.Month, D.NotValid, D.Example, ':', "01 a 12")
+		err = Lang.Err(D.InvalidDateFormat, "2006-01-02")
 		return
 	}
 	if err != nil {
+		err = Lang.Err(D.InvalidDateFormat, "2006-01-02")
 		return
 	}
 

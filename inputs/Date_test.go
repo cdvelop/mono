@@ -19,7 +19,7 @@ func Test_InputDate(t *testing.T) {
 			"June does not have 31 days":      {"2023-06-31", Lang.T(D.June, D.DoesNotHave, "31", D.Days)},
 			"incorrect extra character ":      {"2002-12-03-", Lang.T(D.InvalidDateFormat, "2006-01-02")},
 			"incorrect format ":               {"21/12/1998", Lang.T(D.InvalidDateFormat, "2006-01-02")},
-			"incorrect date ":                 {"2020-31-01", " error 31 " + Lang.T(D.Is, D.InvalidDateFormat, D.Month)},
+			"incorrect month 31":              {"2020-31-01", Lang.T(D.Month, 31, D.NotValid)},
 			"shortened date without year ok?": {"31-01", Lang.T(D.InvalidDateFormat, "2006-01-02")},
 			"incorrect data ":                 {"0000-00-00", Lang.T(D.InvalidDateFormat)},
 			"all data correct?":               {"", Lang.T(D.InvalidDateFormat, "2006-01-02")}}

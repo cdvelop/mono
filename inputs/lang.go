@@ -82,6 +82,10 @@ func (l *lang) T(args ...interface{}) string {
 	for _, arg := range args {
 		switch v := arg.(type) {
 		case string:
+			if v == "" {
+				continue
+			}
+
 			if trans, ok := l.translations[l.current][v]; ok {
 				l.out.WriteString(space + trans)
 			} else {
@@ -89,6 +93,9 @@ func (l *lang) T(args ...interface{}) string {
 			}
 		case []string:
 			for _, s := range v {
+				if s == "" {
+					continue
+				}
 				if trans, ok := l.translations[l.current][s]; ok {
 					l.out.WriteString(space + trans)
 				} else {
