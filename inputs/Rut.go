@@ -63,60 +63,91 @@ func Rut(params ...any) *rut {
 	return new
 } // validación con datos de entrada
 func (r rut) Validate(value string) error {
-
 	const hidden_err = "campo invalido"
 
-	for _, doc := range r.options {
-		if doc == "ex" {
-			err := r.dni.Validate(value)
-			if err != nil && r.hideTyping {
-				return errors.New(hidden_err)
-			}
-			return err
-		} else {
-			err := r.runValidate(value)
-			if err != nil && r.hideTyping {
-				return errors.New(hidden_err)
-			}
-			return err
+	// Limpiar espacios y convertir a minúsculas
+	value = strings.TrimSpace(value)
+	value = strings.ToLower(value)
+
+	// Validar tamaño mínimo primero
+	if len(value) < 9 {
+		if r.hideTyping {
+			return errors.New(hidden_err)
 		}
+		return Lang.Err(D.MinSize, 9, D.Chars)
 	}
 
+	// Validar caracteres permitidos
+	if len(value) < 9 {
+		if r.hideTyping {
+			return errors.New(hidden_err)
+		}
+		return Lang.Err(D.MinSize, 9, D.Chars)
+	}
+
+	// Validar modo DNI
 	if r.dni_mode {
-		if !strings.Contains(value, `-`) {
-			err := r.Validate(value)
-			if err != nil && r.hideTyping {
+		// Si es documento extranjero
+		if len(r.options) > 0 && r.options[0]["option"] == "ex" {
+			// Validar formato básico
+			if len(value) < 3 {
+				if r.hideTyping {
+					return errors.New(hidden_err)
+				}
+				return errors.New(errRut01)
+			}
+			// Permitir letras y números sin guion
+			return nil
+		}
+
+		// Si es RUT chileno, validar formato
+		if !strings.Contains(value, "-") {
+			if r.hideTyping {
 				return errors.New(hidden_err)
 			}
-			return err
+			return Lang.Err(D.HyphenMissing)
 		}
 	}
 
-	err := r.runValidate(value)
-	if err != nil && r.hideTyping {
-		return errors.New(hidden_err)
+	// Validar RUT chileno
+	if !r.dni_mode {
+		if !strings.Contains(value, "-") {
+			if r.hideTyping {
+				return errors.New(hidden_err)
+			}
+			return Lang.Err(D.HyphenMissing)
+		}
 	}
 
-	return err
-}
+	// Ejecutar validación completa
+	err := r.runValidate(value)
+	if err != nil {
+		if r.hideTyping {
+			return errors.New(hidden_err)
+		}
+		return err
+	}
 
-const errCeroRut = "primer dígito no puede ser 0"
+	return nil
+}
 
 // RUT validate formato "7863697-1"
 func (r rut) runValidate(rin string) error {
 	data, onlyRun, err := RunData(rin)
-	if err != "" {
-		return errors.New(err)
+	if err != nil {
+		return err
 	}
 
 	if data[0][0:1] == "0" {
-		return errors.New(errCeroRut)
+		return Lang.Err(D.DoNotStartWith, D.Digit, 0)
 	}
 
 	dv := DvRut(onlyRun)
 
-	if dv != strings.ToLower(data[1]) {
-		return errors.New("dígito verificador " + data[1] + " inválido")
+	originalDv := data[1]
+	expectedDV := strings.ToLower(data[1])
+	if dv != expectedDV {
+		return Lang.Err(D.Digit, D.Verifier, originalDv, D.NotValid)
 	}
 
 	return nil
@@ -147,25 +178,53 @@ func DvRut(rut int) string {
 const errRut01 = "datos ingresados insuficientes"
 const errGuionRut = "guion (-) dígito verificador inexistente"
 
-func RunData(runIn string) (data []string, onlyRun int, err string) {
+func RunData(runIn string) (data []string, onlyRun int, err error) {
+	// Limpiar espacios y convertir a minúsculas
+	runIn = strings.TrimSpace(strings.ToLower(runIn))
 
 	if len(runIn) < 3 {
-		return nil, 0, errRut01
+		return nil, 0, Lang.Err(D.Value, D.Empty)
 	}
 
+	// Verificar guion
 	if !strings.Contains(runIn, "-") {
-		return nil, 0, errGuionRut
+		return nil, 0, Lang.Err(D.HyphenMissing)
 	}
 
-	data = strings.Split(string(runIn), "-")
-	// fmt.Println("TAMAÑO", len(data), "RUT DATA -:", data)
+	// Separar número y dígito verificador
+	data = strings.Split(runIn, "-")
+	if len(data) != 2 {
+		return nil, 0, Lang.Err(D.Format, D.NotValid)
+	}
+
+	// Validar caracteres del número
+	if !isDigits(data[0]) {
+		return nil, 0, Lang.Err(D.Chars, D.NotAllowed, D.In, D.Numbers)
+	}
+
+	// Validar dígito verificador
+	dv := strings.ToLower(data[1])
+	if len(dv) != 1 || (dv != "k" && !isDigits(dv)) {
+		return nil, 0, Lang.Err(D.Digit, D.Verifier, dv, D.NotValid)
+	}
+
+	// Convertir número a entero
 	var e error
 	onlyRun, e = strconv.Atoi(data[0])
 	if e != nil {
-		err = "caracteres no permitidos"
+		return nil, 0, Lang.Err(D.Numbers, D.NotValid)
 	}
 
-	return
+	return data, onlyRun, nil
+}
+
+func isDigits(s string) bool {
+	for _, c := range s {
+		if c < '0' || c > '9' {
+			return false
+		}
+	}
+	return true
 }
 
 func Dni(params ...any) *rut {

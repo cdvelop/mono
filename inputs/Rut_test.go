@@ -14,21 +14,26 @@ func Test_InputRut(t *testing.T) {
 			inputData string
 			expected  string
 		}{
-			"without hyphen 15890022k":    {"15890022k", Lang.T(D.HyphenMissing)},
-			"no hyphen 177344788":         {"177344788", Lang.T(D.HyphenMissing)},
-			"ok 7863697-1":                {"7863697-1", ""},
-			"ok 20373221-K":               {"20373221-k", ""},
-			"valid run? allowed?":         {"7863697-W", Lang.T(D.Digit, D.Verifier, "W", D.NotValid)},
-			"change digit to k 7863697-k": {"7863697-k", Lang.T(D.Digit, D.Verifier, "k", D.NotValid)},
-			"change digit to 0 7863697-0": {"7863697-0", Lang.T(D.Digit, D.Verifier, 0, D.NotValid)},
-			"ok 14080717-6":               {"14080717-6", ""},
-			"incorrect 14080717-0":        {"14080717-0", Lang.T(D.Digit, D.Verifier, 0, D.NotValid)},
-			"correct zero at start?":      {"07863697-1", Lang.T(D.DoNotStartWith, D.Digit, 0, D.NotValid)},
-			"correct data only space?":    {" ", Lang.T(D.MinSize, 9, D.Chars)},
-			"ok 17734478-8":               {"17734478-8", ""},
-			"allowed characters?":         {`%$"1 `, Lang.T(D.Chars, D.NotAllowed)},
-			"pasaporte ax001223b ok?":     {"ax001223b", ""},
-			"caída con dato":              {"123", Lang.T(D.MinSize, 9, D.Chars)},
+			"without hyphen 15890022k":     {"15890022k", Lang.T(D.HyphenMissing)},
+			"no hyphen 177344788":          {"177344788", Lang.T(D.HyphenMissing)},
+			"ok 7863697-1":                 {"7863697-1", ""},
+			"ok 20373221-K":                {"20373221-k", ""},
+			"valid run? allowed?":          {"7863697-W", Lang.T(D.Digit, D.Verifier, "W", D.NotValid)},
+			"change digit to k 7863697-k":  {"7863697-k", Lang.T(D.Digit, D.Verifier, "k", D.NotValid)},
+			"change digit to 0 7863697-0":  {"7863697-0", Lang.T(D.Digit, D.Verifier, 0, D.NotValid)},
+			"ok 14080717-6":                {"14080717-6", ""},
+			"incorrect 14080717-0":         {"14080717-0", Lang.T(D.Digit, D.Verifier, 0, D.NotValid)},
+			"correct zero at start?":       {"07863697-1", Lang.T(D.DoNotStartWith, D.Digit, 0)},
+			"correct data only space?":     {" ", Lang.T(D.MinSize, 9, D.Chars)},
+			"ok 17734478-8":                {"17734478-8", ""},
+			"ok with spaces":               {" 17734478-8 ", ""},
+			"ok lowercase":                 {"17734478-k", ""},
+			"invalid characters in number": {"12a34567-8", "caracteres no permitidos en el número"},
+			"invalid dv 12":                {"12345678-12", Lang.T(D.Digit, D.Verifier, 12, D.NotValid)},
+			"invalid dv character":         {"12345678-x", Lang.T(D.Digit, D.Verifier, "x", D.NotValid)},
+			"allowed characters?":          {`%$"1 `, Lang.T(D.Chars, D.NotAllowed)},
+			"pasaporte ax001223b ok?":      {"ax001223b", ""},
+			"caída con dato":               {"123", Lang.T(D.MinSize, 9, D.Chars)},
 		}
 	)
 	for prueba, data := range dataRut {
@@ -42,7 +47,7 @@ func Test_InputRut(t *testing.T) {
 
 			if err_str != data.expected {
 				log.Println(prueba)
-				log.Fatalf("resultado: [%v] expectativa: [%v]\n%v", err, data.expected, data.inputData)
+				log.Fatalf("result: [%v] expected: [%v]\n%v", err, data.expected, data.inputData)
 			}
 		})
 	}
