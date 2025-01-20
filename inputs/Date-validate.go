@@ -25,7 +25,7 @@ func (d date) CheckDateExists(date string) error {
 	}
 
 	if month < 1 || month > 12 {
-		return Lang.Err(strconv.Itoa(day), D.Is, D.InvalidDateFormat, D.Month)
+		return Lang.Err(D.Month, strconv.Itoa(month), D.NotValid)
 	}
 
 	month_days := d.MonthDays(year)[month]
@@ -137,12 +137,9 @@ func stringToDateNumberSeparate(date string) (year, month, day int, err error) {
 		return
 	}
 
-	if monthText >= "01" && monthText <= "09" {
-		month, err = strconv.Atoi(string(monthText[1]))
-	} else if monthText >= "10" && monthText <= "12" {
-		month, err = strconv.Atoi(monthText)
-	} else {
-		err = Lang.Err(D.InvalidDateFormat, "2006-01-02")
+	month, err = strconv.Atoi(monthText)
+	if err != nil || month < 1 || month > 12 {
+		err = Lang.Err(D.Month, monthText, D.NotValid)
 		return
 	}
 	if err != nil {
