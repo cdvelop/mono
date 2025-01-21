@@ -58,8 +58,14 @@ func (h input) Validate(text string) error {
 	}
 
 	if h.StartWith != nil {
-		if err := h.StartWith.validate(text[0:1]); err != nil {
-			return Lang.Err(D.DoNotStartWith, text[0:1])
+		char := text[0:1]
+		if err := h.StartWith.validate(char); err != nil {
+
+			if char == " " {
+				return Lang.Err(D.DoNotStartWith, D.WhiteSpace)
+			}
+
+			return Lang.Err(D.DoNotStartWith, char)
 		}
 	}
 
