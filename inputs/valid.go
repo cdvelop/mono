@@ -213,31 +213,6 @@ func (a attributes) checkOptionKeys(value string) error {
 
 }
 
-func (a attributes) GoodTestData() (out []string) {
-	for _, opt := range a.options {
-		for k := range opt {
-			out = append(out, k)
-		}
-	}
-	return
-}
-
-func (a attributes) WrongTestData() (out []string) {
-	for _, wd := range wrong_data {
-		found := false
-		for _, opt := range a.options {
-			if _, exists := opt[wd]; exists {
-				found = true
-				break
-			}
-		}
-		if !found {
-			out = append(out, wd)
-		}
-	}
-	return
-}
-
 // Define un mapa de caracteres válidos
 func (p permitted) MinMaxAllowedChars() (min, max int) {
 	return p.Minimum, p.Maximum
