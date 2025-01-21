@@ -10,7 +10,7 @@ import (
 )
 
 type input interface {
-	Render(tabIndex int) string
+	Render(tabIndex *int) string
 	Validate(value string) error
 }
 

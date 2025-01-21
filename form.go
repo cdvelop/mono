@@ -29,15 +29,16 @@ func (e *entity) FormRender(attributes ...string) string {
 	e.HtmlForm = `<form name="` + e.Name + `"` + class + autocomplete + spellcheck + `>
 	
 	`
-
-	for i, f := range e.Fields {
+	var tabIndex int
+	for _, f := range e.Fields {
 
 		if f.Input == nil {
 			continue
 		}
 
-		e.HtmlForm += f.Input.Render(i)
+		e.HtmlForm += f.Input.Render(&tabIndex)
 		e.HtmlForm += "\n\n"
+		tabIndex++
 	}
 
 	e.HtmlForm += `

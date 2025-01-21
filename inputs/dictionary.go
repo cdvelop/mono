@@ -20,6 +20,7 @@ type dictionary struct {
 	Email             string `es:"correo electrónico"`
 	Empty             string `es:"vacío"`
 	Example           string `es:"ejemplo"`
+	Female            string `es:"Femenino"`
 	Field             string `es:"campo"`
 	Format            string `es:"Formato"`
 	Gender            string `es:"género"`
@@ -29,6 +30,7 @@ type dictionary struct {
 	Is                string `es:"es"`
 	LastName          string `es:"apellido"`
 	Letters           string `es:"letras"`
+	Male              string `es:"Masculino"`
 	Max               string `es:"máx."`
 	MaxSize           string `es:"tamaño máximo"`
 	Min               string `es:"mín."`

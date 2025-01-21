@@ -22,7 +22,7 @@ func (d list) Validate(value string) error {
 	return nil
 }
 
-func (d list) Render(tabIndex int) string {
+func (d list) Render(tabIndex *int) string {
 
 	tag := `<ol>`
 	tag += d.getAll()

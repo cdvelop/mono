@@ -26,7 +26,7 @@ type dateAge struct {
 	day *date
 }
 
-func (d dateAge) Render(tabIndex int) string {
+func (d dateAge) Render(tabIndex *int) string {
 
 	tag := `<label class="age-number"><input data-name="age-number" type="number" min="0" max="150" oninput="AgeInputChange(this)" title="Campo Informativo"></label>`
 

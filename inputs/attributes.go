@@ -65,40 +65,57 @@ func extractValue(option, delete string) string {
 	return out
 }
 
-func (h *input) Render(tabIndex int) string {
-
-	var tags string
+func (h input) Render(tabIndex *int) string {
+	var tags, close, labelForID string
 
 	for _, opt := range h.options {
-		h.Id = h.htmlID()
-
-		var key, value string
-		for key, value = range opt {
+		h.Id = h.htmlID() //generate new id
+		if labelForID == "" {
+			labelForID = h.Id
 		}
 
-		switch h.htmlName {
-		case "checkbox":
-			h.Value = key
-			tags += `<label for="` + h.Id + `">`
-			tags += h.renderOneInput()
-			tags += `<span>` + value + `</span>`
-			tags += `</label>`
-			h.allowSkipCompleted = true // avoid required appearing again
-		case "radio":
+		for value, text := range opt {
 
-		case "select":
+			switch h.htmlName {
 
-		default:
-			tags += h.renderOneInput()
+			case "datalist":
+				if tags == "" {
+					h.htmlName = "list"
+					tags += h.renderOneInput()
+					tags += `<datalist id="` + labelForID + `">`
+					tags += `<option value="` + text + `">`
+					close = `</datalist>`
+				}
+
+			case "list":
+				tags += `<option value="` + text + `">`
+
+			case "checkbox", "radio":
+				h.Value = value
+				tags += `<label for="` + h.Id + `">`
+				tags += h.renderOneInput()
+				tags += `<span>` + text + `</span>`
+				tags += `</label>`
+				h.allowSkipCompleted = true // avoid required appearing again
+				*tabIndex++
+
+			case "select":
+
+			default:
+				tags += h.renderOneInput()
+
+			}
 
 		}
 
 	}
 
-	return h.renderInputLayout(tags, tabIndex)
+	tags += close
+
+	return h.renderInputLayout(tags, labelForID, tabIndex)
 }
 
-func (h *input) renderOneInput() (result string) {
+func (h input) renderOneInput() (result string) {
 	var open = `<input`
 	var close = `>`
 	h.Type = h.htmlName
@@ -151,14 +168,14 @@ func (h *input) renderOneInput() (result string) {
 	return result
 }
 
-func (h input) renderInputLayout(inputHtml string, tabindex int) string {
+func (h input) renderInputLayout(inputHtml, labelForID string, tabindex *int) string {
 
 	if h.htmlName == "hidden" {
 		return inputHtml
 	}
 
-	return `<fieldset tabindex="` + strconv.Itoa(tabindex) + `"` + h.getClassNames() + `">
-	<legend><label for="` + h.Id + `">` + h.legend + `</label></legend>
+	return `<fieldset tabindex="` + strconv.Itoa(*tabindex) + `"` + h.getClassNames() + `">
+	<legend><label for="` + labelForID + `">` + h.legend + `</label></legend>
 	` + inputHtml + `
 </fieldset>`
 }

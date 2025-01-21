@@ -33,7 +33,7 @@ func (d dayWord) InputName(customName, htmlName *string) {
 	}
 }
 
-func (d dayWord) Render(tabIndex int) string {
+func (d dayWord) Render(tabIndex *int) string {
 	tag := `<label class="date-spanish">`
 	tag += d.input.Render(tabIndex)
 	tag += `</label>`

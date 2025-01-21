@@ -49,6 +49,11 @@ type extraValidation interface {
 
 func (h input) Validate(text string) error {
 
+	switch h.htmlName {
+	case "checkbox", "radio", "datalist", "select":
+		return h.checkOptionKeys(text)
+	}
+
 	// Validar empty string
 	if len(text) == 0 {
 		if h.allowSkipCompleted {

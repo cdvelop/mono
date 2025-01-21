@@ -112,7 +112,7 @@ func compareFormParts(t *testing.T, entity *entity) {
 
 	// Check each field
 	for index, field := range entity.Fields {
-		expectedTagFieldOriginal := field.Input.Render(index)
+		expectedTagFieldOriginal := field.Input.Render(&index)
 
 		expectedTagFieldWithOutSpaces := strings.ReplaceAll(expectedTagFieldOriginal, " ", "")
 

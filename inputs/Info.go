@@ -18,7 +18,7 @@ type info struct {
 	input
 }
 
-func (i info) Render(tabIndex int) string {
+func (i info) Render(tabIndex *int) string {
 	return i.Value
 }
 
