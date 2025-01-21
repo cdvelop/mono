@@ -142,10 +142,6 @@ func stringToDateNumberSeparate(date string) (year, month, day int, err error) {
 		err = Lang.Err(D.Month, monthText, D.NotValid)
 		return
 	}
-	if err != nil {
-		err = Lang.Err(D.InvalidDateFormat, "2006-01-02")
-		return
-	}
 
 	//DAY
 	day, err = validateDay(date[8:10])

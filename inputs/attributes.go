@@ -84,6 +84,8 @@ func (h *input) Render(tabIndex int) string {
 			tags += `<span>` + value + `</span>`
 			tags += `</label>`
 			h.allowSkipCompleted = true // avoid required appearing again
+		case "radio":
+
 		case "select":
 
 		default:

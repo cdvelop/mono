@@ -13,7 +13,6 @@ func Radio(params ...any) *radio {
 		},
 	}
 	new.Set(params)
-
 	return new
 }
 

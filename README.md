@@ -1,4 +1,4 @@
-# MonoGO
+# MONO
 
 framework de desarrollo fullstack en go, 
 
@@ -18,7 +18,7 @@ package main
 ### por que no solo unir json gorm?
 json de la librería estándar y gorm usan reflect y eso si lo llevamos a un dispositivo de bajo rendimiento se vuelve lento, si a eso le sumamos que queremos compilar a tinygo (que es la única forma de reducir el tamaño del binario resultante para webAssembly) necesitamos que el resultado sea optimo, sin dependencias externas y soporte a webAssembly + tinygo.
 
-### monogo no usa reflect?
+### mono no usa reflect?
 si lo usa pero una sola vez es como un json con asteroides. crea una imagen de cada estructura de tu programa cuando este arranca y lo mantiene en memoria para que no tenga que ser generado en tiempo de ejecución.
 
 
@@ -59,7 +59,7 @@ type Person struct {
 	Age   uint8  `Input:"Number(min=0;max=120)"` 
 }
 ```
-- tipos de inputs soportados en ..monogo/inputs eg:
+- tipos de inputs soportados en ..mono/inputs eg:
 - si el o los inputs que necesitas no se encuentra en la librería puedes crear el método asociado a tu estructura de esta forma:
 ```go
 type input interface {

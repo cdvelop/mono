@@ -46,40 +46,16 @@ type password struct {
 }
 
 func (p password) GoodTestData() (out []string) {
-
-	temp := []string{
-		"c0ntra3",
-		"M1 contraseÑ4",
-		"contrase",
-		"cont",
-		"12345",
-		"UNA Frase tambien Cuenta",
-		"DOS Frases tambien CuentaN",
-		"CUATRO FraseS tambien CuentaN",
-	}
-
+	temp := []string{"c0ntra3", "M1 contraseÑ4", "contrase", "cont", "12345", "UNA Frase tambien Cuenta", "DOS Frases tambien CuentaN", "CUATRO FraseS tambien CuentaN"}
 	for _, v := range temp {
 		if len(v) >= p.Minimum && len(v) <= p.Maximum {
 			out = append(out, v)
 		}
 	}
-
 	return
 }
 
 func (p password) WrongTestData() (out []string) {
-
-	temp := []string{
-		"",
-		"Ñ",
-		"c",
-		" ",
-		"2",
-		"%",
-		"sdlksññs092830928309280%%%%%9382¿323294720&&/0kdlskdlskdskdñskdlskdsññdkslkdñskdslkdsñ",
-		"sdlksññs0928309283092809382%%¿323294720&&/0kdlskdlskdskdñskdlskdsññdkslkdñskdslkdsñ",
-		"sdlksññs0928309283092809382¿78%%323294720&&/0kdlskdlskdskdñskdlskdsññdkslkdñskdslkdsñ",
-	}
-
+	temp := []string{"", "Ñ", "c", " ", "2", "%", "sdlksññs092830928309280%%%%%9382¿323294720&&/0kdlskdlskdskdñskdlskdsññdkslkdñskdslkdsñ", "sdlksññs0928309283092809382%%¿323294720&&/0kdlskdlskdskdñskdlskdsññdkslkdñskdslkdsñ", "sdlksññs0928309283092809382¿78%%323294720&&/0kdlskdlskdskdñskdlskdsññdkslkdñskdslkdsñ"}
 	return temp
 }

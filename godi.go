@@ -1,4 +1,4 @@
-package monogo
+package mono
 
 type handler struct {
 }

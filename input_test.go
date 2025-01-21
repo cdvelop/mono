@@ -1,1 +1,1 @@
-package monogo
+package mono

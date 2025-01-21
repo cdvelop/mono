@@ -1,4 +1,4 @@
-module github.com/cdvelop/monogo
+module github.com/cdvelop/mono
 
 go 1.22.0
 

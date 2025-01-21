@@ -1,10 +1,10 @@
-package monogo
+package mono
 
 import (
 	"reflect"
 	"strings"
 
-	"github.com/cdvelop/monogo/inputs"
+	"github.com/cdvelop/mono/inputs"
 	"golang.org/x/text/cases"
 	"golang.org/x/text/language"
 )

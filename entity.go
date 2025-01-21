@@ -1,4 +1,4 @@
-package monogo
+package mono
 
 import (
 	"fmt"
@@ -6,7 +6,7 @@ import (
 	"strings"
 	"unicode"
 
-	"github.com/cdvelop/monogo/inputs"
+	"github.com/cdvelop/mono/inputs"
 )
 
 type entity struct {

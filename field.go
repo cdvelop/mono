@@ -1,9 +1,9 @@
-package monogo
+package mono
 
 import (
 	"reflect"
 
-	"github.com/cdvelop/monogo/inputs"
+	"github.com/cdvelop/mono/inputs"
 )
 
 type field struct {
