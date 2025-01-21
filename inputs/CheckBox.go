@@ -16,7 +16,3 @@ func CheckBox(params ...any) *check {
 type check struct {
 	input
 }
-
-// func (c check) Validate(value string) error {
-// 	return c.checkOptionKeys(value)
-// }
