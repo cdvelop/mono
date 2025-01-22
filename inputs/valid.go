@@ -39,12 +39,8 @@ type permitted struct {
 	Characters      []rune   // other special characters eg: '\','/','@'
 	Minimum         int      // min characters eg 2 "lo" ok default 0 no defined
 	Maximum         int      // max characters eg 1 "l" ok default 0 no defined}
-	ExtraValidation extraValidation
+	ExtraValidation func(string) error
 	StartWith       *permitted // characters allowed at the beginning
-}
-
-type extraValidation interface {
-	ExtraValidation(text string) error
 }
 
 func (h input) Validate(text string) error {
@@ -75,7 +71,7 @@ func (h input) Validate(text string) error {
 	}
 
 	if h.ExtraValidation != nil {
-		if err := h.ExtraValidation.ExtraValidation(text); err != nil {
+		if err := h.ExtraValidation(text); err != nil {
 			return err
 		}
 	}

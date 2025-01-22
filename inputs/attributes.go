@@ -9,6 +9,7 @@ import (
 
 type attributes struct {
 	allowSkipCompleted bool //permite que el campo no sea completado
+	hideTyping         bool //oculta el valor mientras se escribe
 
 	Type     string // eg : text, password, email
 	htmlName string //eg input,select,textarea

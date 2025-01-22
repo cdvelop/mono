@@ -22,10 +22,6 @@ type selec struct {
 	input
 }
 
-func (s selec) Validate(value string) error {
-	return s.checkOptionKeys(value)
-}
-
 func (s selec) Render(tabIndex *int) string {
 	var req string
 	if !s.allowSkipCompleted {

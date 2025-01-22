@@ -11,27 +11,29 @@ type rut struct {
 }
 
 // typing="hide" hides information while typing
-func Rut(params ...any) *rut {
-	new := &rut{
-		input: input{
-			attributes: attributes{
-				htmlName:     "text",
-				customName:   "rut",
-				Autocomplete: `autocomplete="off"`,
-				Title:        `title="rut sin puntos y con guion ejem.: 11222333-4"`,
-				Class:        []className{"rut"},
+func Rut(params ...any) *input {
+	new := &input{
+		attributes: attributes{
+			htmlName:     "text",
+			customName:   "rut",
+			Autocomplete: `autocomplete="off"`,
+			Title:        `title="rut sin puntos y con guion ejem.: 11222333-4"`,
+			Class:        []className{"rut"},
+		},
+		permitted: permitted{
+			Letters:    true,
+			Numbers:    true,
+			Minimum:    9,
+			Maximum:    11,
+			Characters: []rune{'-'},
+			StartWith: &permitted{
+				Numbers: true,
 			},
-			permitted: permitted{
-				Letters:    true,
-				Numbers:    true,
-				Minimum:    9,
-				Maximum:    11,
-				Characters: []rune{'-'},
-				StartWith: &permitted{
-					Numbers: true,
-				},
-				ExtraValidation: rut{},
-			},
+			ExtraValidation: extraValidation,
+		},
+		testData: testData{
+			Good: []string{"22537160-1", "5008452-3", "10493788-8", "21821424-k", "15890022-k", "7467499-2", "21129619-4", "24287548-6", "15093641-1", "10245390-5"},
+			Bad:  []string{"7863697-k", "7863697-0", "14080717-0", "07863697-1", " - 100 ", "-100"},
 		},
 	}
 
@@ -45,7 +47,7 @@ func Rut(params ...any) *rut {
 }
 
 // RUT validate formato "7863697-1"
-func (r rut) ExtraValidation(value string) error {
+func extraValidation(value string) error {
 
 	// Validar RUT chileno
 	if !strings.Contains(value, "-") {
@@ -132,17 +134,4 @@ func isDigits(s string) bool {
 		}
 	}
 	return true
-}
-
-func (r rut) GoodTestData() (out []string) {
-	ok_rut := []string{"22537160-1", "5008452-3", "10493788-8", "21821424-k", "15890022-k", "7467499-2", "21129619-4", "24287548-6", "15093641-1", "10245390-5"}
-	return ok_rut
-}
-
-func (r rut) WrongTestData() (out []string) {
-
-	out = []string{"7863697-k", "7863697-0", "14080717-0", "07863697-1", " - 100 ", "-100"}
-	out = append(out, wrong_data...)
-
-	return
 }

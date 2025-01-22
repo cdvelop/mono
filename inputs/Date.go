@@ -1,90 +1,13 @@
 package inputs
 
-import "strconv"
-
-// format date: html DD-MM-YYYY - validation YYYY-MM-DD
-func Date(params ...any) *date {
-	new := &date{
-		input: input{
-			attributes: attributes{
-				htmlName: "date",
-				Title:    `title="` + Lang.T(D.Format, D.Date, ':') + `: DD-MM-YYYY"`,
-			},
-		},
-	}
-	new.Set(params)
-	return new
-}
-
-type date struct {
-	input
-}
-
-// validación con datos de entrada
-func (d date) Validate(value string) error {
-	return d.CheckDateExists(value)
-}
-
-func (d date) GoodTestData() (out []string) {
-	out = []string{"2002-01-03", "1998-02-01", "1999-03-08", "2022-04-21", "1999-05-30", "2020-09-29", "1991-10-02", "2000-11-12", "1993-12-15"}
-	return
-}
-
-func (d date) WrongTestData() (out []string) {
-	out = []string{"21/12/1998", "0000-00-00", "31-01"}
-	out = append(out, wrong_data...)
-	return
-}
-
-// options: "hidden": campo oculto para el usuario
-func MonthDay(params ...any) *monthDay {
-	new := &monthDay{
-		input: input{
-			attributes: attributes{
-				htmlName:   "text",
-				customName: "MonthDay",
-			},
-			permitted: permitted{
-				Numbers:         true,
-				Minimum:         2,
-				Maximum:         2,
-				ExtraValidation: &monthDay{},
-			},
-		},
-	}
-	new.Set(params)
-
-	return new
-}
-
-// formato fecha: DD-MM
-type monthDay struct {
-	input
-}
-
-func (m monthDay) ExtraValidation(text string) error {
-	_, err := validateDay(text)
-	return err
-}
-
-func (m monthDay) GoodTestData() (out []string) {
-	out = []string{"01", "30", "03", "22", "31", "29", "10", "12", "05"}
-	return
-}
-
-func (m monthDay) WrongTestData() (out []string) {
-	out = []string{"1-1", "21/12"}
-
-	out = append(out, wrong_data...)
-
-	return
-}
+import (
+	"strconv"
+)
 
 // verifica formato 2006-01-02 y si los rangos de el año, mes y dia son validos
 // y si los Dias existen según año y mes bisiesto
-
-func (d date) CheckDateExists(date string) error {
-	err := d.CorrectFormatDate(date)
+func CheckDateExists(date string) error {
+	err := CorrectFormatDate(date)
 	if err != nil {
 		return err
 	}
@@ -95,7 +18,6 @@ func (d date) CheckDateExists(date string) error {
 	}
 
 	// Verificar los rangos para año, mes y día
-
 	if year < 1000 || year > 9999 {
 		return Lang.Err(D.YearOutOfRange)
 	}
@@ -104,26 +26,40 @@ func (d date) CheckDateExists(date string) error {
 		return Lang.Err(D.Month, strconv.Itoa(month), D.NotValid)
 	}
 
-	month_days := d.MonthDays(year)[month]
+	// Validación específica para febrero
+	if month == 2 {
+		febDays := 28
+		if IsLeap(year) {
+			febDays = 29
+		}
+
+		if day < 1 {
+			return Lang.Err(D.DayCannotBeZero)
+		}
+		if day > febDays {
+			yearMsg := ""
+			if !IsLeap(year) {
+				yearMsg = Lang.T(D.Year, strconv.Itoa(year))
+			}
+			return Lang.Err(NameMonths()[month], D.DoesNotHave, strconv.Itoa(day), D.Days, yearMsg)
+		}
+		return nil
+	}
+
+	// Validación para otros meses
+	month_days := MonthDays(year)[month]
 	if day < 1 {
 		return Lang.Err(D.DayCannotBeZero)
 	}
-
 	if day > month_days {
-		var yearMsg string
-		// Solo agregar el año para febrero en años no bisiestos
-		if month == 2 && !d.IsLeap(year) {
-			yearMsg = Lang.T(D.Year, date[:4])
-		}
-
-		return Lang.Err(d.NameMonths()[month], D.DoesNotHave, strconv.Itoa(day), D.Days, yearMsg)
+		return Lang.Err(NameMonths()[month], D.DoesNotHave, strconv.Itoa(day), D.Days)
 	}
 
 	return nil
 }
 
 // verifica formato y valores numéricos en sus posiciones ej: "2006-01-02"
-func (d date) CorrectFormatDate(date string) error {
+func CorrectFormatDate(date string) error {
 	if len(date) != 10 {
 		return Lang.Err(D.InvalidDateFormat, "2006-01-02")
 	}
@@ -149,7 +85,7 @@ func (d date) CorrectFormatDate(date string) error {
 	return nil
 }
 
-func (d date) NameMonths() map[int]string {
+func NameMonths() map[int]string {
 	return map[int]string{
 		1:  Lang.T(D.January),
 		2:  Lang.T(D.February),
@@ -166,11 +102,10 @@ func (d date) NameMonths() map[int]string {
 	}
 }
 
-func (d date) MonthDays(year int) map[int]int {
-
+func MonthDays(year int) map[int]int {
 	var feb_days = 28
 
-	if d.IsLeap(year) {
+	if IsLeap(year) {
 		feb_days = 29
 	}
 
@@ -191,14 +126,13 @@ func (d date) MonthDays(year int) map[int]int {
 }
 
 // es bisiesto este año?
-func (d date) IsLeap(year int) bool {
+func IsLeap(year int) bool {
 	return year%4 == 0 && year%100 != 0 || year%400 == 0
 }
 
 // date format "2006-01-02" returns: 2006,1,2.
 // NOTE: DOES NOT VERIFY THE INPUT FORMAT
 func stringToDateNumberSeparate(date string) (year, month, day int, err error) {
-
 	//YEAR
 	year, err = strconv.Atoi(date[:4])
 	if err != nil {
@@ -228,43 +162,29 @@ func stringToDateNumberSeparate(date string) (year, month, day int, err error) {
 	return
 }
 
-// validateDay validates and converts a day string to an integer
+// validateDay converts a day string to an integer
 // Parameters:
 //   - dayTxt: string representing a day in format "01" to "31"
 //
 // Returns:
 //   - day: integer value of the day
-//   - err: error if the day is not valid or cannot be converted
+//   - err: error if the day cannot be converted
 func validateDay(dayTxt string) (day int, err error) {
-
-	errOut := Lang.Err(D.Field, D.Day, D.NotValid)
-
 	if len(dayTxt) > 2 {
-		err = Lang.Err(D.MaxSize, "2", D.Chars)
-		return
+		return 0, Lang.Err(D.MaxSize, "2", D.Chars)
 	}
 
 	// Verificar que todos los caracteres sean dígitos
 	for _, c := range dayTxt {
 		if c < '0' || c > '9' {
-			err = Lang.Err(D.NotNumber)
-			return
+			return 0, Lang.Err(D.NotNumber)
 		}
 	}
 
-	if dayTxt >= "01" && dayTxt <= "09" {
-		day, err = strconv.Atoi(string(dayTxt[1]))
-	} else if dayTxt >= "10" && dayTxt <= "31" {
-		day, err = strconv.Atoi(dayTxt)
-	} else {
-		err = errOut
-		return
-	}
-
+	day, err = strconv.Atoi(dayTxt)
 	if err != nil {
-		err = errOut
-		return
+		return 0, Lang.Err(D.Field, D.Day, D.NotValid)
 	}
 
-	return
+	return day, nil
 }
