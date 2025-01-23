@@ -49,7 +49,7 @@ func (s *structHandler) validate(structIN any, requiredPointer bool) error {
 	}
 
 	s.reflectValue = reflect.ValueOf(structIN)
-	s.reflectKind = reflect.ValueOf(structIN).Kind()
+	s.reflectKind = s.reflectValue.Kind()
 
 	// Verifica si structIN es un puntero de una estructura
 	if requiredPointer && s.reflectKind != reflect.Ptr {
@@ -57,26 +57,31 @@ func (s *structHandler) validate(structIN any, requiredPointer bool) error {
 	}
 
 	// Si es un puntero, obtén el valor apuntado
-	if s.reflectKind == reflect.Ptr {
+	isPointer := s.reflectKind == reflect.Ptr
+	if isPointer {
 		s.reflectValue = s.reflectValue.Elem()
 		s.reflectKind = s.reflectValue.Kind()
 
 		if !requiredPointer {
 			s.buildName()
-
-			// "structure " + name + " is not required as a pointer"
-			// return errNoStructPtrReq(s.Name())
 			return R.Err(D.TheStructure, s.Name(), D.IsNotRequired, D.AsAPointer)
 		}
-
-	}
-
-	// Verifica si structIN es una estructura
-	if s.reflectKind != reflect.Struct {
-		return R.Err(D.TheElement, D.IsNotOfStructureType)
 	}
 
 	s.buildName()
+
+	// Verifica si structIN es una estructura
+	if s.reflectKind != reflect.Struct {
+		typeName := s.reflectKind.String()
+		if s.reflectKind == reflect.Ptr {
+			typeName = s.reflectValue.Type().String()
+		}
+		s.anonymous = false
+		return R.Err(D.TheElement, typeName, D.IsNotOfStructureType)
+	}
+
+	// Configura anonymous basado en si es una estructura anónima
+	s.anonymous = s.structName == "unknown"
 
 	return nil
 }

@@ -95,11 +95,11 @@ func TestValidateStruct(t *testing.T) {
 			}
 
 			if errStr != tc.errorExpected {
-				t.Errorf("expected error %v, got %v", tc.errorExpected, errStr)
+				t.Fatalf("expected error %v, got %v", tc.errorExpected, errStr)
 			}
 
 			if tc.expectAnonymous != response.anonymous {
-				t.Errorf("expected anonymous %v, got %v", tc.expectAnonymous, response.anonymous)
+				t.Fatalf("expected anonymous %v, got %v", tc.expectAnonymous, response.anonymous)
 			}
 		})
 	}
