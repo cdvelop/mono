@@ -30,21 +30,6 @@ var valid_number = map[rune]bool{
 	'0': true, '1': true, '2': true, '3': true, '4': true, '5': true, '6': true, '7': true, '8': true, '9': true,
 }
 
-type permitted struct {
-	Letters         bool
-	Tilde           bool
-	Numbers         bool
-	BreakLine       bool     // line breaks allowed
-	WhiteSpaces     bool     // white spaces allowed
-	Tabulation      bool     // tabulation allowed
-	TextNotAllowed  []string // text not allowed eg: "hola" not allowed
-	Characters      []rune   // other special characters eg: '\','/','@'
-	Minimum         int      // min characters eg 2 "lo" ok default 0 no defined
-	Maximum         int      // max characters eg 1 "l" ok default 0 no defined}
-	ExtraValidation func(string) error
-	StartWith       *permitted // characters allowed at the beginning
-}
-
 func (h input) Validate(text string) error {
 
 	switch h.htmlName {

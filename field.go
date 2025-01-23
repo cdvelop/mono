@@ -5,15 +5,15 @@ import (
 )
 
 type field struct {
-	Index      uint32 // index of the field
-	Name       string // e.g.: id_user, name_user, phone
-	Legend     string // e.g.: ID, Name, Phone
-	Type       fieldType
-	Unique     bool // unique and unalterable field in db
+	Index      uint32      // index of the field
+	Name       string      // e.g.: id_user, name_user, phone
+	Legend     string      // e.g.: ID, Name, Phone
+	DbType     dbFieldType // e.g.: INT, VARCHAR(255)
+	Unique     bool        // unique and unalterable field in db
 	NotNull    bool
 	PrimaryKey bool         // primary key of the table
 	ForeignKey *entity      // foreign key of the table
-	Input      inputAdapter //for representation in the form and validation
+	Input      inputAdapter //for html representation in the form and validation
 	Parent     *entity      // pointer to the entity parent
 }
 

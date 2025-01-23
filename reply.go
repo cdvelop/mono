@@ -48,20 +48,20 @@ func init() {
 
 	for i := 0; i < v.NumField(); i++ {
 		field := v.Field(i)
-		fieldType := t.Field(i)
+		dbFieldType := t.Field(i)
 
 		if field.CanSet() {
 			// Convert field name to: snake case
-			snakeCaseName := G.String.SnakeCase(fieldType.Name)
+			snakeCaseName := G.String.SnakeCase(dbFieldType.Name)
 			// Assign field name to dictionary structure
 			field.SetString(snakeCaseName)
 			// Separate words
-			separateName := G.String.SnakeCase(fieldType.Name, " ")
+			separateName := G.String.SnakeCase(dbFieldType.Name, " ")
 			// Update translations map
 			R.translations["en"][snakeCaseName] = separateName
 			for _, reply := range langSupported {
 				// Get tags for other languages "es","pt"
-				esTag := fieldType.Tag.Get(reply)
+				esTag := dbFieldType.Tag.Get(reply)
 				if esTag != "" {
 					R.translations[reply][snakeCaseName] = esTag
 				}

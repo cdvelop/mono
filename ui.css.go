@@ -1,7 +1,5 @@
 package mono
 
-type className string
-
 const (
 	cssClassNormal    className = "normal"
 	cssClassBorder    className = "border"

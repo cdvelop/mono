@@ -6,18 +6,18 @@ import (
 )
 
 const (
-	typeInt    fieldType = "INT"
-	typeString fieldType = "VARCHAR(255)"
+	dbFieldTypeInt    dbFieldType = "INT"
+	dbFieldTypeString dbFieldType = "VARCHAR(255)"
 )
 
-type fieldType string
+type dbFieldType string
 
 func (t entity) CreateTableSQL() string {
 	var sb strings.Builder
 	sb.WriteString(fmt.Sprintf("CREATE TABLE IF NOT EXISTS %s (\n", t.TableName))
 
 	for i, column := range t.Fields {
-		sb.WriteString(fmt.Sprintf("    %s %s", column.Name, column.Type))
+		sb.WriteString(fmt.Sprintf("    %s %s", column.Name, column.DbType))
 
 		if column.Unique {
 			sb.WriteString(" UNIQUE")
@@ -25,7 +25,7 @@ func (t entity) CreateTableSQL() string {
 
 		if column.PrimaryKey {
 			sb.WriteString(" PRIMARY KEY")
-			if column.Type == typeInt {
+			if column.DbType == dbFieldTypeInt {
 				// sb.WriteString(" AUTO_INCREMENT")
 			}
 		}

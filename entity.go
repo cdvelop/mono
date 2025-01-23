@@ -77,7 +77,7 @@ func processStruct(t reflect.Type, entities *[]entity, foreignField *field) {
 			if rsField.Type.Elem().Kind() == reflect.Struct {
 				structureFrom = rsField.Type.Elem()
 				processStruct(rsField.Type.Elem(), entities, &newField)
-				// continue // Skip adding this field to the current table
+				newField.ForeignKey = &(*entities)[len(*entities)-1]
 			}
 
 		case reflect.Struct:
@@ -92,7 +92,7 @@ func processStruct(t reflect.Type, entities *[]entity, foreignField *field) {
 
 		}
 		newField.setLegend(&rsField)
-
+		newField.setInput(structureFrom, &rsField)
 		newField.setInput(structureFrom, &rsField)
 
 		e.Fields = append(e.Fields, newField)

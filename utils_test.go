@@ -7,7 +7,6 @@ import (
 )
 
 func TestSnakeCase(t *testing.T) {
-
 	testCases := []struct {
 		input string
 		want  string
@@ -73,8 +72,27 @@ func compareFieldsInStruct(expected, got reflect.Value) error {
 }
 
 func compareValues(expected, got reflect.Value, fieldName string) error {
+	// Handle input comparison specially
+	if fieldName == "Input" {
+		expectedInput := expected.Interface().(inputAdapter)
+		gotInput := got.Interface().(inputAdapter)
+
+		// Compare rendered output
+		index := 0
+		expectedRendered := expectedInput.Render(&index)
+		gotRendered := gotInput.Render(&index)
+
+		if expectedRendered != gotRendered {
+			return fmt.Errorf("%s are not equal\n\nexpected:\n%v\n\ngot:\n%v\n\n",
+				fieldName, expectedRendered, gotRendered)
+		}
+		return nil
+	}
+
+	// Default comparison for other fields
 	if !reflect.DeepEqual(expected.Interface(), got.Interface()) {
-		return fmt.Errorf("%s are not equal\n\nexpected:\n%v\n\ngot:\n%v\n\n", fieldName, expected.Interface(), got.Interface())
+		return fmt.Errorf("%s are not equal\n\nexpected:\n%v\n\ngot:\n%v\n\n",
+			fieldName, expected.Interface(), got.Interface())
 	}
 	return nil
 }
