@@ -9,11 +9,6 @@ import (
 	"golang.org/x/text/language"
 )
 
-type inputAdapter interface {
-	Render(tabIndex *int) string
-	Validate(value string) error
-}
-
 func (h *input) Set(params ...any) {
 	if h.customName == "" {
 		h.customName = h.htmlName

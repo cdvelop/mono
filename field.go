@@ -4,6 +4,11 @@ import (
 	"reflect"
 )
 
+type inputAdapter interface {
+	Render(tabIndex *int) string
+	Validate(value string) error
+}
+
 type field struct {
 	Index      uint32      // index of the field
 	Name       string      // e.g.: id_user, name_user, phone
