@@ -4,8 +4,6 @@ import (
 	"reflect"
 	"strings"
 	"testing"
-
-	"github.com/cdvelop/mono/inputs"
 )
 
 type Address struct {
@@ -55,12 +53,12 @@ func TestBuildEntity(t *testing.T) {
 		IsTable:   true,
 		// ReflectValue: gotPerson.ReflectValue,
 		Fields: []field{
-			{Index: 0, Name: "id", Legend: "Id", PrimaryKey: true, Unique: true, Input: inputs.ID("entity=mono.person", "legend=Id"), Parent: gotPerson},
-			{Index: 1, Name: "name", Legend: "Nombre", Input: inputs.Text("name=name", "entity=mono.person", "legend=Nombre"), Parent: gotPerson},
-			{Index: 2, Name: "birth_date", Legend: "Fecha De Nacimiento", Input: inputs.Date("name=birth_date", "entity=mono.person", "legend=Fecha De Nacimiento"), Parent: gotPerson},
-			{Index: 3, Name: "gender", Legend: "Género", Input: inputs.RadioGender("entity=mono.person", "legend=Género"), Parent: gotPerson},
-			{Index: 4, Name: "phone", Legend: "Teléfono", Input: inputs.Phone(), Parent: gotPerson},
-			{Index: 5, Name: "addresses", Legend: "Direcciones", Input: inputs.Select(structureAddressFrom, "name=addresses", "entity=mono.person", "legend=Direcciones"), Parent: gotPerson},
+			{Index: 0, Name: "id", Legend: "Id", PrimaryKey: true, Unique: true, Input: IN.ID("entity=mono.person", "legend=Id"), Parent: gotPerson},
+			{Index: 1, Name: "name", Legend: "Nombre", Input: IN.Text("name=name", "entity=mono.person", "legend=Nombre"), Parent: gotPerson},
+			{Index: 2, Name: "birth_date", Legend: "Fecha De Nacimiento", Input: IN.Date("name=birth_date", "entity=mono.person", "legend=Fecha De Nacimiento"), Parent: gotPerson},
+			{Index: 3, Name: "gender", Legend: "Género", Input: IN.RadioGender("entity=mono.person", "legend=Género"), Parent: gotPerson},
+			{Index: 4, Name: "phone", Legend: "Teléfono", Input: IN.Phone(), Parent: gotPerson},
+			{Index: 5, Name: "addresses", Legend: "Direcciones", Input: IN.Select(structureAddressFrom, "name=addresses", "entity=mono.person", "legend=Direcciones"), Parent: gotPerson},
 		},
 	}
 
@@ -70,11 +68,11 @@ func TestBuildEntity(t *testing.T) {
 		IsTable:   true,
 		// ReflectValue: gotAddress.ReflectValue,
 		Fields: []field{
-			{Index: 0, Name: "id", Legend: "Id", PrimaryKey: true, Unique: true, Input: inputs.ID("entity=mono.address", "legend=Id"), Parent: gotAddress},
-			{Index: 1, Name: "street", Legend: "Calle", Input: inputs.Text("name=street", "entity=mono.address", "legend=Calle"), Parent: gotAddress},
-			{Index: 2, Name: "city", Legend: "Ciudad", Input: inputs.Text("name=city", "entity=mono.address", "legend=Ciudad"), Parent: gotAddress},
-			{Index: 3, Name: "zip_code", Legend: "Código Postal", Input: inputs.Text("name=zip_code", "entity=mono.address", "legend=Código Postal"), Parent: gotAddress},
-			{Index: 4, Name: "id_person", Legend: "Id", NotNull: true, ForeignKey: expectedPerson, Input: inputs.ID(), Parent: gotAddress},
+			{Index: 0, Name: "id", Legend: "Id", PrimaryKey: true, Unique: true, Input: IN.ID("entity=mono.address", "legend=Id"), Parent: gotAddress},
+			{Index: 1, Name: "street", Legend: "Calle", Input: IN.Text("name=street", "entity=mono.address", "legend=Calle"), Parent: gotAddress},
+			{Index: 2, Name: "city", Legend: "Ciudad", Input: IN.Text("name=city", "entity=mono.address", "legend=Ciudad"), Parent: gotAddress},
+			{Index: 3, Name: "zip_code", Legend: "Código Postal", Input: IN.Text("name=zip_code", "entity=mono.address", "legend=Código Postal"), Parent: gotAddress},
+			{Index: 4, Name: "id_person", Legend: "Id", NotNull: true, ForeignKey: expectedPerson, Input: IN.ID(), Parent: gotAddress},
 		},
 	}
 	// fmt.Println("expectedPerson", expectedPerson)

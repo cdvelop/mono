@@ -1,4 +1,4 @@
-package inputs
+package mono
 
 import (
 	"fmt"

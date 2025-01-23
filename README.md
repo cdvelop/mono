@@ -13,7 +13,8 @@ package main
 
 ```
 
-
+## Motivación
+este proyecto se creo con el objetivo en mente y realizando la pregunta: como puedo crea una aplicación web de pila completa escribiendo el menor código posible.
 
 ### por que no solo unir json gorm?
 json de la librería estándar y gorm usan reflect y eso si lo llevamos a un dispositivo de bajo rendimiento se vuelve lento, si a eso le sumamos que queremos compilar a tinygo (que es la única forma de reducir el tamaño del binario resultante para webAssembly) necesitamos que el resultado sea optimo, sin dependencias externas y soporte a webAssembly + tinygo.
@@ -21,16 +22,12 @@ json de la librería estándar y gorm usan reflect y eso si lo llevamos a un dis
 ### mono no usa reflect?
 si lo usa pero una sola vez es como un json con asteroides. crea una imagen de cada estructura de tu programa cuando este arranca y lo mantiene en memoria para que no tenga que ser generado en tiempo de ejecución.
 
-
 es un proyecto grande si, llevo trabando en el desde el 2020 pero con librerías separadas. ahora con todo lo aprendido es el momento de unir todo.
 
 ## alcances:
 
 ### html (gui)
-- solo se pretende la generación de formularios básicos sin estilos css
-- [ ] Generación de formularios HTML
-- [ ] Validación en el lado del cliente (wasm)
-- [ ] Validación en el lado del servidor (Go)
+- [] renderizado de formularios html
 
 ### base de datos
 solo se trabajara con almacenamiento del tipo texto  que es el que todas las base de datos soportan, por ende la validación de datos se hará en el lado del servidor y el front con go + webAssembly. asi se evita configuraciones interminables en las estructuras de datos.
@@ -39,12 +36,15 @@ solo se trabajara con almacenamiento del tipo texto  que es el que todas las bas
 - [ ] Generación de json
 
 
-manejadores:
+## APIS:
 
-- ui: renderizados de formularios html
-- net: api http
-- db: sql dinámico
-- json
+- UI: renderizados de formularios html
+- NT: http y red 
+- DB: base de datos
+- G: funciones globales (tool, helpers, utils)
+- D: diccionario de palabras traducidas o mensajes de error para usar con R.T() o R.Err()
+- R: reply crear respuestas, métodos: Err() error, T() string. ej: R.Err(D.Field,D.NotFound), R.T(D.Address)
+- Inputs: inicializares de inputs eg: Text(), Number(),Radio(), Checkbox(), Select(), File()
 
 ## html rendering and validation
 

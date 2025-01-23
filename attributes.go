@@ -1,4 +1,4 @@
-package inputs
+package mono
 
 import (
 	"reflect"
@@ -11,7 +11,7 @@ type attributes struct {
 	allowSkipCompleted bool //permite que el campo no sea completado
 	hideTyping         bool //oculta el valor mientras se escribe
 
-	Type     string // eg : text, password, email
+	Type     string // input type  eg : text, password, email
 	htmlName string //eg input,select,textarea
 	Name     string //eg address,phone
 	Id       string
@@ -86,10 +86,18 @@ func (h input) Render(tabIndex *int) string {
 					tags += `<datalist id="` + labelForID + `">`
 					tags += `<option value="` + text + `">`
 					close = `</datalist>`
+					h.htmlName = "datalist"
 				}
 
-			case "list":
 				tags += `<option value="` + text + `">`
+			case "list":
+				if tags == "" {
+					tags += `<ol>`
+					tags += `<li><p>` + value + `: ` + text + `</p></li>`
+					close = `</ol>`
+				}
+
+				tags += `<li><p>` + value + `: ` + text + `</p></li>`
 
 			case "checkbox", "radio":
 				h.Value = value
@@ -101,14 +109,16 @@ func (h input) Render(tabIndex *int) string {
 				*tabIndex++
 
 			case "select":
-
+				if tags == "" {
+					tags += h.renderOneInput()
+					tags += `<option ` + R.T(D.Select) + `></option>`
+					close = `</select>`
+				}
+				tags = `<option value="` + value + `">` + text + `</option>`
 			default:
 				tags += h.renderOneInput()
-
 			}
-
 		}
-
 	}
 
 	tags += close
@@ -121,9 +131,13 @@ func (h input) renderOneInput() (result string) {
 	var close = `>`
 	h.Type = h.htmlName
 
-	if h.htmlName == "textarea" {
+	switch h.htmlName {
+	case "textarea":
 		open = `<textarea`
 		close = `></textarea>`
+		h.Type = ""
+	case "select":
+		open = `<select`
 		h.Type = ""
 	}
 

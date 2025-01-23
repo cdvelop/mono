@@ -1,27 +1,9 @@
 package mono
 
 import (
-	"errors"
 	"reflect"
 	"strings"
 )
-
-var (
-	// errStAnonymous = errors.New("anonymous structure not supported")
-	errStNil = errors.New("the structure pointer is nil")
-)
-
-func errNotStruct(name string) error {
-	return errors.New("the element " + name + " is not of structure type")
-}
-
-func errNoStructPtr(name string) error {
-	return errors.New("the structure " + name + " is not of pointer type")
-}
-
-func errNoStructPtrReq(name string) error {
-	return errors.New("structure " + name + " is not required as a pointer")
-}
 
 type structHandler struct {
 	objectName string //ej: attention.user,
@@ -32,8 +14,6 @@ type structHandler struct {
 	reflectType  reflect.Type
 	reflectValue reflect.Value
 }
-
-const unknownStName = "unknown"
 
 func (s *structHandler) Name(stIN ...any) string {
 
@@ -59,13 +39,13 @@ func (s *structHandler) buildName() {
 func (s *structHandler) checkAnonymousName() {
 	if s.structName == "" {
 		s.anonymous = true
-		s.structName = unknownStName
+		s.structName = "unknown"
 	}
 }
 
 func (s *structHandler) validate(structIN any, requiredPointer bool) error {
 	if structIN == nil {
-		return errStNil
+		return R.Err(D.Pointer, D.TheStructure, D.Is, D.Nil)
 	}
 
 	s.reflectValue = reflect.ValueOf(structIN)
@@ -73,7 +53,7 @@ func (s *structHandler) validate(structIN any, requiredPointer bool) error {
 
 	// Verifica si structIN es un puntero de una estructura
 	if requiredPointer && s.reflectKind != reflect.Ptr {
-		return errNoStructPtr(s.Name(structIN))
+		return R.Err(D.TheStructure, s.Name(structIN), D.IsNotOfPointerType)
 	}
 
 	// Si es un puntero, obtén el valor apuntado
@@ -83,14 +63,17 @@ func (s *structHandler) validate(structIN any, requiredPointer bool) error {
 
 		if !requiredPointer {
 			s.buildName()
-			return errNoStructPtrReq(s.Name())
+
+			// "structure " + name + " is not required as a pointer"
+			// return errNoStructPtrReq(s.Name())
+			return R.Err(D.TheStructure, s.Name(), D.IsNotRequired, D.AsAPointer)
 		}
 
 	}
 
 	// Verifica si structIN es una estructura
 	if s.reflectKind != reflect.Struct {
-		return errNotStruct(s.reflectKind.String())
+		return R.Err(D.TheElement, D.IsNotOfStructureType)
 	}
 
 	s.buildName()

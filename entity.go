@@ -5,8 +5,6 @@ import (
 	"reflect"
 	"strings"
 	"unicode"
-
-	"github.com/cdvelop/mono/inputs"
 )
 
 type entity struct {
@@ -37,7 +35,7 @@ func processStruct(t reflect.Type, entities *[]entity, foreignField *field) {
 
 	e := entity{
 		Name:      strings.ToLower(t.String()), // the package name + "." + structure name e.g.: attention.person
-		TableName: snakeCase(t.Name()),
+		TableName: G.String.SnakeCase(t.Name()),
 		Fields:    []field{},
 		// ParentStruct: parentStruct,
 	}
@@ -54,7 +52,7 @@ func processStruct(t reflect.Type, entities *[]entity, foreignField *field) {
 
 		newField := field{
 			Index:  uint32(len(e.Fields)),
-			Name:   snakeCase(t.Field(i).Name),
+			Name:   G.String.SnakeCase(t.Field(i).Name),
 			Unique: setUnique(&rsField),
 			Parent: &e,
 		}
@@ -113,7 +111,7 @@ func processStruct(t reflect.Type, entities *[]entity, foreignField *field) {
 			PrimaryKey: false,
 			NotNull:    true,
 			ForeignKey: foreignField.Parent,
-			Input:      inputs.ID(),
+			Input:      IN.ID(),
 			Parent:     &e,
 		})
 

@@ -2,25 +2,23 @@ package mono
 
 import (
 	"reflect"
-
-	"github.com/cdvelop/mono/inputs"
 )
 
 type field struct {
 	Index      uint32 // index of the field
 	Name       string // e.g.: id_user, name_user, phone
 	Legend     string // e.g.: ID, Name, Phone
-	Type       FieldType
+	Type       fieldType
 	Unique     bool // unique and unalterable field in db
 	NotNull    bool
-	PrimaryKey bool    // primary key of the table
-	ForeignKey *entity // foreign key of the table
-	Input      input   //for representation in the form and validation
-	Parent     *entity // pointer to the entity parent
+	PrimaryKey bool         // primary key of the table
+	ForeignKey *entity      // foreign key of the table
+	Input      inputAdapter //for representation in the form and validation
+	Parent     *entity      // pointer to the entity parent
 }
 
 func (f *field) isPrimaryKey() bool {
-	_, isPrimary := fieldType(f.Parent.TableName, f.Name)
+	_, isPrimary := isIDField(f.Parent.TableName, f.Name)
 	return isPrimary
 }
 
@@ -43,7 +41,7 @@ func (f *field) setDataBaseParams() {
 
 		// check input is not set
 		if f.Input == nil {
-			f.Input = inputs.ID()
+			f.Input = IN.ID()
 		}
 	}
 }

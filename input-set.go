@@ -1,6 +1,7 @@
 package mono
 
 import (
+	"fmt"
 	"reflect"
 	"strings"
 
@@ -38,7 +39,7 @@ func (f *field) setInput(structureFrom reflect.Type, rf *reflect.StructField) {
 		// fmt.Println("SET inputType ", inputType)
 	}
 
-	inputType = snakeCase(inputType)
+	inputType = G.String.SnakeCase(inputType)
 
 	// Add common params
 	params = append(params,
@@ -126,6 +127,8 @@ func (f *field) setLegend(rf *reflect.StructField) {
 
 	f.Legend = rf.Tag.Get("Legend")
 	if f.Legend == "" {
+
+		fmt.Println("f.Legend is empty: ", f.Name)
 
 		name := R.T(f.Name)
 		// f.Legend = cases.Title(language.Und).String(strings.ToLower(name))

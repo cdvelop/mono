@@ -7,19 +7,19 @@ import (
 	"strings"
 )
 
+// var R reply
+var R reply
+
 type reply struct {
 	current      string // "es" or "en"
 	translations map[string]map[string]string
 	out          strings.Builder
-	err          *errMessage
+	err          errMessage
 }
 
 type errMessage struct {
 	message string
 }
-
-// var R reply
-var R reply
 
 // var d dictionary
 var D dictionary
@@ -33,14 +33,14 @@ func init() {
 		translations: map[string]map[string]string{
 			"en": {}, // do not complete manually!
 		},
-		err: &errMessage{
+		err: errMessage{
 			message: "",
 		},
 	}
 
 	// initialize translations map
-	for _, reply := range langSupported {
-		R.translations[reply] = map[string]string{}
+	for _, lang := range langSupported {
+		R.translations[lang] = map[string]string{}
 	}
 
 	v := reflect.ValueOf(&D).Elem()
@@ -52,16 +52,18 @@ func init() {
 
 		if field.CanSet() {
 			// Convert field name to: snake case
-			fieldName := snakeCase(fieldType.Name, " ")
+			snakeCaseName := G.String.SnakeCase(fieldType.Name)
 			// Assign field name to dictionary structure
-			field.SetString(fieldName)
+			field.SetString(snakeCaseName)
+			// Separate words
+			separateName := G.String.SnakeCase(fieldType.Name, " ")
 			// Update translations map
-			R.translations["en"][fieldName] = fieldName
+			R.translations["en"][snakeCaseName] = separateName
 			for _, reply := range langSupported {
 				// Get tags for other languages "es","pt"
 				esTag := fieldType.Tag.Get(reply)
 				if esTag != "" {
-					R.translations[reply][fieldName] = esTag
+					R.translations[reply][snakeCaseName] = esTag
 				}
 			}
 		}

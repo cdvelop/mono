@@ -1,4 +1,4 @@
-package inputs
+package mono
 
 import (
 	"reflect"
@@ -10,25 +10,6 @@ type input struct {
 	permitted
 	dataSource
 	fieldset
-	testData
-}
-
-type testData struct {
-	Good []string
-	Bad  []string
-}
-
-var wrong_data = []string{
-	"", " ", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
-	"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l",
-	"m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x",
-	"y", "z", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J",
-	"K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V",
-	"W", "X", "Y", "Z", "ñ", "Ñ", "á", "é", "í", "ó", "ú",
-	"Á", "É", "Í", "Ó", "Ú", "!", "@", "#", "$", "%", "^", "&",
-	"*", "(", ")", "-", "_", "+", "=", "{", "}", "[", "]", "|",
-	"\\", ":", ";", "\"", "'", "<", ">", ",", ".", "?", "/", "`",
-	"~",
 }
 
 type fieldset struct {
@@ -167,14 +148,14 @@ func (h *input) setDynamicTitle() {
 	}
 
 	var parts []string
-	parts = append(parts, Lang.T(D.Allowed))
+	parts = append(parts, R.T(D.Allowed))
 
 	if h.Letters {
-		parts = append(parts, Lang.T(D.Letters))
+		parts = append(parts, R.T(D.Letters))
 	}
 
 	if h.Numbers {
-		parts = append(parts, Lang.T(D.Numbers))
+		parts = append(parts, R.T(D.Numbers))
 	}
 
 	if len(h.Characters) > 0 {
@@ -186,15 +167,15 @@ func (h *input) setDynamicTitle() {
 				chars = append(chars, string(char))
 			}
 		}
-		parts = append(parts, Lang.T(D.Chars, chars))
+		parts = append(parts, R.T(D.Chars, chars))
 	}
 
 	if h.Minimum != 0 {
-		parts = append(parts, Lang.T("min", h.Minimum))
+		parts = append(parts, R.T("min", h.Minimum))
 	}
 
 	if h.Maximum != 0 {
-		parts = append(parts, Lang.T("max", h.Maximum))
+		parts = append(parts, R.T("max", h.Maximum))
 	}
 
 	h.Title = strings.Join(parts, " ")

@@ -1,4 +1,4 @@
-package inputs
+package mono
 
 import (
 	"strings"
@@ -7,6 +7,8 @@ import (
 const tabulation = '	'
 const white_space = ' '
 const break_line = '\n'
+
+// const carriage_return = '\r'
 
 var valid_letters = map[rune]bool{
 	'a': true, 'b': true, 'c': true, 'd': true, 'e': true, 'f': true, 'g': true, 'h': true, 'i': true,
@@ -55,7 +57,7 @@ func (h input) Validate(text string) error {
 		if h.allowSkipCompleted {
 			return nil
 		}
-		return Lang.Err(D.Field, D.Empty, D.NotAllowed)
+		return R.Err(D.Field, D.Empty, D.NotAllowed)
 	}
 
 	if h.StartWith != nil {
@@ -63,10 +65,10 @@ func (h input) Validate(text string) error {
 		if err := h.StartWith.validate(char); err != nil {
 
 			if char == " " {
-				return Lang.Err(D.DoNotStartWith, D.WhiteSpace)
+				return R.Err(D.DoNotStartWith, D.WhiteSpace)
 			}
 
-			return Lang.Err(D.DoNotStartWith, char)
+			return R.Err(D.DoNotStartWith, char)
 		}
 	}
 
@@ -83,20 +85,20 @@ func (h permitted) validate(text string) (err error) {
 
 	if h.Minimum != 0 {
 		if len(text) < h.Minimum {
-			return Lang.Err(D.MinSize, h.Minimum, D.Chars)
+			return R.Err(D.MinSize, h.Minimum, D.Chars)
 		}
 	}
 
 	if h.Maximum != 0 {
 		if len(text) > h.Maximum {
-			return Lang.Err(D.MaxSize, h.Maximum, D.Chars)
+			return R.Err(D.MaxSize, h.Maximum, D.Chars)
 		}
 	}
 
 	if len(h.TextNotAllowed) != 0 {
 		for _, notAllowed := range h.TextNotAllowed {
 			if strings.Contains(text, notAllowed) {
-				return Lang.Err(D.NotAllowed, ':', h.TextNotAllowed)
+				return R.Err(D.NotAllowed, ':', h.TextNotAllowed)
 			}
 		}
 	}
@@ -116,7 +118,7 @@ func (h permitted) validate(text string) (err error) {
 
 		if h.Letters {
 			if !valid_letters[char] {
-				err = Lang.Err(char, D.NotLetter)
+				err = R.Err(char, D.NotLetter)
 			} else {
 				err = nil
 				continue
@@ -125,7 +127,7 @@ func (h permitted) validate(text string) (err error) {
 
 		if h.Tilde {
 			if !valid_tilde[char] {
-				err = Lang.Err(char, D.TildeNotAllowed)
+				err = R.Err(char, D.TildeNotAllowed)
 			} else {
 				err = nil
 				continue
@@ -135,9 +137,9 @@ func (h permitted) validate(text string) (err error) {
 		if h.Numbers {
 			if !valid_number[char] {
 				if char == ' ' {
-					err = Lang.Err(D.WhiteSpace, D.NotAllowed)
+					err = R.Err(D.WhiteSpace, D.NotAllowed)
 				} else {
-					err = Lang.Err(char, D.NotNumber)
+					err = R.Err(char, D.NotNumber)
 				}
 			} else {
 				err = nil
@@ -159,15 +161,15 @@ func (h permitted) validate(text string) (err error) {
 				continue
 			} else {
 				if char == white_space {
-					return Lang.Err(D.WhiteSpace, D.NotAllowed)
+					return R.Err(D.WhiteSpace, D.NotAllowed)
 				} else if valid_tilde[char] {
-					return Lang.Err(char, D.TildeNotAllowed)
+					return R.Err(char, D.TildeNotAllowed)
 				} else if char == tabulation {
-					return Lang.Err(D.TabText, D.NotAllowed)
+					return R.Err(D.TabText, D.NotAllowed)
 				} else if char == break_line {
-					return Lang.Err(D.Newline, D.NotAllowed)
+					return R.Err(D.Newline, D.NotAllowed)
 				}
-				return Lang.Err(D.Char, char, D.NotAllowed)
+				return R.Err(D.Char, char, D.NotAllowed)
 			}
 		}
 
@@ -179,8 +181,6 @@ func (h permitted) validate(text string) (err error) {
 	return err
 }
 
-// const carriage_return = '\r'
-
 func (a attributes) checkOptionKeys(value string) error {
 
 	dataInArray := strings.Split(value, ",")
@@ -188,7 +188,7 @@ func (a attributes) checkOptionKeys(value string) error {
 	for _, keyIn := range dataInArray {
 
 		if keyIn == "" {
-			return Lang.Err(D.RequiredSelection, D.Field, a.Name)
+			return R.Err(D.RequiredSelection, D.Field, a.Name)
 		}
 
 		var exist bool
@@ -200,7 +200,7 @@ func (a attributes) checkOptionKeys(value string) error {
 		}
 
 		if !exist {
-			return Lang.Err(D.Value, keyIn, D.NotAllowed, D.In, a.htmlName, a.Name)
+			return R.Err(D.Value, keyIn, D.NotAllowed, D.In, a.Name)
 		}
 
 	}

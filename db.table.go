@@ -6,11 +6,11 @@ import (
 )
 
 const (
-	TypeInt    FieldType = "INT"
-	TypeString FieldType = "VARCHAR(255)"
+	typeInt    fieldType = "INT"
+	typeString fieldType = "VARCHAR(255)"
 )
 
-type FieldType string
+type fieldType string
 
 func (t entity) CreateTableSQL() string {
 	var sb strings.Builder
@@ -25,7 +25,7 @@ func (t entity) CreateTableSQL() string {
 
 		if column.PrimaryKey {
 			sb.WriteString(" PRIMARY KEY")
-			if column.Type == TypeInt {
+			if column.Type == typeInt {
 				// sb.WriteString(" AUTO_INCREMENT")
 			}
 		}

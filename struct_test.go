@@ -6,6 +6,8 @@ import (
 
 func TestValidateStruct(t *testing.T) {
 
+	const unknownStName = "unknown"
+
 	type Person struct {
 		ID   string
 		Name string
@@ -32,7 +34,7 @@ func TestValidateStruct(t *testing.T) {
 			input:          Person{},
 			requirePointer: true,
 			expectPointer:  false,
-			errorExpected:  errNoStructPtr("Person").Error(),
+			errorExpected:  R.T(D.TheStructure, "Person", D.IsNotOfPointerType),
 		},
 		{
 			name:           "Person structure sent as required pointer ok",
@@ -46,7 +48,7 @@ func TestValidateStruct(t *testing.T) {
 			input:          &Person{},
 			requirePointer: false,
 			expectPointer:  false,
-			errorExpected:  errNoStructPtrReq("Person").Error(),
+			errorExpected:  R.T(D.TheStructure, "Person", D.IsNotRequired, D.AsAPointer),
 		},
 		{
 			name:            "anonymous structure sent as pointer ok",
@@ -70,19 +72,20 @@ func TestValidateStruct(t *testing.T) {
 			requirePointer:  true,
 			expectPointer:   false,
 			expectAnonymous: true,
-			errorExpected:   errNoStructPtr(unknownStName).Error(),
+			errorExpected:   R.T(D.TheStructure, unknownStName, D.IsNotOfPointerType),
 		},
 		{
 			name:           "map sent, error expected",
 			input:          map[string]int{"data": 1},
 			requirePointer: false,
 			expectPointer:  false,
-			errorExpected:  errNotStruct("map").Error(),
+			errorExpected:  R.T(D.TheElement, "map", D.IsNotOfStructureType),
 		},
 	}
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
+
 			var response structHandler
 
 			err := response.validate(tc.input, tc.requirePointer)
